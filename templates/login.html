@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - BIOPAGE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #0f172a;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 400px;
+            background: #ffffff;
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            border-radius: 24px;
+            padding: 36px 30px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.04);
+            text-align: center;
+        }
+
+        /* LOGO */
+        .logo-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            margin-bottom: 24px;
+        }
+        .logo-icon-svg { height: 32px; width: auto; color: #000; }
+        .logo-text-brand {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 0.22em;
+            color: #000;
+        }
+
+        h1 {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+        .subtitle {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 24px;
+        }
+
+        /* FORM */
+        form { text-align: left; }
+        .form-group { margin-bottom: 16px; }
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #334155;
+        }
+        input {
+            width: 100%;
+            padding: 12px 14px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 14px;
+            color: #0f172a;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        input:focus {
+            border-color: #000000;
+            background: #ffffff;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 13px;
+            background: #000000;
+            color: #ffffff;
+            border: none;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: transform 0.2s, background 0.2s;
+        }
+        .btn-submit:hover {
+            background: #1e293b;
+            transform: scale(1.02);
+        }
+
+        .error-msg {
+            background: #fef2f2;
+            color: #ef4444;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 13px;
+            margin-bottom: 16px;
+            border: 1px solid #fee2e2;
+            text-align: center;
+        }
+
+        .auth-footer {
+            margin-top: 24px;
+            font-size: 13px;
+            color: #64748b;
+        }
+        .auth-footer a {
+            color: #000000;
+            font-weight: 700;
+            text-decoration: none;
+        }
+        .auth-footer a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <div class="auth-card">
+        <!-- LOGO -->
+        <a href="/" class="logo-link">
+            <svg class="logo-icon-svg" viewBox="0 0 180 220" fill="currentColor">
+                <path d="M24 12h86c34 0 61 25 61 57 0 20-10 37-27 47 18 10 28 26 28 47 0 35-28 59-66 64l-33 5c-26 4-43 21-47 42H4c4-35 25-58 62-64l38-6c25-4 40-18 40-37 0-13-7-23-20-30-9 7-21 12-36 14l-28 5c-20 4-31 13-35 26H4v-40c0-25 20-47 54-54l40-8c24-5 39-19 39-38 0-16-13-28-30-28H46v89H24V12Zm48 133 28-5c10-2 18-5 25-10-8-2-16-3-25-1l-39 8c-13 3-23 9-29 18 7 1 14 0 20-2l20-8Z"></path>
+            </svg>
+            <span class="logo-text-brand">BIOPAGE</span>
+        </a>
+
+        <h1>Đăng nhập</h1>
+        <p class="subtitle">Chào mừng bạn quay trở lại với biopage</p>
+
+        {% if error %}
+            <div class="error-msg"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</div>
+        {% endif %}
+
+        <form method="POST">
+            <div class="form-group">
+                <label>Tên đăng nhập</label>
+                <input type="text" name="username" placeholder="Nhập tên đăng nhập" required autofocus>
+            </div>
+
+            <div class="form-group">
+                <label>Mật khẩu</label>
+                <input type="password" name="password" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn-submit">Đăng Nhập</button>
+        </form>
+
+        <div class="auth-footer">
+            Chưa có tài khoản? <a href="/register">Đăng ký ngay</a>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="BIOPAGE - Nền tảng tạo trang Bio cá nhân miễn phí, chuyên nghiệp, tối ưu hiển thị cho TikTok, Instagram và Facebook.">
+    <link rel="icon" type="image/png" href="/static/logo.png">
+    
+    <title>BIOPAGE - Một liên kết cho tất cả nội dung của bạn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #0f172a;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* NAVBAR */
+        .nav-wrapper { max-width: 1140px; margin: 20px auto 0; padding: 0 20px; }
+        nav {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+            padding: 10px 24px;
+            border-radius: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-left { display: flex; align-items: center; gap: 32px; }
+        
+        .logo-vector-link {
+            display: inline-flex; align-items: center; gap: 10px;
+            text-decoration: none; color: #000000;
+        }
+        .logo-icon-svg { height: 28px; width: auto; display: block; color: #000; }
+        .logo-text-brand { font-size: 16px; font-weight: 800; letter-spacing: 0.22em; line-height: 1; color: #000; }
+        
+        .nav-menu { display: flex; align-items: center; gap: 24px; list-style: none; }
+        .nav-menu a { color: #0f172a; text-decoration: none; font-weight: 600; font-size: 14px; transition: color 0.2s; }
+        .nav-menu a:hover { color: #3b82f6; }
+
+        .nav-right { display: flex; align-items: center; gap: 16px; }
+        .btn-login { color: #0f172a; text-decoration: none; font-weight: 700; font-size: 14px; padding: 8px 12px; }
+        .btn-signup {
+            background: #000000; color: #ffffff; text-decoration: none; font-weight: 700;
+            font-size: 14px; padding: 10px 22px; border-radius: 50px; transition: transform 0.2s, background 0.2s;
+        }
+        .btn-signup:hover { transform: scale(1.03); background: #1e293b; }
+
+        /* HERO SECTION */
+        .hero { max-width: 900px; margin: 60px auto 70px; padding: 0 20px; text-align: center; }
+        .hero h1 { font-size: 54px; font-weight: 800; line-height: 1.15; letter-spacing: -1.5px; margin-bottom: 20px; color: #000000; }
+        .hero p { font-size: 18px; color: #64748b; max-width: 620px; margin: 0 auto 36px; }
+
+        .claim-box {
+            max-width: 480px; margin: 0 auto 50px; padding: 6px 6px 6px 18px;
+            display: flex; align-items: center; background: #ffffff;
+            border: 1px solid rgba(15, 23, 42, 0.12); border-radius: 50px; box-shadow: 0 12px 35px rgba(0, 0, 0, 0.06);
+        }
+        .domain-prefix { font-weight: 700; color: #94a3b8; font-size: 15px; }
+        .claim-input {
+            flex: 1; border: none; background: transparent; outline: none;
+            font-size: 15px; font-weight: 600; color: #0f172a; padding: 8px 6px;
+        }
+        .claim-btn {
+            border: none; cursor: pointer; padding: 12px 24px; font-size: 14px;
+            background: #2563eb; color: #fff; border-radius: 50px; font-weight: 700; transition: background 0.2s;
+        }
+        .claim-btn:hover { background: #1d4ed8; }
+
+        /* MOCKUPS */
+        .mockups-row { display: flex; justify-content: center; align-items: center; gap: 30px; }
+        .mock-phone {
+            width: 250px; height: 480px; border-radius: 36px; padding: 16px 12px;
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1); border: 1px solid rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+        .mock-phone:hover { transform: translateY(-5px); }
+        .mock-phone-avatar { width: 68px; height: 68px; border-radius: 50%; margin-bottom: 8px; object-fit: cover; border: 2px solid #fff; }
+        .mock-phone-title { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 4px; }
+        .mock-phone-sub { font-size: 12px; opacity: 0.85; margin-bottom: 16px; }
+        .mock-phone-btn {
+            width: 100%; padding: 10px; border-radius: 30px; font-size: 11px; font-weight: 600;
+            margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+
+        /* FEATURES (4-GRID) */
+        .section-wrap { max-width: 1140px; margin: 0 auto 100px; padding: 0 20px; }
+        .section-title-wrap { text-align: center; margin-bottom: 48px; }
+        .section-title { font-size: 34px; font-weight: 800; letter-spacing: -0.8px; margin-bottom: 8px; }
+        .section-desc { font-size: 16px; color: #64748b; }
+
+        .bento-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .bento-card {
+            background: #f8fafc; border: 1px solid rgba(15, 23, 42, 0.08);
+            border-radius: 24px; padding: 32px; display: flex; flex-direction: column; justify-content: space-between;
+            min-height: 220px; transition: transform 0.2s;
+        }
+        .bento-card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.04); }
+        .bento-header h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+        .bento-header p { font-size: 14px; color: #64748b; }
+
+        /* REVIEWS */
+        .social-proof-banner { text-align: center; font-size: 15px; font-weight: 700; color: #3b82f6; margin-bottom: 24px; }
+        .reviews-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .review-card {
+            background: #ffffff; border: 1px solid rgba(15, 23, 42, 0.08);
+            border-radius: 20px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            display: flex; flex-direction: column; justify-content: space-between; gap: 16px;
+        }
+        .stars { color: #f59e0b; font-size: 13px; display: flex; gap: 2px; }
+        .review-text { font-size: 14px; color: #334155; }
+        .reviewer { display: flex; align-items: center; gap: 10px; }
+        .reviewer-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+        .reviewer-info b { font-size: 13px; display: block; }
+        .reviewer-info span { font-size: 11px; color: #64748b; }
+
+        /* FAQ */
+        .faq-wrap { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+        .faq-item {
+            background: #f8fafc; border: 1px solid rgba(15, 23, 42, 0.08);
+            padding: 18px 24px; cursor: pointer; border-radius: 18px;
+        }
+        .faq-question { display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 15px; }
+        .faq-answer { display: none; font-size: 14px; color: #64748b; margin-top: 12px; }
+        .faq-item.active .faq-answer { display: block; }
+        .faq-item.active .faq-icon { transform: rotate(180deg); }
+        .faq-icon { transition: transform 0.2s; color: #94a3b8; }
+
+        /* BOTTOM CTA */
+        .bottom-cta {
+            max-width: 900px; margin: 0 auto 80px; padding: 50px 20px;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            border-radius: 32px; text-align: center; color: #ffffff;
+        }
+        .bottom-cta h2 { font-size: 32px; font-weight: 800; margin-bottom: 12px; }
+        .bottom-cta p { font-size: 16px; color: #cbd5e1; margin-bottom: 24px; }
+        .btn-cta-large {
+            display: inline-block; background: #38bdf8; color: #0f172a;
+            font-weight: 800; font-size: 15px; padding: 14px 32px; border-radius: 50px;
+            text-decoration: none; transition: transform 0.2s;
+        }
+        .btn-cta-large:hover { transform: scale(1.05); }
+
+        /* FOOTER */
+        footer {
+            max-width: 1140px; margin: 0 auto; padding: 30px 20px 50px;
+            display: flex; justify-content: space-between; align-items: center;
+            border-top: 1px solid rgba(15, 23, 42, 0.08); font-size: 13px; color: #94a3b8;
+        }
+
+        @media (max-width: 900px) {
+            .hero h1 { font-size: 38px; }
+            .nav-menu { display: none; }
+            .bento-grid { grid-template-columns: 1fr; }
+            .reviews-grid { grid-template-columns: 1fr; }
+            .mockups-row { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <div class="nav-wrapper">
+        <nav>
+            <div class="nav-left">
+                <a href="/" class="logo-vector-link">
+                    <svg class="logo-icon-svg" viewBox="0 0 180 220" fill="currentColor">
+                        <path d="M24 12h86c34 0 61 25 61 57 0 20-10 37-27 47 18 10 28 26 28 47 0 35-28 59-66 64l-33 5c-26 4-43 21-47 42H4c4-35 25-58 62-64l38-6c25-4 40-18 40-37 0-13-7-23-20-30-9 7-21 12-36 14l-28 5c-20 4-31 13-35 26H4v-40c0-25 20-47 54-54l40-8c24-5 39-19 39-38 0-16-13-28-30-28H46v89H24V12Zm48 133 28-5c10-2 18-5 25-10-8-2-16-3-25-1l-39 8c-13 3-23 9-29 18 7 1 14 0 20-2l20-8Z"></path>
+                    </svg>
+                    <span class="logo-text-brand">BIOPAGE</span>
+                </a>
+                <ul class="nav-menu">
+                    <li><a href="#features">Tính năng</a></li>
+                    <li><a href="#reviews">Đánh giá</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="nav-right">
+                {% if is_logged_in %}
+                    <a href="/admin" class="btn-signup"><i class="fa-solid fa-gauge"></i> Quản trị</a>
+                {% else %}
+                    <a href="/login" class="btn-login">Đăng nhập</a>
+                    <a href="/register" class="btn-signup">Tạo trang miễn phí</a>
+                {% endif %}
+            </div>
+        </nav>
+    </div>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <h1>Tất cả liên kết của bạn,<br>gọn gàng trong một trang.</h1>
+        <p>Tối ưu hóa hồ sơ mạng xã hội của bạn với BIOPAGE. Thiết lập nhanh chóng, tích hợp đa nền tảng và tùy biến giao diện chuyên nghiệp.</p>
+
+        <form action="/register" method="GET" class="claim-box">
+            <span class="domain-prefix">biopage/</span>
+            <input type="text" name="username" class="claim-input" placeholder="ten-cua-ban" required>
+            <button type="submit" class="claim-btn">Tạo trang miễn phí</button>
+        </form>
+
+        <!-- 2 MOCKUP PHONES (Rút gọn) -->
+        <div class="mockups-row">
+            <!-- Mockup Tech -->
+            <div class="mock-phone" style="background: linear-gradient(135deg, #0f172a, #1e1b4b); color:#ffffff; z-index: 2;">
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" class="mock-phone-avatar">
+                <div class="mock-phone-title">Phạm Huy <i class="fa-solid fa-circle-check" style="color:#38bdf8;"></i></div>
+                <div class="mock-phone-sub">Developer & Creator 💻</div>
+                <div class="mock-phone-btn" style="background:rgba(255,255,255,0.15); color:#fff;"><i class="fa-brands fa-github"></i> Dự án GitHub</div>
+                <div class="mock-phone-btn" style="background:rgba(255,255,255,0.15); color:#fff;"><i class="fa-brands fa-youtube"></i> Kênh YouTube</div>
+                <div class="mock-phone-btn" style="background:rgba(255,255,255,0.15); color:#fff;"><i class="fa-solid fa-envelope"></i> Liên hệ công việc</div>
+            </div>
+
+            <!-- Mockup Fashion -->
+            <div class="mock-phone" style="background: linear-gradient(135deg, #f97316, #db2777); color:#ffffff;">
+                <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150" class="mock-phone-avatar">
+                <div class="mock-phone-title">Linh Đan <i class="fa-solid fa-circle-check" style="color:#fff;"></i></div>
+                <div class="mock-phone-sub">Fashion & Daily Vlogs 🌸</div>
+                <div class="mock-phone-btn" style="background:rgba(255,255,255,0.2); color:#fff;"><i class="fa-brands fa-tiktok"></i> Kênh TikTok</div>
+                <div class="mock-phone-btn" style="background:rgba(255,255,255,0.2); color:#fff;"><i class="fa-solid fa-bag-shopping"></i> Shopee Tủ Đồ</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES (4-GRID) -->
+    <section class="section-wrap" id="features">
+        <div class="section-title-wrap">
+            <h2 class="section-title">Nâng tầm thương hiệu cá nhân</h2>
+            <p class="section-desc">Đầy đủ tính năng thông minh để tối ưu trang cá nhân của bạn</p>
+        </div>
+
+        <div class="bento-grid">
+            <div class="bento-card">
+                <div class="bento-header">
+                    <h3>Đường dẫn cá nhân riêng biệt</h3>
+                    <p>Sở hữu đường link ngắn gọn, dễ nhớ để đính kèm lên bio TikTok, Facebook, Instagram.</p>
+                </div>
+                <div style="font-weight:700; color:#0f172a; margin-top:20px;"><i class="fa-solid fa-link" style="color:#3b82f6;"></i> biopage/ten-cua-ban</div>
+            </div>
+
+            <div class="bento-card">
+                <div class="bento-header">
+                    <h3>Tải trang siêu tốc</h3>
+                    <p>Hệ thống tối ưu hóa hình ảnh và mã nguồn, đảm bảo khách hàng truy cập không độ trễ.</p>
+                </div>
+                <div style="font-size:28px; font-weight:900; color:#000; margin-top:14px;"><i class="fa-solid fa-bolt" style="color:#f59e0b;"></i> Nhanh & Mượt mà</div>
+            </div>
+
+            <div class="bento-card">
+                <div class="bento-header">
+                    <h3>Tích hợp Bản đồ & Gọi điện</h3>
+                    <p>Hỗ trợ hiển thị nút mở Google Maps và Hotline, giúp chốt sale và điều hướng khách hàng cực kỳ hiệu quả.</p>
+                </div>
+                <div style="display:flex; gap:6px; margin-top:20px;">
+                    <span style="background:#e2e8f0; padding:8px 14px; border-radius:30px; font-size:12px; font-weight:600;"><i class="fa-solid fa-map-pin" style="color:#ef4444;"></i> Maps</span>
+                    <span style="background:#e2e8f0; padding:8px 14px; border-radius:30px; font-size:12px; font-weight:600;"><i class="fa-solid fa-phone" style="color:#22c55e;"></i> Hotline</span>
+                </div>
+            </div>
+
+            <div class="bento-card">
+                <div class="bento-header">
+                    <h3>Thống kê lượt nhấp & Mã QR</h3>
+                    <p>Theo dõi chính xác liên kết nào đang hoạt động tốt nhất. Cung cấp sẵn mã QR để in ấn hoặc chia sẻ dễ dàng.</p>
+                </div>
+                <div style="display:flex; gap:12px; margin-top:20px;">
+                    <i class="fa-solid fa-chart-column" style="font-size:28px; color:#38bdf8;"></i>
+                    <i class="fa-solid fa-qrcode" style="font-size:28px; color:#0f172a;"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- REVIEWS -->
+    <section class="section-wrap" id="reviews">
+        <div class="section-title-wrap">
+            <h2 class="section-title">Được tin dùng bởi Creator</h2>
+            <div class="social-proof-banner"><i class="fa-solid fa-fire"></i> Hơn 10,000+ nhà sáng tạo nội dung đang sử dụng</div>
+        </div>
+
+        <div class="reviews-grid">
+            <div class="review-card">
+                <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <p class="review-text">"Giao diện cực kỳ sạch sẽ và hiện đại. Tính năng tải ảnh trực tiếp từ thư viện điện thoại rất tiện lợi!"</p>
+                <div class="reviewer">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" class="reviewer-img">
+                    <div class="reviewer-info">
+                        <b>Minh Thư</b><span>Beauty Blogger</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="review-card">
+                <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <p class="review-text">"Có sẵn tích xanh và nút bấm mở Google Maps chỉ đường rất tiện cho shop của mình khi khách bấm từ TikTok sang."</p>
+                <div class="reviewer">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" class="reviewer-img">
+                    <div class="reviewer-info">
+                        <b>Hoàng Quân</b><span>Studio Manager</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="review-card">
+                <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <p class="review-text">"Màn hình Live Preview lúc chỉnh sửa rất trực quan, chỉnh cái gì là thấy ngay trên điện thoại mẫu."</p>
+                <div class="reviewer">
+                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100" class="reviewer-img">
+                    <div class="reviewer-info">
+                        <b>Thảo Vy</b><span>Content Creator</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section-wrap" id="faq">
+        <div class="section-title-wrap">
+            <h2 class="section-title">Câu hỏi thường gặp</h2>
+            <p class="section-desc">Mọi giải đáp nhanh về BIOPAGE</p>
+        </div>
+
+        <div class="faq-wrap">
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    <span>Tạo Bio trên BIOPAGE có miễn phí không?</span>
+                    <i class="fa-solid fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">Hoàn toàn miễn phí! Bạn có thể tạo tài khoản, thêm không giới hạn các liên kết và sử dụng toàn bộ tính năng chọn theme màu sắc mà không tốn phí.</div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    <span>Dữ liệu cá nhân của tôi có an toàn không?</span>
+                    <i class="fa-solid fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">Tuyệt đối an toàn. Chúng tôi cam kết bảo mật thông tin cá nhân (được mã hóa an toàn) và không chia sẻ dữ liệu của bạn cho bất kỳ bên thứ ba nào.</div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    <span>Làm thế nào để gắn link lên TikTok/Instagram?</span>
+                    <i class="fa-solid fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">Sau khi đăng ký xong, bạn sao chép đường link hiển thị trong trang Quản trị, sau đó vào ứng dụng TikTok/Instagram chọn "Sửa hồ sơ" và dán link vào mục Trang web.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BOTTOM CTA -->
+    <section class="bottom-cta">
+        <h2>Sẵn sàng tạo trang Bio của riêng bạn?</h2>
+        <p>Tham gia cùng hàng ngàn Creator và tối ưu hóa chuyển đổi ngay hôm nay.</p>
+        <a href="/register" class="btn-cta-large">Bắt Đầu Tạo Miễn Phí <i class="fa-solid fa-arrow-right"></i></a>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <a href="/" class="logo-vector-link">
+            <svg class="logo-icon-svg" style="height: 22px;" viewBox="0 0 180 220" fill="currentColor">
+                <path d="M24 12h86c34 0 61 25 61 57 0 20-10 37-27 47 18 10 28 26 28 47 0 35-28 59-66 64l-33 5c-26 4-43 21-47 42H4c4-35 25-58 62-64l38-6c25-4 40-18 40-37 0-13-7-23-20-30-9 7-21 12-36 14l-28 5c-20 4-31 13-35 26H4v-40c0-25 20-47 54-54l40-8c24-5 39-19 39-38 0-16-13-28-30-28H46v89H24V12Zm48 133 28-5c10-2 18-5 25-10-8-2-16-3-25-1l-39 8c-13 3-23 9-29 18 7 1 14 0 20-2l20-8Z"></path>
+            </svg>
+            <span class="logo-text-brand" style="font-size: 14px;">BIOPAGE</span>
+        </a>
+        <div>© 2026 biopage. All rights reserved.</div>
+        <div style="display:flex; gap:16px;">
+            <a href="/login" style="color:inherit; text-decoration:none; font-weight:600;">Đăng nhập</a>
+            <a href="/register" style="color:inherit; text-decoration:none; font-weight:600;">Đăng ký</a>
+        </div>
+    </footer>
+
+    <script>
+        function toggleFaq(element) {
+            element.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
