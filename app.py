@@ -1,16 +1,17 @@
 import os
+from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, session
 from werkzeug.security import generate_password_hash, check_password_hash
 import psycopg2
 
 app = Flask(__name__)
+load_dotenv()
 
 # Đọc khóa bí mật từ biến môi trường
-app.secret_key = os.environ.get("SECRET_KEY", "biopage_secret_key_123")
+app.secret_key = os.environ.get("SECRET_KEY")
 
 # Đọc link Database từ biến môi trường
 DB_URL = os.environ.get("DATABASE_URL")
-
 def get_db():
     return psycopg2.connect(DB_URL)
 

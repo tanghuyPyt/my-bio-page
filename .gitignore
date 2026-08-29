@@ -1,4 +1,6 @@
 .env
 __pycache__/
 *.pyc
-bio_database.db
+venv/
+.venv/
+*.db
