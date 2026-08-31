@@ -7,83 +7,342 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-        body { background-color: #f8fafc; color: #0f172a; min-height: 100vh; padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 380px; gap: 28px; align-items: start; }
+        
+        /* Nền Gradient mờ ảo chuẩn Glassmorphism */
+        body {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #cbd5e1 100%);
+            color: #0f172a;
+            min-height: 100vh;
+            padding: 24px 16px;
+            position: relative;
+        }
 
-        .admin-nav { grid-column: 1 / -1; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 50px; padding: 10px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03); margin-bottom: 8px; }
-        .logo-vector-link { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: #000; }
-        .logo-icon-svg { height: 26px; width: auto; color: #000; }
-        .logo-text-brand { font-size: 16px; font-weight: 800; letter-spacing: 0.2em; color: #000; }
+        /* Vệt sáng trang trí tạo chiều sâu kính */
+        body::before, body::after {
+            content: "";
+            position: fixed;
+            width: 350px;
+            height: 350px;
+            border-radius: 50%;
+            filter: blur(90px);
+            z-index: -1;
+            opacity: 0.6;
+        }
+        body::before {
+            background: #93c5fd;
+            top: 5%;
+            left: 10%;
+        }
+        body::after {
+            background: #fbcfe8;
+            bottom: 10%;
+            right: 15%;
+        }
+
+        .container {
+            max-width: 1220px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 390px;
+            gap: 28px;
+            align-items: start;
+        }
+
+        /* Navigation Glass */
+        .admin-nav {
+            grid-column: 1 / -1;
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 30px;
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+            margin-bottom: 8px;
+        }
+        .logo-vector-link { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: #0f172a; }
+        .logo-icon-svg { height: 26px; width: auto; color: #0f172a; }
+        .logo-text-brand { font-size: 17px; font-weight: 800; letter-spacing: 0.2em; color: #0f172a; }
         .nav-actions { display: flex; align-items: center; gap: 12px; }
-        .btn-view-bio { background: #0f172a; color: #ffffff; text-decoration: none; font-size: 13px; font-weight: 600; padding: 8px 16px; border-radius: 30px; display: inline-flex; align-items: center; gap: 6px; }
-        .btn-logout { color: #ef4444; text-decoration: none; font-size: 13px; font-weight: 600; padding: 8px 12px; }
+        .btn-view-bio {
+            background: rgba(15, 23, 42, 0.9);
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 9px 18px;
+            border-radius: 25px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        .btn-view-bio:hover { background: #000; transform: translateY(-1px); }
+        .btn-logout {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 9px 16px;
+            border-radius: 25px;
+            transition: all 0.2s;
+        }
+        .btn-logout:hover { background: rgba(239, 68, 68, 0.2); }
 
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
-        .stat-card { background: #ffffff; border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 18px; padding: 16px; display: flex; align-items: center; gap: 12px; }
-        .stat-icon { width: 42px; height: 42px; border-radius: 12px; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 18px; }
-        .stat-info span { font-size: 12px; color: #64748b; display: block; }
+        /* Stats Grid Glass */
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+        .stat-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            padding: 16px 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.04);
+        }
+        .stat-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+        .stat-info span { font-size: 12px; color: #64748b; font-weight: 600; display: block; }
         .stat-info b { font-size: 18px; font-weight: 800; color: #0f172a; }
 
-        .qr-copy-card { background: #ffffff; border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 20px; padding: 18px 20px; display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
-        .qr-img { width: 70px; height: 70px; border-radius: 10px; border: 1px solid #e2e8f0; padding: 4px; }
+        /* Copy Link Card Glass */
+        .qr-copy-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 22px;
+            padding: 18px 22px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 22px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.04);
+        }
+        .qr-img { width: 68px; height: 68px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.9); padding: 4px; background: #fff; }
         .link-copy-wrap { flex: 1; display: flex; flex-direction: column; gap: 6px; }
-        .link-copy-wrap label { font-size: 12px; font-weight: 600; color: #64748b; }
+        .link-copy-wrap label { font-size: 12px; font-weight: 700; color: #64748b; }
         .link-copy-bar { display: flex; gap: 8px; }
-        .link-copy-bar input { flex: 1; padding: 8px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 13px; font-weight: 600; outline: none; }
-        .btn-copy { background: #0f172a; color: #ffffff; border: none; padding: 8px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; }
+        .link-copy-bar input {
+            flex: 1;
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            outline: none;
+        }
+        .btn-copy {
+            background: #0f172a;
+            color: #ffffff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-copy:hover { transform: scale(1.02); }
 
-        .tabs-header { display: flex; gap: 6px; background: #e2e8f0; padding: 5px; border-radius: 14px; margin-bottom: 18px; overflow-x: auto; }
-        .tab-btn { flex: 1; padding: 10px; border: none; background: transparent; color: #64748b; font-size: 13px; font-weight: 700; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; }
-        .tab-btn.active { background: #ffffff; color: #0f172a; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); }
+        /* Tabs Header Glass */
+        .tabs-header {
+            display: flex;
+            gap: 8px;
+            background: rgba(226, 232, 240, 0.5);
+            backdrop-filter: blur(12px);
+            padding: 6px;
+            border-radius: 18px;
+            margin-bottom: 22px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 11px;
+            border: none;
+            background: transparent;
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 700;
+            border-radius: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            transition: all 0.2s ease;
+        }
+        .tab-btn.active {
+            background: rgba(255, 255, 255, 0.9);
+            color: #0f172a;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+        }
         .badge-count { background: #ef4444; color: #fff; font-size: 11px; padding: 2px 7px; border-radius: 10px; }
 
         .tab-pane { display: none; }
         .tab-pane.active { display: block; }
 
-        .content-card { background: #ffffff; border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 20px; padding: 24px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02); margin-bottom: 20px; }
-        .content-card h2 { font-size: 16px; font-weight: 800; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+        /* Content Card Glass */
+        .content-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            border-radius: 24px;
+            padding: 26px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.04);
+            margin-bottom: 22px;
+        }
+        .content-card h2 { font-size: 16px; font-weight: 800; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; color: #0f172a; }
 
-        .form-group { margin-bottom: 16px; display: flex; flex-direction: column; gap: 6px; }
-        .form-group label { font-size: 13px; font-weight: 600; color: #475569; }
-        input[type="text"], input[type="url"], textarea { width: 100%; padding: 11px 14px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; font-size: 14px; outline: none; }
-        input:focus, textarea:focus { border-color: #0f172a; background: #ffffff; }
+        .form-group { margin-bottom: 18px; display: flex; flex-direction: column; gap: 7px; }
+        .form-group label { font-size: 13px; font-weight: 700; color: #475569; }
+        input[type="text"], input[type="url"], textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            border-radius: 14px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s;
+        }
+        input:focus, textarea:focus {
+            border-color: #0f172a;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.05);
+        }
 
-        .upload-section { display: grid; grid-template-columns: 120px 1fr; gap: 16px; align-items: center; margin-bottom: 18px; padding: 14px; background: #f8fafc; border-radius: 16px; border: 1px dashed #cbd5e1; }
-        .avatar-uploader { position: relative; width: 100px; height: 100px; cursor: pointer; }
-        .avatar-uploader img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid #ffffff; }
-        .avatar-uploader .upload-overlay { position: absolute; bottom: 0; right: 0; width: 32px; height: 32px; background: #0f172a; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; border: 2px solid #fff; }
-        .banner-uploader { width: 100%; height: 100px; border-radius: 12px; overflow: hidden; position: relative; cursor: pointer; border: 2px solid #fff; }
+        /* Image Upload Glass */
+        .upload-section {
+            display: grid;
+            grid-template-columns: 110px 1fr;
+            gap: 16px;
+            align-items: center;
+            margin-bottom: 18px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 18px;
+            border: 1px dashed rgba(148, 163, 184, 0.6);
+        }
+        .avatar-uploader { position: relative; width: 92px; height: 92px; cursor: pointer; }
+        .avatar-uploader img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .avatar-uploader .upload-overlay { position: absolute; bottom: 0; right: 0; width: 30px; height: 30px; background: #0f172a; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; border: 2px solid #fff; }
+        .banner-uploader { width: 100%; height: 92px; border-radius: 14px; overflow: hidden; position: relative; cursor: pointer; border: 2px solid #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         .banner-uploader img { width: 100%; height: 100%; object-fit: cover; }
-        .banner-overlay-text { position: absolute; bottom: 8px; right: 8px; background: rgba(15, 23, 42, 0.75); color: #fff; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .banner-overlay-text { position: absolute; bottom: 8px; right: 8px; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(4px); color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; }
 
-        .theme-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 18px; }
-        .theme-box { border: 2px solid #e2e8f0; border-radius: 12px; padding: 10px 4px; text-align: center; cursor: pointer; font-size: 11px; font-weight: 700; }
+        /* Themes Glass */
+        .theme-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 20px; }
+        .theme-box {
+            border: 1.5px solid rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 14px;
+            padding: 12px 6px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
         .theme-box input { display: none; }
-        .theme-box.active { border-color: #0f172a; background: #f1f5f9; }
-        .theme-circle { width: 22px; height: 22px; border-radius: 50%; margin: 0 auto 6px; }
+        .theme-box.active {
+            border-color: #0f172a;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transform: translateY(-2px);
+        }
+        .theme-circle { width: 24px; height: 24px; border-radius: 50%; margin: 0 auto 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
 
-        .btn-save { width: 100%; padding: 13px; background: #0f172a; color: #ffffff; border: none; border-radius: 50px; font-size: 14px; font-weight: 700; cursor: pointer; }
+        .btn-save {
+            width: 100%;
+            padding: 14px;
+            background: #0f172a;
+            color: #ffffff;
+            border: none;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.15);
+        }
+        .btn-save:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(15, 23, 42, 0.2); }
 
-        .link-row { display: flex; justify-content: space-between; align-items: center; padding: 14px; background: #f8fafc; border-radius: 14px; border: 1px solid #e2e8f0; margin-bottom: 10px; }
-        .link-title-text { font-size: 14px; font-weight: 700; }
+        /* Link Rows Glass */
+        .link-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.65);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            margin-bottom: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+        }
+        .link-title-text { font-size: 14px; font-weight: 700; color: #0f172a; }
         .link-url-text { font-size: 12px; color: #64748b; text-decoration: none; max-width: 240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; }
-        .click-badge { background: #e2e8f0; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; }
-        .btn-del { color: #ef4444; text-decoration: none; font-size: 15px; }
+        .click-badge { background: rgba(241, 245, 249, 0.9); padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; color: #475569; }
+        .btn-del { color: #ef4444; text-decoration: none; font-size: 15px; padding: 6px; transition: transform 0.2s; }
+        .btn-del:hover { transform: scale(1.15); }
 
-        /* Bảng lịch hẹn */
-        .app-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
-        .app-table th { text-align: left; padding: 10px; background: #f1f5f9; border-bottom: 1px solid #cbd5e1; color: #475569; }
-        .app-table td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
-        .status-badge { padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: 700; }
+        /* Table Glass */
+        .app-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 13px; }
+        .app-table th { text-align: left; padding: 12px 10px; background: rgba(241, 245, 249, 0.6); border-bottom: 1px solid rgba(203, 213, 225, 0.6); color: #475569; font-weight: 700; }
+        .app-table td { padding: 14px 10px; border-bottom: 1px solid rgba(241, 245, 249, 0.8); vertical-align: middle; }
+        .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
         .status-pending { background: #fef3c7; color: #d97706; }
         .status-done { background: #dcfce7; color: #15803d; }
 
-        .preview-sticky { position: sticky; top: 20px; display: flex; flex-direction: column; align-items: center; }
-        .mockup-frame { width: 340px; height: 680px; background: #000; border-radius: 44px; border: 10px solid #0f172a; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15); position: relative; overflow: hidden; }
-        .mockup-notch { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 90px; height: 20px; background: #0f172a; border-radius: 20px; z-index: 10; }
+        /* Mockup Preview */
+        .preview-sticky { position: sticky; top: 24px; display: flex; flex-direction: column; align-items: center; }
+        .mockup-frame {
+            width: 350px;
+            height: 700px;
+            background: #000;
+            border-radius: 46px;
+            border: 11px solid #0f172a;
+            box-shadow: 0 24px 70px rgba(15, 23, 42, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        .mockup-notch {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 96px;
+            height: 22px;
+            background: #0f172a;
+            border-radius: 20px;
+            z-index: 10;
+        }
         .mockup-iframe { width: 100%; height: 100%; border: none; }
 
-        @media (max-width: 950px) { .container { grid-template-columns: 1fr; } .preview-sticky { display: none; } .theme-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 950px) {
+            .container { grid-template-columns: 1fr; }
+            .preview-sticky { display: none; }
+            .theme-grid { grid-template-columns: repeat(3, 1fr); }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -91,7 +350,9 @@
 <div class="container">
     <header class="admin-nav">
         <a href="/" class="logo-vector-link">
-            <svg class="logo-icon-svg" viewBox="0 0 180 220" fill="currentColor"><path d="M24 12h86c34 0 61 25 61 57 0 20-10 37-27 47 18 10 28 26 28 47 0 35-28 59-66 64l-33 5c-26 4-43 21-47 42H4c4-35 25-58 62-64l38-6c25-4 40-18 40-37 0-13-7-23-20-30-9 7-21 12-36 14l-28 5c-20 4-31 13-35 26H4v-40c0-25 20-47 54-54l40-8c24-5 39-19 39-38 0-16-13-28-30-28H46v89H24V12Zm48 133 28-5c10-2 18-5 25-10-8-2-16-3-25-1l-39 8c-13 3-23 9-29 18 7 1 14 0 20-2l20-8Z"></path></svg>
+            <svg class="logo-icon-svg" viewBox="0 0 180 220" fill="currentColor">
+                <path d="M24 12h86c34 0 61 25 61 57 0 20-10 37-27 47 18 10 28 26 28 47 0 35-28 59-66 64l-33 5c-26 4-43 21-47 42H4c4-35 25-58 62-64l38-6c25-4 40-18 40-37 0-13-7-23-20-30-9 7-21 12-36 14l-28 5c-20 4-31 13-35 26H4v-40c0-25 20-47 54-54l40-8c24-5 39-19 39-38 0-16-13-28-30-28H46v89H24V12Zm48 133 28-5c10-2 18-5 25-10-8-2-16-3-25-1l-39 8c-13 3-23 9-29 18 7 1 14 0 20-2l20-8Z"></path>
+            </svg>
             <span class="logo-text-brand">BIOPAGE</span>
         </a>
         <div class="nav-actions">
@@ -105,7 +366,7 @@
         {% for item in links %}{% set total_clicks.value = total_clicks.value + (item[3] or 0) %}{% endfor %}
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-icon"><i class="fa-solid fa-chart-line"></i></div>
+                <div class="stat-icon"><i class="fa-solid fa-chart-line" style="color: #0284c7;"></i></div>
                 <div class="stat-info"><span>Tổng lượt click</span><b>{{ total_clicks.value }}</b></div>
             </div>
             <div class="stat-card">
@@ -113,7 +374,7 @@
                 <div class="stat-info"><span>Khách đặt lịch</span><b>{{ appointments|length if appointments else 0 }}</b></div>
             </div>
             <div class="stat-card">
-                <div class="stat-icon"><i class="fa-solid fa-user-check"></i></div>
+                <div class="stat-icon"><i class="fa-solid fa-user-check" style="color: #10b981;"></i></div>
                 <div class="stat-info"><span>Tài khoản</span><b style="font-size: 15px;">{{ user.username }}</b></div>
             </div>
         </div>
@@ -121,7 +382,7 @@
         <div class="qr-copy-card">
             <img class="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://my-bio-page.onrender.com/{{ user.username }}" alt="QR Code">
             <div class="link-copy-wrap">
-                <label>Đường dẫn trang Bio của bạn</label>
+                <label>Đường dẫn trang Bio / Business của bạn</label>
                 <div class="link-copy-bar">
                     <input type="text" id="bioUrlInput" value="https://my-bio-page.onrender.com/{{ user.username }}" readonly>
                     <button class="btn-copy" onclick="copyBioLink()"><i class="fa-regular fa-copy"></i> Copy</button>
@@ -132,7 +393,7 @@
         <div class="tabs-header">
             <button class="tab-btn active" onclick="switchTab('tab-profile', this)"><i class="fa-solid fa-palette"></i> Giao diện</button>
             <button class="tab-btn" onclick="switchTab('tab-links', this)"><i class="fa-solid fa-link"></i> Liên kết</button>
-            <button class="tab-btn" onclick="switchTab('tab-social', this)"><i class="fa-solid fa-phone"></i> Liên hệ</button>
+            <button class="tab-btn" onclick="switchTab('tab-social', this)"><i class="fa-solid fa-phone"></i> Liên hệ & Zalo</button>
             <button class="tab-btn" onclick="switchTab('tab-appointments', this)">
                 <i class="fa-solid fa-calendar-days"></i> Khách Hẹn
                 {% if appointments %}<span class="badge-count">{{ appointments|length }}</span>{% endif %}
@@ -184,7 +445,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group"><label>Tên Hiển Thị</label><input type="text" name="fullname" value="{{ user.fullname }}" required></div>
+                    <div class="form-group"><label>Tên Hiển Thị / Cơ Sở</label><input type="text" name="fullname" value="{{ user.fullname }}" required></div>
                     <div class="form-group"><label>Mô tả ngắn</label><textarea name="bio" rows="2">{{ user.bio }}</textarea></div>
                     <button type="submit" class="btn-save">Lưu Giao Diện</button>
                 </form>
@@ -194,16 +455,16 @@
         <!-- TAB 2: QUẢN LÝ LIÊN KẾT -->
         <div id="tab-links" class="tab-pane">
             <div class="content-card">
-                <h2><i class="fa-solid fa-plus-circle"></i> Thêm Liên Kết</h2>
+                <h2><i class="fa-solid fa-plus-circle"></i> Thêm Liên Kết Dịch Vụ</h2>
                 <form method="POST">
                     <input type="hidden" name="add_link" value="1">
-                    <div class="form-group"><label>Tên nút</label><input type="text" name="title" required></div>
-                    <div class="form-group"><label>URL</label><input type="url" name="url" required></div>
-                    <button type="submit" class="btn-save">Thêm</button>
+                    <div class="form-group"><label>Tên nút hiển thị</label><input type="text" name="title" placeholder="VD: Bảng giá, TikTok, Fanpage..." required></div>
+                    <div class="form-group"><label>Đường dẫn (URL)</label><input type="url" name="url" placeholder="https://..." required></div>
+                    <button type="submit" class="btn-save">Thêm Liên Kết</button>
                 </form>
             </div>
             <div class="content-card">
-                <h2><i class="fa-solid fa-list-ul"></i> Danh Sách</h2>
+                <h2><i class="fa-solid fa-list-ul"></i> Danh Sách Liên Kết</h2>
                 {% if links %}{% for item in links %}
                 <div class="link-row">
                     <div><span class="link-title-text">{{ item[1] }}</span><a href="{{ item[2] }}" target="_blank" class="link-url-text">{{ item[2] }}</a></div>
@@ -216,17 +477,17 @@
         <!-- TAB 3: LIÊN HỆ -->
         <div id="tab-social" class="tab-pane">
             <div class="content-card">
-                <h2><i class="fa-solid fa-headset"></i> Kênh Liên Hệ</h2>
+                <h2><i class="fa-solid fa-headset"></i> Kênh Tư Vấn & Chốt Khách</h2>
                 <form method="POST">
                     <input type="hidden" name="update_profile" value="1">
                     <input type="hidden" name="fullname" value="{{ user.fullname }}"><input type="hidden" name="bio" value="{{ user.bio }}"><input type="hidden" name="avatar_url" value="{{ user.avatar_url }}"><input type="hidden" name="banner_url" value="{{ user.banner_url }}"><input type="hidden" name="theme" value="{{ user.theme }}">
-                    <div class="form-group"><label><i class="fa-solid fa-comment-dots" style="color: #0068ff;"></i> SĐT Zalo:</label><input type="text" name="zalo" value="{{ user.zalo }}"></div>
-                    <div class="form-group"><label><i class="fa-solid fa-phone" style="color: #22c55e;"></i> Hotline:</label><input type="text" name="phone" value="{{ user.phone }}"></div>
+                    <div class="form-group"><label><i class="fa-solid fa-comment-dots" style="color: #0068ff;"></i> SĐT Zalo:</label><input type="text" name="zalo" value="{{ user.zalo }}" placeholder="0912345678"></div>
+                    <div class="form-group"><label><i class="fa-solid fa-phone" style="color: #22c55e;"></i> Hotline gọi nhanh:</label><input type="text" name="phone" value="{{ user.phone }}" placeholder="0912345678"></div>
                     <div class="form-group"><label><i class="fa-solid fa-location-dot" style="color: #ef4444;"></i> Địa chỉ:</label><input type="text" name="address" value="{{ user.address }}"></div>
-                    <div class="form-group"><label><i class="fa-brands fa-facebook" style="color: #1877f2;"></i> Facebook:</label><input type="url" name="social_fb" value="{{ user.social_fb }}"></div>
-                    <div class="form-group"><label><i class="fa-brands fa-tiktok"></i> TikTok:</label><input type="url" name="social_tiktok" value="{{ user.social_tiktok }}"></div>
-                    <div class="form-group"><label><i class="fa-brands fa-instagram" style="color: #e1306c;"></i> Instagram:</label><input type="url" name="social_ig" value="{{ user.social_ig }}"></div>
-                    <button type="submit" class="btn-save">Lưu Liên Hệ</button>
+                    <div class="form-group"><label><i class="fa-brands fa-facebook" style="color: #1877f2;"></i> Link Facebook:</label><input type="url" name="social_fb" value="{{ user.social_fb }}"></div>
+                    <div class="form-group"><label><i class="fa-brands fa-tiktok"></i> Link TikTok:</label><input type="url" name="social_tiktok" value="{{ user.social_tiktok }}"></div>
+                    <div class="form-group"><label><i class="fa-brands fa-instagram" style="color: #e1306c;"></i> Link Instagram:</label><input type="url" name="social_ig" value="{{ user.social_ig }}"></div>
+                    <button type="submit" class="btn-save">Lưu Kênh Liên Hệ</button>
                 </form>
             </div>
         </div>
@@ -234,7 +495,7 @@
         <!-- TAB 4: DANH SÁCH ĐẶT LỊCH HẸN -->
         <div id="tab-appointments" class="tab-pane">
             <div class="content-card">
-                <h2><i class="fa-solid fa-calendar-check" style="color: #2563eb;"></i> Khách Hàng Đặt Hẹn</h2>
+                <h2><i class="fa-solid fa-calendar-check" style="color: #2563eb;"></i> Danh Sách Khách Đặt Hẹn</h2>
                 {% if appointments %}
                     <table class="app-table">
                         <thead><tr><th>Khách hàng</th><th>SĐT Zalo</th><th>Ghi chú</th><th>Thời gian</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
@@ -258,7 +519,7 @@
                         </tbody>
                     </table>
                 {% else %}
-                    <div style="text-align:center; color:#94a3b8; padding:30px 0;"><i class="fa-solid fa-inbox" style="font-size:32px; display:block;"></i>Chưa có yêu cầu.</div>
+                    <div style="text-align:center; color:#94a3b8; padding:30px 0;"><i class="fa-solid fa-inbox" style="font-size:32px; margin-bottom:8px; display:block;"></i>Chưa có yêu cầu đặt lịch nào.</div>
                 {% endif %}
             </div>
         </div>
