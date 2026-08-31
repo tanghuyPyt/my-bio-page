@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 import psycopg2
 import re
@@ -16,8 +16,9 @@ DB_URL = os.environ.get("DATABASE_URL")
 RESERVED_USERNAMES = {
     "admin", "login", "register", "logout", "delete",
     "click", "static", "api", "index", "home", "about",
-    "contact", "help", "settings", "dashboard", "assets"
+    "contact", "help", "settings", "dashboard", "assets", "book"
 }
+
 def get_db():
     return psycopg2.connect(DB_URL)
 
@@ -36,6 +37,7 @@ def init_db():
             theme TEXT DEFAULT 'dark',
             address TEXT DEFAULT '',
             phone TEXT DEFAULT '',
+            zalo TEXT DEFAULT '',
             social_ig TEXT DEFAULT '',
             social_tiktok TEXT DEFAULT '',
             social_fb TEXT DEFAULT '',
@@ -46,11 +48,12 @@ def init_db():
     cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS banner_url TEXT DEFAULT '';")
     cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS address TEXT DEFAULT '';")
     cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS phone TEXT DEFAULT '';")
+    cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS zalo TEXT DEFAULT '';")
     cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS social_ig TEXT DEFAULT '';")
     cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS social_tiktok TEXT DEFAULT '';")
     cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS social_fb TEXT DEFAULT '';")
     cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS social_yt TEXT DEFAULT '';")
-    
+   
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS links (
             id SERIAL PRIMARY KEY,
@@ -60,13 +63,26 @@ def init_db():
             clicks INTEGER DEFAULT 0
         );
     ''')
+    
+    # Bảng khách đặt lịch tư vấn
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS appointments (
+            id SERIAL PRIMARY KEY,
+            username TEXT NOT NULL,
+            customer_name TEXT NOT NULL,
+            customer_phone TEXT NOT NULL,
+            service_note TEXT DEFAULT '',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            status TEXT DEFAULT 'pending'
+        );
+    ''')
     conn.commit()
     cursor.close()
     conn.close()
 
 init_db()
 
-# 1. Trang chủ Landing Page (Hiển thị index.html thay vì chuyển hướng login)
+# 1. Trang chủ Landing Page
 @app.route("/")
 def index():
     is_logged_in = "user" in session
@@ -75,11 +91,6 @@ def index():
 
 # 2. Đăng Ký
 @app.route("/register", methods=["GET", "POST"])
-def register():
-    error = None
-    # Lấy sẵn username nếu người dùng gõ từ ô ở trang chủ
-    suggested_username = request.args.get("username", "")
-
 def register():
     error = None
     suggested_username = request.args.get("username", "")
@@ -159,52 +170,61 @@ def admin():
     conn = get_db()
     cursor = conn.cursor()
 
-    if request.method == "POST" and "add_link" in request.form:
-        title = request.form.get("title", "").strip()
-        url = request.form.get("url", "").strip()
+    if request.method == "POST":
+        if "add_link" in request.form:
+            title = request.form.get("title", "").strip()
+            url = request.form.get("url", "").strip()
 
-        if title and url and (url.startswith("http://") or url.startswith("https://")):
-            cursor.execute("INSERT INTO links (username, title, url, clicks) VALUES (%s, %s, %s, 0)", (current_user, title, url))
+            if title and url and (url.startswith("http://") or url.startswith("https://")):
+                cursor.execute("INSERT INTO links (username, title, url, clicks) VALUES (%s, %s, %s, 0)", (current_user, title, url))
+                conn.commit()
+
+        elif "update_profile" in request.form:
+            fullname = request.form.get("fullname")
+            bio = request.form.get("bio")
+            avatar_url = request.form.get("avatar_url")
+            banner_url = request.form.get("banner_url")
+            theme = request.form.get("theme", "dark")
+            address = request.form.get("address", "").strip()
+            phone = request.form.get("phone", "").strip()
+            zalo = request.form.get("zalo", "").strip()
+            social_ig = request.form.get("social_ig", "").strip()
+            social_tiktok = request.form.get("social_tiktok", "").strip()
+            social_fb = request.form.get("social_fb", "").strip()
+            social_yt = request.form.get("social_yt", "").strip()
+
+            cursor.execute("""
+                UPDATE users SET
+                fullname = %s, bio = %s, avatar_url = %s, banner_url = %s,
+                theme = %s, address = %s, phone = %s, zalo = %s, social_ig = %s,
+                social_tiktok = %s, social_fb = %s, social_yt = %s
+                WHERE username = %s
+            """, (fullname, bio, avatar_url, banner_url, theme, address, phone, zalo, social_ig, social_tiktok, social_fb, social_yt, current_user))
             conn.commit()
 
-        cursor.close()
-        conn.close()
-        return redirect("/admin")
+        elif "update_appointment_status" in request.form:
+            app_id = request.form.get("appointment_id")
+            new_status = request.form.get("status", "done")
+            cursor.execute("UPDATE appointments SET status=%s WHERE id=%s AND username=%s", (new_status, app_id, current_user))
+            conn.commit()
 
-    if request.method == "POST" and "update_profile" in request.form:
-        fullname = request.form.get("fullname")
-        bio = request.form.get("bio")
-        avatar_url = request.form.get("avatar_url")
-        banner_url = request.form.get("banner_url")
-        theme = request.form.get("theme", "dark")
-        address = request.form.get("address", "").strip()
-        phone = request.form.get("phone", "").strip()
-        social_ig = request.form.get("social_ig", "").strip()
-        social_tiktok = request.form.get("social_tiktok", "").strip()
-        social_fb = request.form.get("social_fb", "").strip()
-        social_yt = request.form.get("social_yt", "").strip()
-
-        cursor.execute("""
-            UPDATE users SET
-            fullname = %s, bio = %s, avatar_url = %s, banner_url = %s,
-            theme = %s, address = %s, phone = %s, social_ig = %s,
-            social_tiktok = %s, social_fb = %s, social_yt = %s
-            WHERE username = %s
-        """, (fullname, bio, avatar_url, banner_url, theme, address, phone, social_ig, social_tiktok, social_fb, social_yt, current_user))
-        conn.commit()
-        cursor.close()
-        conn.close()
         return redirect("/admin")
 
     cursor.execute("""
         SELECT fullname, bio, avatar_url, banner_url, theme, address, phone,
-        social_ig, social_tiktok, social_fb, social_yt
+        social_ig, social_tiktok, social_fb, social_yt, zalo
         FROM users WHERE username = %s
     """, (current_user,))
     user_data = cursor.fetchone()
 
     cursor.execute("SELECT id, title, url, clicks FROM links WHERE username = %s ORDER BY id ASC", (current_user,))
     links = cursor.fetchall()
+
+    cursor.execute("""
+        SELECT id, customer_name, customer_phone, service_note, TO_CHAR(created_at, 'HH24:MI DD/MM/YYYY'), status 
+        FROM appointments WHERE username = %s ORDER BY id DESC
+    """, (current_user,))
+    appointments = cursor.fetchall()
 
     cursor.close()
     conn.close()
@@ -221,10 +241,11 @@ def admin():
         "social_ig": user_data[7] if user_data and user_data[7] else "",
         "social_tiktok": user_data[8] if user_data and user_data[8] else "",
         "social_fb": user_data[9] if user_data and user_data[9] else "",
-        "social_yt": user_data[10] if user_data and user_data[10] else ""
+        "social_yt": user_data[10] if user_data and user_data[10] else "",
+        "zalo": user_data[11] if user_data and len(user_data) > 11 and user_data[11] else ""
     }
 
-    return render_template("admin.html", links=links, user=user_info)
+    return render_template("admin.html", links=links, user=user_info, appointments=appointments)
 
 # 6. Xóa link
 @app.route("/delete/<int:link_id>")
@@ -236,6 +257,21 @@ def delete_link(link_id):
     conn = get_db()
     cursor = conn.cursor()
     cursor.execute("DELETE FROM links WHERE id = %s AND username = %s", (link_id, current_user))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return redirect("/admin")
+
+# Xóa lịch hẹn
+@app.route("/delete_appointment/<int:app_id>")
+def delete_appointment(app_id):
+    if "user" not in session:
+        return redirect("/login")
+    
+    current_user = session["user"]
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM appointments WHERE id = %s AND username = %s", (app_id, current_user))
     conn.commit()
     cursor.close()
     conn.close()
@@ -257,15 +293,44 @@ def track_click(link_id):
         return redirect(target_url[0])
     return redirect("/")
 
-# 8. Xem Bio công khai
+# 8. Gửi yêu cầu đặt lịch (AJAX)
+@app.route("/book/<username>", methods=["POST"])
+def book_appointment(username):
+    target_username = username.strip().lower()
+    name = (request.form.get("customer_name") or "").strip()
+    phone = (request.form.get("customer_phone") or "").strip()
+    note = (request.form.get("service_note") or "").strip()
+
+    if not name or not phone:
+        return jsonify({"success": False, "message": "Vui lòng nhập tên và số điện thoại!"}), 400
+
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id FROM users WHERE username = %s", (target_username,))
+    if not cursor.fetchone():
+        cursor.close()
+        conn.close()
+        return jsonify({"success": False, "message": "Tài khoản không tồn tại!"}), 404
+
+    cursor.execute("""
+        INSERT INTO appointments (username, customer_name, customer_phone, service_note)
+        VALUES (%s, %s, %s, %s)
+    """, (target_username, name, phone, note))
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return jsonify({"success": True, "message": "Gửi thông tin thành công! Cơ sở sẽ liên hệ lại sớm nhất."})
+
+# 9. Xem Bio công khai
 @app.route("/<username>")
 def user_bio(username):
     username = username.strip().lower()
     conn = get_db()
     cursor = conn.cursor()
     cursor.execute("""
-        SELECT fullname, bio, avatar_url, banner_url, theme, address, phone, 
-               social_ig, social_tiktok, social_fb, social_yt 
+        SELECT fullname, bio, avatar_url, banner_url, theme, address, phone,
+               social_ig, social_tiktok, social_fb, social_yt, zalo
         FROM users WHERE username = %s
     """, (username,))
     user_data = cursor.fetchone()
@@ -281,6 +346,7 @@ def user_bio(username):
     conn.close()
 
     user_info = {
+        "username": username,
         "name": user_data[0] if user_data[0] else username,
         "bio": user_data[1] if user_data[1] else "",
         "avatar": user_data[2] if user_data[2] else "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150",
@@ -291,7 +357,8 @@ def user_bio(username):
         "social_ig": user_data[7] if user_data[7] else "",
         "social_tiktok": user_data[8] if user_data[8] else "",
         "social_fb": user_data[9] if user_data[9] else "",
-        "social_yt": user_data[10] if user_data[10] else ""
+        "social_yt": user_data[10] if user_data[10] else "",
+        "zalo": user_data[11] if user_data and len(user_data) > 11 and user_data[11] else ""
     }
     return render_template("bio.html", user=user_info, links=my_links)
 
