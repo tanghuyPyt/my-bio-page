@@ -43,7 +43,6 @@
             grid-column: 1 / -1;
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.85);
             border-radius: 24px;
             padding: 10px 20px;
@@ -76,7 +75,6 @@
             font-size: 11px;
             font-weight: 600;
             cursor: pointer;
-            transition: opacity 0.2s;
         }
         .btn-qr-mini {
             background: rgba(15, 23, 42, 0.08);
@@ -116,7 +114,6 @@
             padding: 10px 16px;
             margin-bottom: 16px;
             font-size: 13px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
         }
         .stats-item { display: flex; align-items: center; gap: 8px; color: #475569; }
         .stats-item b { color: #0f172a; font-weight: 800; }
@@ -147,7 +144,6 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-            transition: all 0.2s;
         }
         .tab-btn.active {
             background: rgba(255, 255, 255, 0.95);
@@ -159,11 +155,9 @@
         .tab-pane { display: none; }
         .tab-pane.active { display: block; }
 
-        /* Content Card Glass */
         .content-card {
             background: rgba(255, 255, 255, 0.65);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.9);
             border-radius: 22px;
             padding: 22px;
@@ -172,70 +166,78 @@
         }
         .content-card h2 { font-size: 15px; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; color: #0f172a; }
 
-        /* Unified Profile Header (Avatar overlap Banner) */
+        /* KHUNG AVATAR & BANNER GỌN GÀNG */
         .profile-cover-area {
             position: relative;
-            margin-bottom: 45px;
+            height: 90px;
+            margin-bottom: 30px;
         }
         .banner-box-admin {
             width: 100%;
-            height: 110px;
-            border-radius: 16px;
+            height: 80px;
+            border-radius: 14px;
             overflow: hidden;
-            background: #e2e8f0;
+            background: #0f172a;
             position: relative;
             cursor: pointer;
+            display: block;
             border: 1px solid rgba(255,255,255,0.8);
         }
-        .banner-box-admin img { width: 100%; height: 100%; object-fit: cover; }
+        .banner-box-admin img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
         .banner-edit-label {
             position: absolute;
-            top: 8px;
+            top: 6px;
             right: 8px;
-            background: rgba(15, 23, 42, 0.7);
+            background: rgba(15, 23, 42, 0.75);
             color: #fff;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 10px;
             font-weight: 600;
         }
         .avatar-box-admin {
             position: absolute;
-            bottom: -35px;
-            left: 18px;
-            width: 76px;
-            height: 76px;
+            bottom: -15px;
+            left: 14px;
+            width: 58px;
+            height: 58px;
             border-radius: 50%;
-            border: 3.5px solid #ffffff;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+            border: 2.5px solid #ffffff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.12);
             overflow: hidden;
             cursor: pointer;
             background: #fff;
+            display: block;
+            z-index: 5;
         }
-        .avatar-box-admin img { width: 100%; height: 100%; object-fit: cover; }
+        .avatar-box-admin img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .avatar-edit-overlay {
             position: absolute;
             bottom: 0;
             width: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.6);
             color: #fff;
-            font-size: 9px;
+            font-size: 8px;
             text-align: center;
-            padding: 2px 0;
+            padding: 1px 0;
         }
 
         /* Color Dots Theme Picker */
-        .theme-dots-wrap { display: flex; gap: 12px; margin-bottom: 18px; align-items: center; }
+        .theme-dots-wrap { display: flex; gap: 12px; margin-bottom: 16px; align-items: center; }
         .theme-dot-btn {
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             border: 2px solid transparent;
             cursor: pointer;
-            position: relative;
             transition: transform 0.2s;
         }
-        .theme-dot-btn.active { border-color: #0f172a; transform: scale(1.15); box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+        .theme-dot-btn.active { border-color: #0f172a; transform: scale(1.15); }
         .theme-dot-btn input { display: none; }
 
         .form-group { margin-bottom: 14px; display: flex; flex-direction: column; gap: 6px; }
@@ -248,9 +250,8 @@
             border-radius: 12px;
             font-size: 13px;
             outline: none;
-            transition: all 0.2s;
         }
-        input:focus, textarea:focus { border-color: #0f172a; background: #fff; box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.05); }
+        input:focus, textarea:focus { border-color: #0f172a; background: #fff; }
 
         .btn-save {
             width: 100%;
@@ -262,11 +263,9 @@
             font-size: 13px;
             font-weight: 700;
             cursor: pointer;
-            transition: transform 0.2s;
         }
-        .btn-save:hover { transform: translateY(-1px); }
 
-        /* Links List Minimal */
+        /* Links List */
         .link-row {
             display: flex;
             justify-content: space-between;
@@ -282,7 +281,7 @@
         .click-badge { background: #f1f5f9; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; color: #475569; }
         .btn-del { color: #ef4444; text-decoration: none; font-size: 14px; padding: 4px 6px; }
 
-        /* Table minimal */
+        /* Table */
         .app-table { width: 100%; border-collapse: collapse; font-size: 12px; }
         .app-table th { text-align: left; padding: 10px 8px; background: rgba(241, 245, 249, 0.6); color: #475569; font-weight: 700; }
         .app-table td { padding: 12px 8px; border-bottom: 1px solid rgba(241, 245, 249, 0.8); }
@@ -315,7 +314,7 @@
         }
         .mockup-iframe { width: 100%; height: 100%; border: none; }
 
-        /* Popup QR Modal */
+        /* Modal QR */
         .qr-modal {
             display: none;
             position: fixed;
@@ -332,8 +331,6 @@
             padding: 24px;
             border-radius: 20px;
             text-align: center;
-            position: relative;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         }
         .qr-modal-card img { width: 180px; height: 180px; }
 
@@ -347,7 +344,6 @@
 <body>
 
 <div class="container">
-    <!-- Top Navbar -->
     <header class="admin-nav">
         <a href="/" class="logo-wrap">
             <svg class="logo-svg" viewBox="0 0 180 220" fill="currentColor">
@@ -356,7 +352,6 @@
             <span class="logo-brand">BIOPAGE</span>
         </a>
 
-        <!-- Mini Link Bar tích hợp ngay Header -->
         <div class="nav-center-bar">
             <span class="bio-link-text">my-bio-page.onrender.com/{{ user.username }}</span>
             <input type="hidden" id="bioUrlInput" value="https://my-bio-page.onrender.com/{{ user.username }}">
@@ -370,9 +365,7 @@
         </div>
     </header>
 
-    <!-- Left Column -->
     <div class="left-col">
-        <!-- Stats Mini Strip -->
         {% set total_clicks = namespace(value=0) %}
         {% for item in links %}{% set total_clicks.value = total_clicks.value + (item[3] or 0) %}{% endfor %}
         <div class="stats-mini-strip">
@@ -383,7 +376,6 @@
             <div class="stats-item"><i class="fa-solid fa-circle-user" style="color: #10b981;"></i> <b>{{ user.username }}</b></div>
         </div>
 
-        <!-- Navigation Tabs -->
         <div class="tabs-header">
             <button class="tab-btn active" onclick="switchTab('tab-profile', this)"><i class="fa-solid fa-palette"></i> Giao diện</button>
             <button class="tab-btn" onclick="switchTab('tab-links', this)"><i class="fa-solid fa-link"></i> Liên kết</button>
@@ -435,7 +427,7 @@
                         </div>
                     </div>
 
-                    <!-- Profile Header Unified -->
+                    <!-- KHUNG AVATAR & BANNER ĐÃ ĐƯỢC THU GỌN -->
                     <div class="profile-cover-area">
                         <label for="banner_file_input" class="banner-box-admin" title="Bấm để đổi ảnh bìa">
                             <img id="banner_img_preview" src="{{ user.banner_url or 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=800' }}">
@@ -491,7 +483,7 @@
             </div>
         </div>
 
-        <!-- TAB 3: LIÊN HỆ & ZALO -->
+        <!-- TAB 3: LIÊN HỆ -->
         <div id="tab-social" class="tab-pane">
             <div class="content-card">
                 <h2><i class="fa-solid fa-headset"></i> Kênh Chốt Khách</h2>
@@ -503,12 +495,12 @@
                     <input type="hidden" name="banner_url" value="{{ user.banner_url }}">
                     <input type="hidden" name="theme" value="{{ user.theme }}">
 
-                    <div class="form-group"><label><i class="fa-solid fa-comment-dots" style="color: #0068ff;"></i> SĐT Zalo (Tự tạo link chat Zalo):</label><input type="text" name="zalo" value="{{ user.zalo }}" placeholder="VD: 0912345678"></div>
-                    <div class="form-group"><label><i class="fa-solid fa-phone" style="color: #22c55e;"></i> Hotline gọi nhanh:</label><input type="text" name="phone" value="{{ user.phone }}" placeholder="VD: 0912345678"></div>
-                    <div class="form-group"><label><i class="fa-solid fa-location-dot" style="color: #ef4444;"></i> Địa chỉ cơ sở:</label><input type="text" name="address" value="{{ user.address }}"></div>
-                    <div class="form-group"><label><i class="fa-brands fa-facebook" style="color: #1877f2;"></i> Link Facebook:</label><input type="url" name="social_fb" value="{{ user.social_fb }}"></div>
-                    <div class="form-group"><label><i class="fa-brands fa-tiktok"></i> Link TikTok:</label><input type="url" name="social_tiktok" value="{{ user.social_tiktok }}"></div>
-                    <div class="form-group"><label><i class="fa-brands fa-instagram" style="color: #e1306c;"></i> Link Instagram:</label><input type="url" name="social_ig" value="{{ user.social_ig }}"></div>
+                    <div class="form-group"><label><i class="fa-solid fa-comment-dots" style="color: #0068ff;"></i> SĐT Zalo:</label><input type="text" name="zalo" value="{{ user.zalo }}" placeholder="0912345678"></div>
+                    <div class="form-group"><label><i class="fa-solid fa-phone" style="color: #22c55e;"></i> Hotline:</label><input type="text" name="phone" value="{{ user.phone }}" placeholder="0912345678"></div>
+                    <div class="form-group"><label><i class="fa-solid fa-location-dot" style="color: #ef4444;"></i> Địa chỉ:</label><input type="text" name="address" value="{{ user.address }}"></div>
+                    <div class="form-group"><label><i class="fa-brands fa-facebook" style="color: #1877f2;"></i> Facebook:</label><input type="url" name="social_fb" value="{{ user.social_fb }}"></div>
+                    <div class="form-group"><label><i class="fa-brands fa-tiktok"></i> TikTok:</label><input type="url" name="social_tiktok" value="{{ user.social_tiktok }}"></div>
+                    <div class="form-group"><label><i class="fa-brands fa-instagram" style="color: #e1306c;"></i> Instagram:</label><input type="url" name="social_ig" value="{{ user.social_ig }}"></div>
                     <button type="submit" class="btn-save">Lưu Liên Hệ</button>
                 </form>
             </div>
@@ -517,7 +509,7 @@
         <!-- TAB 4: KHÁCH HẸN -->
         <div id="tab-appointments" class="tab-pane">
             <div class="content-card">
-                <h2><i class="fa-solid fa-calendar-check" style="color: #6366f1;"></i> Danh Sách Khách Đặt Hẹn</h2>
+                <h2><i class="fa-solid fa-calendar-check" style="color: #6366f1;"></i> Khách Đặt Hẹn</h2>
                 {% if appointments %}
                     <table class="app-table">
                         <thead><tr><th>Khách hàng</th><th>SĐT Zalo</th><th>Ghi chú</th><th>Thời gian</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
@@ -547,7 +539,7 @@
         </div>
     </div>
 
-    <!-- Live Preview Sticky -->
+    <!-- Live Preview -->
     <div class="preview-sticky">
         <div style="font-size: 12px; font-weight: 700; color: #64748b; margin-bottom: 8px;"><i class="fa-solid fa-mobile-screen"></i> Xem trước trực tiếp</div>
         <div class="mockup-frame">
@@ -557,7 +549,6 @@
     </div>
 </div>
 
-<!-- Modal QR Code -->
 <div id="qrModalBox" class="qr-modal" onclick="toggleQRModal(false)">
     <div class="qr-modal-card" onclick="event.stopPropagation()">
         <h4 style="font-size:14px; margin-bottom:12px;">Mã QR Bio của bạn</h4>
