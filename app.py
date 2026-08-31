@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, session
 from werkzeug.security import generate_password_hash, check_password_hash
 import psycopg2
+import re
 
 app = Flask(__name__)
 load_dotenv()
@@ -12,6 +13,11 @@ app.secret_key = os.environ.get("SECRET_KEY")
 
 # Đọc link Database từ biến môi trường
 DB_URL = os.environ.get("DATABASE_URL")
+RESERVED_USERNAMES = {
+    "admin", "login", "register", "logout", "delete",
+    "click", "static", "api", "index", "home", "about",
+    "contact", "help", "settings", "dashboard", "assets"
+}
 def get_db():
     return psycopg2.connect(DB_URL)
 
@@ -74,11 +80,29 @@ def register():
     # Lấy sẵn username nếu người dùng gõ từ ô ở trang chủ
     suggested_username = request.args.get("username", "")
 
+def register():
+    error = None
+    suggested_username = request.args.get("username", "")
+
     if request.method == "POST":
         username = request.form.get("username").strip().lower()
         password = request.form.get("password")
         fullname = request.form.get("fullname")
         bio = request.form.get("bio")
+
+        # --- Validate username ---
+        if not re.match(r"^[a-z0-9_]{3,20}$", username):
+            error = "Tên đăng nhập chỉ được chứa chữ thường, số, dấu gạch dưới, từ 3-20 ký tự."
+            return render_template("register.html", error=error, suggested_username=suggested_username)
+
+        if username in RESERVED_USERNAMES:
+            error = "Tên đăng nhập này không thể sử dụng, vui lòng chọn tên khác."
+            return render_template("register.html", error=error, suggested_username=suggested_username)
+
+        # --- Validate password ---
+        if not password or len(password) < 6:
+            error = "Mật khẩu phải có ít nhất 6 ký tự."
+            return render_template("register.html", error=error, suggested_username=suggested_username)
 
         hashed_password = generate_password_hash(password)
 
@@ -136,14 +160,16 @@ def admin():
     cursor = conn.cursor()
 
     if request.method == "POST" and "add_link" in request.form:
-        title = request.form.get("title")
-        url = request.form.get("url")
-        if title and url:
+        title = request.form.get("title", "").strip()
+        url = request.form.get("url", "").strip()
+
+        if title and url and (url.startswith("http://") or url.startswith("https://")):
             cursor.execute("INSERT INTO links (username, title, url, clicks) VALUES (%s, %s, %s, 0)", (current_user, title, url))
             conn.commit()
-            cursor.close()
-            conn.close()
-            return redirect("/admin")
+
+        cursor.close()
+        conn.close()
+        return redirect("/admin")
 
     if request.method == "POST" and "update_profile" in request.form:
         fullname = request.form.get("fullname")
@@ -159,10 +185,10 @@ def admin():
         social_yt = request.form.get("social_yt", "").strip()
 
         cursor.execute("""
-            UPDATE users SET 
-                fullname = %s, bio = %s, avatar_url = %s, banner_url = %s, 
-                theme = %s, address = %s, phone = %s, social_ig = %s, 
-                social_tiktok = %s, social_fb = %s, social_yt = %s 
+            UPDATE users SET
+            fullname = %s, bio = %s, avatar_url = %s, banner_url = %s,
+            theme = %s, address = %s, phone = %s, social_ig = %s,
+            social_tiktok = %s, social_fb = %s, social_yt = %s
             WHERE username = %s
         """, (fullname, bio, avatar_url, banner_url, theme, address, phone, social_ig, social_tiktok, social_fb, social_yt, current_user))
         conn.commit()
@@ -171,14 +197,15 @@ def admin():
         return redirect("/admin")
 
     cursor.execute("""
-        SELECT fullname, bio, avatar_url, banner_url, theme, address, phone, 
-               social_ig, social_tiktok, social_fb, social_yt 
+        SELECT fullname, bio, avatar_url, banner_url, theme, address, phone,
+        social_ig, social_tiktok, social_fb, social_yt
         FROM users WHERE username = %s
     """, (current_user,))
     user_data = cursor.fetchone()
-    
+
     cursor.execute("SELECT id, title, url, clicks FROM links WHERE username = %s ORDER BY id ASC", (current_user,))
     links = cursor.fetchall()
+
     cursor.close()
     conn.close()
 
@@ -196,6 +223,7 @@ def admin():
         "social_fb": user_data[9] if user_data and user_data[9] else "",
         "social_yt": user_data[10] if user_data and user_data[10] else ""
     }
+
     return render_template("admin.html", links=links, user=user_info)
 
 # 6. Xóa link
