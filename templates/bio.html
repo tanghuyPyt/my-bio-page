@@ -30,11 +30,12 @@
         .social-icon-btn { font-size: 22px; color: inherit; text-decoration: none; opacity: 0.85; transition: transform 0.2s; }
         .social-icon-btn:hover { transform: translateY(-3px) scale(1.15); opacity: 1; }
 
-        .cta-action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .cta-btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; border-radius: 14px; text-decoration: none; font-size: 14px; font-weight: 700; box-shadow: 0 4px 15px rgba(0,0,0,0.12); transition: transform 0.2s; }
+        .cta-action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+        .cta-btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; border-radius: 14px; text-decoration: none; font-size: 14px; font-weight: 700; box-shadow: 0 4px 15px rgba(0,0,0,0.12); border: none; cursor: pointer; transition: transform 0.2s; }
         .cta-btn:hover { transform: translateY(-2px); }
         .cta-zalo { background: #0068ff; color: #ffffff; }
         .cta-phone { background: #22c55e; color: #ffffff; }
+        .cta-book { background: #6366f1; color: #ffffff; grid-column: 1 / -1; }
 
         .links { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
         .link-card { display: flex; align-items: center; justify-content: center; position: relative; background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.2); color: inherit; text-decoration: none; padding: 14px 20px; border-radius: 50px; font-size: 15px; font-weight: 600; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); }
@@ -44,6 +45,21 @@
         .link-card i { position: absolute; left: 20px; font-size: 18px; }
 
         .footer-branding { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); font-size: 13px; font-weight: 600; opacity: 0.6; text-decoration: none; color: inherit; white-space: nowrap; }
+
+        /* Popup Đặt Lịch */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 9999; opacity: 0; transition: opacity 0.3s ease; }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        .modal-content { background: #ffffff; color: #0f172a; width: 90%; max-width: 400px; border-radius: 24px; padding: 24px; position: relative; transform: translateY(20px); transition: transform 0.3s ease; box-shadow: 0 20px 40px rgba(0,0,0,0.2); text-align: left; }
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+        body.theme-dark .modal-content, body.theme-ocean .modal-content { background: #1e293b; color: #f8fafc; }
+        
+        .close-modal { position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 20px; color: inherit; cursor: pointer; opacity: 0.6; }
+        .modal-header h3 { font-size: 18px; font-weight: 800; margin-bottom: 6px; }
+        .modal-header p { font-size: 13px; opacity: 0.8; margin-bottom: 20px; }
+        .modal-input { width: 100%; padding: 12px 14px; margin-bottom: 12px; border: 1px solid #cbd5e1; border-radius: 12px; font-size: 14px; outline: none; background: #f8fafc; color: #0f172a; }
+        body.theme-dark .modal-input, body.theme-ocean .modal-input { background: #0f172a; border-color: #334155; color: #f8fafc; }
+        .modal-submit-btn { width: 100%; padding: 14px; background: #2563eb; color: #fff; border: none; border-radius: 14px; font-size: 15px; font-weight: 700; cursor: pointer; transition: transform 0.2s; }
+        .modal-submit-btn:active { transform: scale(0.98); }
     </style>
 </head>
 <body class="theme-{{ user.theme }}">
@@ -61,19 +77,19 @@
             </div>
             <p class="bio">{{ user.bio }}</p>
 
-            {% if user.zalo or user.phone %}
+            <!-- Kênh liên hệ & Nút mở Popup Đặt Lịch -->
             <div class="cta-action-grid">
                 {% if user.zalo %}<a href="https://zalo.me/{{ user.zalo }}" target="_blank" class="cta-btn cta-zalo"><i class="fa-solid fa-comment-dots"></i> Nhắn Zalo</a>{% endif %}
                 {% if user.phone %}<a href="tel:{{ user.phone }}" class="cta-btn cta-phone"><i class="fa-solid fa-phone"></i> Gọi Hotline</a>{% endif %}
+                <button class="cta-btn cta-book" onclick="openModal()"><i class="fa-solid fa-calendar-plus"></i> Đặt Lịch / Nhận Tư Vấn</button>
             </div>
-            {% endif %}
 
             <div class="social-bar">
                 {% if user.social_fb %}<a href="{{ user.social_fb }}" target="_blank" class="social-icon-btn"><i class="fa-brands fa-facebook"></i></a>{% endif %}
                 {% if user.social_tiktok %}<a href="{{ user.social_tiktok }}" target="_blank" class="social-icon-btn"><i class="fa-brands fa-tiktok"></i></a>{% endif %}
                 {% if user.social_ig %}<a href="{{ user.social_ig }}" target="_blank" class="social-icon-btn"><i class="fa-brands fa-instagram"></i></a>{% endif %}
                 {% if user.social_yt %}<a href="{{ user.social_yt }}" target="_blank" class="social-icon-btn"><i class="fa-brands fa-youtube"></i></a>{% endif %}
-                {% if user.address %}<a href="https://www.google.com/maps/search/?api=1&query={{ user.address }}" target="_blank" class="social-icon-btn" title="Chỉ đường Google Maps"><i class="fa-solid fa-location-dot"></i></a>{% endif %}
+                {% if user.address %}<a href="https://www.google.com/maps/search/?api=1&query={{ user.address }}" target="_blank" class="social-icon-btn"><i class="fa-solid fa-location-dot"></i></a>{% endif %}
             </div>
 
             <div class="links">
@@ -86,9 +102,27 @@
         </div>
     </div>
 
+    <!-- Khung Modal Ẩn -->
+    <div id="bookingModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+            <div class="modal-header">
+                <h3>Đặt Lịch Tư Vấn</h3>
+                <p>Để lại thông tin, chúng tôi sẽ liên hệ với bạn sớm nhất!</p>
+            </div>
+            <form id="bookingForm">
+                <input type="text" name="customer_name" class="modal-input" placeholder="Họ và tên của bạn *" required>
+                <input type="tel" name="customer_phone" class="modal-input" placeholder="Số điện thoại Zalo *" required>
+                <textarea name="service_note" class="modal-input" rows="2" placeholder="Dịch vụ cần tư vấn (tùy chọn)"></textarea>
+                <button type="submit" class="modal-submit-btn" id="btnSubmitBook">Gửi Yêu Cầu Hẹn</button>
+            </form>
+        </div>
+    </div>
+
     <a href="/" target="_blank" class="footer-branding">Tạo trang Bio cá nhân miễn phí ✨</a>
 
     <script>
+        // Xử lý Icon
         document.querySelectorAll('.link-card').forEach(card => {
             const url = (card.getAttribute('data-url') || '').toLowerCase();
             const icon = card.querySelector('i');
@@ -98,6 +132,31 @@
             else if (url.includes('youtube.com') || url.includes('youtu.be')) icon.className = 'fa-brands fa-youtube';
             else if (url.includes('shopee.vn') || url.includes('lazada.vn')) icon.className = 'fa-solid fa-bag-shopping';
             else icon.className = 'fa-solid fa-arrow-up-right-from-square';
+        });
+
+        // Xử lý Modal
+        const modal = document.getElementById('bookingModal');
+        function openModal() { modal.classList.add('active'); }
+        function closeModal() { modal.classList.remove('active'); }
+        window.onclick = function(event) { if (event.target == modal) closeModal(); }
+
+        // Gửi Form
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnSubmitBook');
+            btn.innerText = 'Đang gửi...'; btn.disabled = true;
+
+            fetch('/book/{{ user.username }}', { method: 'POST', body: new FormData(this) })
+            .then(res => res.json())
+            .then(data => {
+                alert(data.message);
+                if(data.success) { this.reset(); closeModal(); }
+                btn.innerText = 'Gửi Yêu Cầu Hẹn'; btn.disabled = false;
+            })
+            .catch(err => {
+                alert('Có lỗi xảy ra, vui lòng thử lại sau!');
+                btn.innerText = 'Gửi Yêu Cầu Hẹn'; btn.disabled = false;
+            });
         });
     </script>
 </body>

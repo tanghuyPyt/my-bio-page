@@ -10,11 +10,7 @@
         body { background-color: #f8fafc; color: #0f172a; min-height: 100vh; padding: 20px; }
         .container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 380px; gap: 28px; align-items: start; }
 
-        .admin-nav {
-            grid-column: 1 / -1; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(16px);
-            border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 50px; padding: 10px 24px;
-            display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03); margin-bottom: 8px;
-        }
+        .admin-nav { grid-column: 1 / -1; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 50px; padding: 10px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03); margin-bottom: 8px; }
         .logo-vector-link { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: #000; }
         .logo-icon-svg { height: 26px; width: auto; color: #000; }
         .logo-text-brand { font-size: 16px; font-weight: 800; letter-spacing: 0.2em; color: #000; }
@@ -82,7 +78,6 @@
         .status-pending { background: #fef3c7; color: #d97706; }
         .status-done { background: #dcfce7; color: #15803d; }
 
-        /* Preview Điện thoại */
         .preview-sticky { position: sticky; top: 20px; display: flex; flex-direction: column; align-items: center; }
         .mockup-frame { width: 340px; height: 680px; background: #000; border-radius: 44px; border: 10px solid #0f172a; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15); position: relative; overflow: hidden; }
         .mockup-notch { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 90px; height: 20px; background: #0f172a; border-radius: 20px; z-index: 10; }
@@ -96,9 +91,7 @@
 <div class="container">
     <header class="admin-nav">
         <a href="/" class="logo-vector-link">
-            <svg class="logo-icon-svg" viewBox="0 0 180 220" fill="currentColor">
-                <path d="M24 12h86c34 0 61 25 61 57 0 20-10 37-27 47 18 10 28 26 28 47 0 35-28 59-66 64l-33 5c-26 4-43 21-47 42H4c4-35 25-58 62-64l38-6c25-4 40-18 40-37 0-13-7-23-20-30-9 7-21 12-36 14l-28 5c-20 4-31 13-35 26H4v-40c0-25 20-47 54-54l40-8c24-5 39-19 39-38 0-16-13-28-30-28H46v89H24V12Zm48 133 28-5c10-2 18-5 25-10-8-2-16-3-25-1l-39 8c-13 3-23 9-29 18 7 1 14 0 20-2l20-8Z"></path>
-            </svg>
+            <svg class="logo-icon-svg" viewBox="0 0 180 220" fill="currentColor"><path d="M24 12h86c34 0 61 25 61 57 0 20-10 37-27 47 18 10 28 26 28 47 0 35-28 59-66 64l-33 5c-26 4-43 21-47 42H4c4-35 25-58 62-64l38-6c25-4 40-18 40-37 0-13-7-23-20-30-9 7-21 12-36 14l-28 5c-20 4-31 13-35 26H4v-40c0-25 20-47 54-54l40-8c24-5 39-19 39-38 0-16-13-28-30-28H46v89H24V12Zm48 133 28-5c10-2 18-5 25-10-8-2-16-3-25-1l-39 8c-13 3-23 9-29 18 7 1 14 0 20-2l20-8Z"></path></svg>
             <span class="logo-text-brand">BIOPAGE</span>
         </a>
         <div class="nav-actions">
@@ -108,7 +101,6 @@
     </header>
 
     <div class="left-col">
-        <!-- Stats -->
         {% set total_clicks = namespace(value=0) %}
         {% for item in links %}{% set total_clicks.value = total_clicks.value + (item[3] or 0) %}{% endfor %}
         <div class="stats-grid">
@@ -126,11 +118,10 @@
             </div>
         </div>
 
-        <!-- Copy Link Box -->
         <div class="qr-copy-card">
             <img class="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://my-bio-page.onrender.com/{{ user.username }}" alt="QR Code">
             <div class="link-copy-wrap">
-                <label>Đường dẫn trang Bio / Business của bạn</label>
+                <label>Đường dẫn trang Bio của bạn</label>
                 <div class="link-copy-bar">
                     <input type="text" id="bioUrlInput" value="https://my-bio-page.onrender.com/{{ user.username }}" readonly>
                     <button class="btn-copy" onclick="copyBioLink()"><i class="fa-regular fa-copy"></i> Copy</button>
@@ -138,13 +129,12 @@
             </div>
         </div>
 
-        <!-- Tabs Header -->
         <div class="tabs-header">
             <button class="tab-btn active" onclick="switchTab('tab-profile', this)"><i class="fa-solid fa-palette"></i> Giao diện</button>
             <button class="tab-btn" onclick="switchTab('tab-links', this)"><i class="fa-solid fa-link"></i> Liên kết</button>
-            <button class="tab-btn" onclick="switchTab('tab-social', this)"><i class="fa-solid fa-phone"></i> Zalo & Liên hệ</button>
+            <button class="tab-btn" onclick="switchTab('tab-social', this)"><i class="fa-solid fa-phone"></i> Liên hệ</button>
             <button class="tab-btn" onclick="switchTab('tab-appointments', this)">
-                <i class="fa-solid fa-calendar-days"></i> Khách Đặt Hẹn
+                <i class="fa-solid fa-calendar-days"></i> Khách Hẹn
                 {% if appointments %}<span class="badge-count">{{ appointments|length }}</span>{% endif %}
             </button>
         </div>
@@ -168,43 +158,25 @@
                     <div class="form-group">
                         <label>Bộ màu giao diện (Themes):</label>
                         <div class="theme-grid">
-                            <label class="theme-box {% if user.theme == 'dark' %}active{% endif %}">
-                                <input type="radio" name="theme" value="dark" {% if user.theme == 'dark' %}checked{% endif %} onchange="selectTheme(this)">
-                                <div class="theme-circle" style="background: linear-gradient(135deg, #0f172a, #1e1b4b);"></div>Dark
-                            </label>
-                            <label class="theme-box {% if user.theme == 'warm' %}active{% endif %}">
-                                <input type="radio" name="theme" value="warm" {% if user.theme == 'warm' %}checked{% endif %} onchange="selectTheme(this)">
-                                <div class="theme-circle" style="background: linear-gradient(135deg, #f5ebe0, #d5bdaf);"></div>Latte
-                            </label>
-                            <label class="theme-box {% if user.theme == 'sunset' %}active{% endif %}">
-                                <input type="radio" name="theme" value="sunset" {% if user.theme == 'sunset' %}checked{% endif %} onchange="selectTheme(this)">
-                                <div class="theme-circle" style="background: linear-gradient(135deg, #f97316, #db2777);"></div>Sunset
-                            </label>
-                            <label class="theme-box {% if user.theme == 'neon' %}active{% endif %}">
-                                <input type="radio" name="theme" value="neon" {% if user.theme == 'neon' %}checked{% endif %} onchange="selectTheme(this)">
-                                <div class="theme-circle" style="background: linear-gradient(135deg, #059669, #0284c7);"></div>Neon
-                            </label>
-                            <label class="theme-box {% if user.theme == 'pastel' %}active{% endif %}">
-                                <input type="radio" name="theme" value="pastel" {% if user.theme == 'pastel' %}checked{% endif %} onchange="selectTheme(this)">
-                                <div class="theme-circle" style="background: linear-gradient(135deg, #fbcfe8, #c7d2fe);"></div>Pastel
-                            </label>
-                            <label class="theme-box {% if user.theme == 'ocean' %}active{% endif %}">
-                                <input type="radio" name="theme" value="ocean" {% if user.theme == 'ocean' %}checked{% endif %} onchange="selectTheme(this)">
-                                <div class="theme-circle" style="background: linear-gradient(135deg, #0284c7, #0f172a);"></div>Ocean
-                            </label>
+                            <label class="theme-box {% if user.theme == 'dark' %}active{% endif %}"><input type="radio" name="theme" value="dark" {% if user.theme == 'dark' %}checked{% endif %} onchange="selectTheme(this)"><div class="theme-circle" style="background: linear-gradient(135deg, #0f172a, #1e1b4b);"></div>Dark</label>
+                            <label class="theme-box {% if user.theme == 'warm' %}active{% endif %}"><input type="radio" name="theme" value="warm" {% if user.theme == 'warm' %}checked{% endif %} onchange="selectTheme(this)"><div class="theme-circle" style="background: linear-gradient(135deg, #f5ebe0, #d5bdaf);"></div>Latte</label>
+                            <label class="theme-box {% if user.theme == 'sunset' %}active{% endif %}"><input type="radio" name="theme" value="sunset" {% if user.theme == 'sunset' %}checked{% endif %} onchange="selectTheme(this)"><div class="theme-circle" style="background: linear-gradient(135deg, #f97316, #db2777);"></div>Sunset</label>
+                            <label class="theme-box {% if user.theme == 'neon' %}active{% endif %}"><input type="radio" name="theme" value="neon" {% if user.theme == 'neon' %}checked{% endif %} onchange="selectTheme(this)"><div class="theme-circle" style="background: linear-gradient(135deg, #059669, #0284c7);"></div>Neon</label>
+                            <label class="theme-box {% if user.theme == 'pastel' %}active{% endif %}"><input type="radio" name="theme" value="pastel" {% if user.theme == 'pastel' %}checked{% endif %} onchange="selectTheme(this)"><div class="theme-circle" style="background: linear-gradient(135deg, #fbcfe8, #c7d2fe);"></div>Pastel</label>
+                            <label class="theme-box {% if user.theme == 'ocean' %}active{% endif %}"><input type="radio" name="theme" value="ocean" {% if user.theme == 'ocean' %}checked{% endif %} onchange="selectTheme(this)"><div class="theme-circle" style="background: linear-gradient(135deg, #0284c7, #0f172a);"></div>Ocean</label>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label>Ảnh đại diện & Ảnh bìa:</label>
                         <div class="upload-section">
-                            <label for="avatar_file_input" class="avatar-uploader" title="Chọn ảnh đại diện">
+                            <label for="avatar_file_input" class="avatar-uploader">
                                 <img id="avatar_img_preview" src="{{ user.avatar_url or 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150' }}">
                                 <div class="upload-overlay"><i class="fa-solid fa-camera"></i></div>
                             </label>
                             <input type="file" id="avatar_file_input" accept="image/*" style="display: none;" onchange="processImage(this, 'avatar_base64', 'avatar_img_preview')">
 
-                            <label for="banner_file_input" class="banner-uploader" title="Chọn ảnh bìa">
+                            <label for="banner_file_input" class="banner-uploader">
                                 <img id="banner_img_preview" src="{{ user.banner_url or 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=800' }}">
                                 <div class="banner-overlay-text"><i class="fa-solid fa-panorama"></i> Đổi ảnh bìa</div>
                             </label>
@@ -212,14 +184,8 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label>Tên Thương Hiệu / Cơ Sở</label>
-                        <input type="text" name="fullname" value="{{ user.fullname }}" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Mô tả ngắn dịch vụ / Câu chào</label>
-                        <textarea name="bio" rows="2">{{ user.bio }}</textarea>
-                    </div>
+                    <div class="form-group"><label>Tên Hiển Thị</label><input type="text" name="fullname" value="{{ user.fullname }}" required></div>
+                    <div class="form-group"><label>Mô tả ngắn</label><textarea name="bio" rows="2">{{ user.bio }}</textarea></div>
                     <button type="submit" class="btn-save">Lưu Giao Diện</button>
                 </form>
             </div>
@@ -228,85 +194,39 @@
         <!-- TAB 2: QUẢN LÝ LIÊN KẾT -->
         <div id="tab-links" class="tab-pane">
             <div class="content-card">
-                <h2><i class="fa-solid fa-plus-circle"></i> Thêm Liên Kết Dịch Vụ / Sản Phẩm</h2>
+                <h2><i class="fa-solid fa-plus-circle"></i> Thêm Liên Kết</h2>
                 <form method="POST">
                     <input type="hidden" name="add_link" value="1">
-                    <div class="form-group">
-                        <label>Tên nút hiển thị</label>
-                        <input type="text" name="title" placeholder="VD: Bảng giá dịch vụ, Đặt lịch Shopee..." required>
-                    </div>
-                    <div class="form-group">
-                        <label>Đường dẫn (URL)</label>
-                        <input type="url" name="url" placeholder="https://..." required>
-                    </div>
-                    <button type="submit" class="btn-save">Thêm Liên Kết</button>
+                    <div class="form-group"><label>Tên nút</label><input type="text" name="title" required></div>
+                    <div class="form-group"><label>URL</label><input type="url" name="url" required></div>
+                    <button type="submit" class="btn-save">Thêm</button>
                 </form>
             </div>
-
             <div class="content-card">
-                <h2><i class="fa-solid fa-list-ul"></i> Danh Sách Liên Kết</h2>
-                {% if links %}
-                    {% for item in links %}
-                        <div class="link-row">
-                            <div>
-                                <span class="link-title-text">{{ item[1] }}</span>
-                                <a href="{{ item[2] }}" target="_blank" class="link-url-text">{{ item[2] }}</a>
-                            </div>
-                            <div style="display:flex; align-items:center; gap:12px;">
-                                <span class="click-badge"><i class="fa-solid fa-eye"></i> {{ item[3] }}</span>
-                                <a href="/delete/{{ item[0] }}" class="btn-del" onclick="return confirm('Bạn có chắc muốn xóa link này?');"><i class="fa-solid fa-trash-can"></i></a>
-                            </div>
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    <p style="text-align: center; color: #94a3b8; font-size: 13px; padding: 20px 0;">Chưa có liên kết nào.</p>
-                {% endif %}
+                <h2><i class="fa-solid fa-list-ul"></i> Danh Sách</h2>
+                {% if links %}{% for item in links %}
+                <div class="link-row">
+                    <div><span class="link-title-text">{{ item[1] }}</span><a href="{{ item[2] }}" target="_blank" class="link-url-text">{{ item[2] }}</a></div>
+                    <div style="display:flex; align-items:center; gap:12px;"><span class="click-badge"><i class="fa-solid fa-eye"></i> {{ item[3] }}</span><a href="/delete/{{ item[0] }}" class="btn-del"><i class="fa-solid fa-trash-can"></i></a></div>
+                </div>
+                {% endfor %}{% endif %}
             </div>
         </div>
 
-        <!-- TAB 3: ZALO & LIÊN HỆ -->
+        <!-- TAB 3: LIÊN HỆ -->
         <div id="tab-social" class="tab-pane">
             <div class="content-card">
-                <h2><i class="fa-solid fa-headset"></i> Kênh Tư Vấn & Chốt Khách</h2>
+                <h2><i class="fa-solid fa-headset"></i> Kênh Liên Hệ</h2>
                 <form method="POST">
                     <input type="hidden" name="update_profile" value="1">
-                    <input type="hidden" name="fullname" value="{{ user.fullname }}">
-                    <input type="hidden" name="bio" value="{{ user.bio }}">
-                    <input type="hidden" name="avatar_url" value="{{ user.avatar_url }}">
-                    <input type="hidden" name="banner_url" value="{{ user.banner_url }}">
-                    <input type="hidden" name="theme" value="{{ user.theme }}">
-
-                    <div class="form-group">
-                        <label><i class="fa-solid fa-comment-dots" style="color: #0068ff;"></i> Số điện thoại Zalo (Tự tạo link chat Zalo trực tiếp):</label>
-                        <input type="text" name="zalo" value="{{ user.zalo }}" placeholder="VD: 0912345678">
-                    </div>
-
-                    <div class="form-group">
-                        <label><i class="fa-solid fa-phone" style="color: #22c55e;"></i> Hotline gọi nhanh:</label>
-                        <input type="text" name="phone" value="{{ user.phone }}" placeholder="VD: 0912345678">
-                    </div>
-
-                    <div class="form-group">
-                        <label><i class="fa-solid fa-location-dot" style="color: #ef4444;"></i> Địa chỉ cơ sở (Bấm vào sẽ mở Google Maps):</label>
-                        <input type="text" name="address" value="{{ user.address }}" placeholder="VD: 123 Lê Duẩn, TP Vinh...">
-                    </div>
-
-                    <div class="form-group">
-                        <label><i class="fa-brands fa-facebook" style="color: #1877f2;"></i> Link Fanpage Facebook:</label>
-                        <input type="url" name="social_fb" value="{{ user.social_fb }}" placeholder="https://facebook.com/...">
-                    </div>
-
-                    <div class="form-group">
-                        <label><i class="fa-brands fa-tiktok"></i> Link TikTok:</label>
-                        <input type="url" name="social_tiktok" value="{{ user.social_tiktok }}" placeholder="https://tiktok.com/@...">
-                    </div>
-
-                    <div class="form-group">
-                        <label><i class="fa-brands fa-instagram" style="color: #e1306c;"></i> Link Instagram:</label>
-                        <input type="url" name="social_ig" value="{{ user.social_ig }}" placeholder="https://instagram.com/...">
-                    </div>
-
-                    <button type="submit" class="btn-save">Lưu Kênh Liên Hệ</button>
+                    <input type="hidden" name="fullname" value="{{ user.fullname }}"><input type="hidden" name="bio" value="{{ user.bio }}"><input type="hidden" name="avatar_url" value="{{ user.avatar_url }}"><input type="hidden" name="banner_url" value="{{ user.banner_url }}"><input type="hidden" name="theme" value="{{ user.theme }}">
+                    <div class="form-group"><label><i class="fa-solid fa-comment-dots" style="color: #0068ff;"></i> SĐT Zalo:</label><input type="text" name="zalo" value="{{ user.zalo }}"></div>
+                    <div class="form-group"><label><i class="fa-solid fa-phone" style="color: #22c55e;"></i> Hotline:</label><input type="text" name="phone" value="{{ user.phone }}"></div>
+                    <div class="form-group"><label><i class="fa-solid fa-location-dot" style="color: #ef4444;"></i> Địa chỉ:</label><input type="text" name="address" value="{{ user.address }}"></div>
+                    <div class="form-group"><label><i class="fa-brands fa-facebook" style="color: #1877f2;"></i> Facebook:</label><input type="url" name="social_fb" value="{{ user.social_fb }}"></div>
+                    <div class="form-group"><label><i class="fa-brands fa-tiktok"></i> TikTok:</label><input type="url" name="social_tiktok" value="{{ user.social_tiktok }}"></div>
+                    <div class="form-group"><label><i class="fa-brands fa-instagram" style="color: #e1306c;"></i> Instagram:</label><input type="url" name="social_ig" value="{{ user.social_ig }}"></div>
+                    <button type="submit" class="btn-save">Lưu Liên Hệ</button>
                 </form>
             </div>
         </div>
@@ -314,41 +234,22 @@
         <!-- TAB 4: DANH SÁCH ĐẶT LỊCH HẸN -->
         <div id="tab-appointments" class="tab-pane">
             <div class="content-card">
-                <h2><i class="fa-solid fa-calendar-check" style="color: #2563eb;"></i> Danh Sách Khách Hàng Đặt Hẹn</h2>
+                <h2><i class="fa-solid fa-calendar-check" style="color: #2563eb;"></i> Khách Hàng Đặt Hẹn</h2>
                 {% if appointments %}
                     <table class="app-table">
-                        <thead>
-                            <tr>
-                                <th>Khách hàng</th>
-                                <th>Số điện thoại</th>
-                                <th>Nhu cầu / Dịch vụ</th>
-                                <th>Thời gian</th>
-                                <th>Trạng thái</th>
-                                <th>Thao tác</th>
-                            </tr>
-                        </thead>
+                        <thead><tr><th>Khách hàng</th><th>SĐT Zalo</th><th>Ghi chú</th><th>Thời gian</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
                         <tbody>
                             {% for app in appointments %}
                             <tr>
                                 <td><b>{{ app[1] }}</b></td>
-                                <td>
-                                    <a href="tel:{{ app[2] }}" style="color:#2563eb; font-weight:700; text-decoration:none;"><i class="fa-solid fa-phone"></i> {{ app[2] }}</a>
-                                </td>
-                                <td>{{ app[3] or 'Tư vấn chung' }}</td>
+                                <td><a href="tel:{{ app[2] }}" style="color:#2563eb; font-weight:700; text-decoration:none;"><i class="fa-solid fa-phone"></i> {{ app[2] }}</a></td>
+                                <td>{{ app[3] or '-' }}</td>
                                 <td style="color:#64748b; font-size:12px;">{{ app[4] }}</td>
-                                <td>
-                                    <span class="status-badge {% if app[5] == 'done' %}status-done{% else %}status-pending{% endif %}">
-                                        {% if app[5] == 'done' %}Đã tư vấn{% else %}Chờ xử lý{% endif %}
-                                    </span>
-                                </td>
+                                <td><span class="status-badge {% if app[5] == 'done' %}status-done{% else %}status-pending{% endif %}">{% if app[5] == 'done' %}Đã tư vấn{% else %}Chờ xử lý{% endif %}</span></td>
                                 <td>
                                     <form method="POST" style="display:inline;">
-                                        <input type="hidden" name="update_appointment_status" value="1">
-                                        <input type="hidden" name="appointment_id" value="{{ app[0] }}">
-                                        <input type="hidden" name="status" value="{% if app[5] == 'done' %}pending{% else %}done{% endif %}">
-                                        <button type="submit" style="border:none; background:transparent; color:#2563eb; cursor:pointer; font-size:12px; margin-right:8px;" title="Đổi trạng thái">
-                                            <i class="fa-solid fa-arrows-rotate"></i>
-                                        </button>
+                                        <input type="hidden" name="update_appointment_status" value="1"><input type="hidden" name="appointment_id" value="{{ app[0] }}"><input type="hidden" name="status" value="{% if app[5] == 'done' %}pending{% else %}done{% endif %}">
+                                        <button type="submit" style="border:none; background:transparent; color:#2563eb; cursor:pointer; font-size:12px; margin-right:8px;"><i class="fa-solid fa-arrows-rotate"></i></button>
                                     </form>
                                     <a href="/delete_appointment/{{ app[0] }}" style="color:#ef4444; text-decoration:none;" onclick="return confirm('Xóa khách hẹn này?');"><i class="fa-solid fa-trash"></i></a>
                                 </td>
@@ -357,16 +258,12 @@
                         </tbody>
                     </table>
                 {% else %}
-                    <div style="text-align:center; color:#94a3b8; padding:30px 0;">
-                        <i class="fa-solid fa-inbox" style="font-size:32px; margin-bottom:8px; display:block;"></i>
-                        Chưa có khách hàng nào để lại thông tin đặt hẹn.
-                    </div>
+                    <div style="text-align:center; color:#94a3b8; padding:30px 0;"><i class="fa-solid fa-inbox" style="font-size:32px; display:block;"></i>Chưa có yêu cầu.</div>
                 {% endif %}
             </div>
         </div>
     </div>
 
-    <!-- Preview Cột Phải -->
     <div class="preview-sticky">
         <div style="font-size: 13px; font-weight: 700; color: #64748b; margin-bottom: 10px;"><i class="fa-solid fa-mobile-screen"></i> Xem trước trực tiếp</div>
         <div class="mockup-frame">
@@ -377,47 +274,10 @@
 </div>
 
 <script>
-    function copyBioLink() {
-        const input = document.getElementById("bioUrlInput");
-        input.select();
-        navigator.clipboard.writeText(input.value);
-        alert("Đã sao chép đường dẫn Bio!");
-    }
-    function switchTab(tabId, btn) {
-        document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
-        btn.classList.add('active');
-    }
-    function selectTheme(radio) {
-        document.querySelectorAll('.theme-box').forEach(b => b.classList.remove('active'));
-        radio.closest('.theme-box').classList.add('active');
-    }
-    function processImage(input, hiddenInputId, previewImgId) {
-        const file = input.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const img = new Image();
-            img.src = e.target.result;
-            img.onload = function() {
-                const canvas = document.createElement('canvas');
-                const maxWidth = 800;
-                let width = img.width, height = img.height;
-                if (width > maxWidth) {
-                    height = Math.round((height * maxWidth) / width);
-                    width = maxWidth;
-                }
-                canvas.width = width; canvas.height = height;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0, width, height);
-                const compressedBase64 = canvas.toDataURL('image/jpeg', 0.8);
-                document.getElementById(hiddenInputId).value = compressedBase64;
-                document.getElementById(previewImgId).src = compressedBase64;
-            };
-        };
-        reader.readAsDataURL(file);
-    }
+    function copyBioLink() { const input = document.getElementById("bioUrlInput"); input.select(); navigator.clipboard.writeText(input.value); alert("Đã sao chép đường dẫn Bio!"); }
+    function switchTab(tabId, btn) { document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active')); document.getElementById(tabId).classList.add('active'); btn.classList.add('active'); }
+    function selectTheme(radio) { document.querySelectorAll('.theme-box').forEach(b => b.classList.remove('active')); radio.closest('.theme-box').classList.add('active'); }
+    function processImage(input, hiddenInputId, previewImgId) { const file = input.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = function(e) { const img = new Image(); img.src = e.target.result; img.onload = function() { const canvas = document.createElement('canvas'); const maxWidth = 800; let width = img.width, height = img.height; if (width > maxWidth) { height = Math.round((height * maxWidth) / width); width = maxWidth; } canvas.width = width; canvas.height = height; const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, width, height); const compressedBase64 = canvas.toDataURL('image/jpeg', 0.8); document.getElementById(hiddenInputId).value = compressedBase64; document.getElementById(previewImgId).src = compressedBase64; }; }; reader.readAsDataURL(file); }
 </script>
 </body>
 </html>
