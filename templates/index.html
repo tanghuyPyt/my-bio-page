@@ -32,18 +32,17 @@
 
         .container { max-width: 1160px; margin: 0 auto; padding: 0 20px; }
 
+        /* Scroll Animation Class */
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
         /* Header Navigation */
         .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px 28px;
-            margin: 20px auto;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 14px 28px; margin: 20px auto;
             background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.85);
-            border-radius: 50px;
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.85); border-radius: 50px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
         }
         .logo-wrap { display: flex; align-items: center; gap: 8px; text-decoration: none; color: #0f172a; }
@@ -54,265 +53,102 @@
         .nav-link { text-decoration: none; color: #475569; font-size: 14px; font-weight: 600; transition: color 0.2s; }
         .nav-link:hover { color: #0f172a; }
         
-        .btn-nav-action {
-            background: #0f172a;
-            color: #ffffff;
-            text-decoration: none;
-            padding: 9px 20px;
-            border-radius: 30px;
-            font-size: 13px;
-            font-weight: 700;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: transform 0.2s;
-        }
+        .btn-nav-action { background: #0f172a; color: #ffffff; text-decoration: none; padding: 9px 20px; border-radius: 30px; font-size: 13px; font-weight: 700; transition: transform 0.2s; }
         .btn-nav-action:hover { transform: translateY(-1px); }
 
         /* Hero Section */
         .hero { text-align: center; padding: 40px 0 20px; }
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(255, 255, 255, 0.8);
-            border: 1px solid rgba(226, 232, 240, 0.9);
-            padding: 6px 14px;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: 700;
-            color: #0284c7;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
-        }
-        .hero-title {
-            font-size: 46px;
-            font-weight: 900;
-            line-height: 1.2;
-            letter-spacing: -0.02em;
-            margin-bottom: 16px;
-            color: #0f172a;
-        }
-        .hero-subtitle {
-            font-size: 16px;
-            color: #475569;
-            max-width: 600px;
-            margin: 0 auto 30px;
-            line-height: 1.6;
-        }
+        .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(226, 232, 240, 0.9); padding: 6px 14px; border-radius: 30px; font-size: 12px; font-weight: 700; color: #0284c7; margin-bottom: 20px; }
+        .hero-title { font-size: 46px; font-weight: 900; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 16px; }
+        .hero-subtitle { font-size: 16px; color: #475569; max-width: 600px; margin: 0 auto 30px; line-height: 1.6; }
 
-        /* Claim URL Bar */
-        .claim-box {
-            display: flex;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.9);
-            border-radius: 50px;
-            padding: 6px 8px 6px 20px;
-            max-width: 480px;
-            margin: 0 auto 40px;
-            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
-        }
+        .claim-box { display: flex; align-items: center; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.9); border-radius: 50px; padding: 6px 8px 6px 20px; max-width: 480px; margin: 0 auto 40px; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06); }
         .claim-prefix { font-size: 14px; font-weight: 700; color: #94a3b8; }
-        .claim-input {
-            border: none;
-            outline: none;
-            background: transparent;
-            font-size: 14px;
-            font-weight: 700;
-            color: #0f172a;
-            flex: 1;
-            padding: 0 6px;
-        }
-        .btn-claim {
-            background: #2563eb;
-            color: #ffffff;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 40px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
+        .claim-input { border: none; outline: none; background: transparent; font-size: 14px; font-weight: 700; color: #0f172a; flex: 1; padding: 0 6px; }
+        .btn-claim { background: #2563eb; color: #ffffff; border: none; padding: 12px 24px; border-radius: 40px; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
         .btn-claim:hover { background: #1d4ed8; transform: scale(1.02); }
 
-        /* Interactive Mode Switcher (Toggle) */
-        .toggle-container {
-            display: inline-flex;
-            background: rgba(226, 232, 240, 0.6);
-            backdrop-filter: blur(12px);
-            padding: 5px;
-            border-radius: 40px;
-            margin-bottom: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-        }
-        .toggle-btn {
-            padding: 9px 22px;
-            border: none;
-            background: transparent;
-            font-size: 13px;
-            font-weight: 700;
-            color: #64748b;
-            border-radius: 30px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.25s ease;
-        }
-        .toggle-btn.active {
-            background: #ffffff;
-            color: #0f172a;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
-        }
+        .toggle-container { display: inline-flex; background: rgba(226, 232, 240, 0.6); backdrop-filter: blur(12px); padding: 5px; border-radius: 40px; margin-bottom: 30px; border: 1px solid rgba(255, 255, 255, 0.5); }
+        .toggle-btn { padding: 9px 22px; border: none; background: transparent; font-size: 13px; font-weight: 700; color: #64748b; border-radius: 30px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.25s ease; }
+        .toggle-btn.active { background: #ffffff; color: #0f172a; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06); }
 
-        /* Showcase Mockup Center */
-        .mockup-display-wrap {
-            display: flex;
-            justify-content: center;
-            position: relative;
-            margin-bottom: 70px;
-        }
-        .mockup-shell {
-            width: 330px;
-            height: 560px;
-            background: #000;
-            border-radius: 44px;
-            border: 10px solid #0f172a;
-            box-shadow: 0 24px 70px rgba(15, 23, 42, 0.16);
-            position: relative;
-            overflow: hidden;
-        }
-        .mockup-notch {
-            position: absolute;
-            top: 8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 86px;
-            height: 18px;
-            background: #0f172a;
-            border-radius: 20px;
-            z-index: 10;
-        }
-
-        /* Mockup Inner Screens */
-        .screen-content {
-            width: 100%;
-            height: 100%;
-            padding: 24px 16px 16px;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-        .screen-content.active { display: flex; }
-
-        /* Business Theme Mockup */
-        .screen-biz {
-            background: linear-gradient(135deg, #0369a1 0%, #0f172a 100%);
-            color: #ffffff;
-        }
-        /* Creator Theme Mockup */
-        .screen-creator {
-            background: linear-gradient(135deg, #f97316 0%, #db2777 50%, #7c3aed 100%);
-            color: #ffffff;
-        }
-
-        .m-avatar {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            border: 3px solid rgba(255, 255, 255, 0.8);
-            object-fit: cover;
-            margin-top: 15px;
-            margin-bottom: 8px;
-        }
-        .m-name { font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 5px; }
-        .m-desc { font-size: 11px; opacity: 0.85; margin: 4px 0 14px; line-height: 1.4; padding: 0 10px; }
+        /* Showcase Mockup */
+        .mockup-display-wrap { display: flex; justify-content: center; position: relative; margin-bottom: 70px; }
+        .mockup-shell { width: 330px; height: 560px; background: #000; border-radius: 44px; border: 10px solid #0f172a; box-shadow: 0 24px 70px rgba(15, 23, 42, 0.16); position: relative; overflow: hidden; }
+        .mockup-notch { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 86px; height: 18px; background: #0f172a; border-radius: 20px; z-index: 10; }
         
+        .screen-content { width: 100%; height: 100%; padding: 24px 16px 16px; display: none; flex-direction: column; align-items: center; text-align: center; }
+        .screen-content.active { display: flex; }
+        .screen-biz { background: linear-gradient(135deg, #0369a1 0%, #0f172a 100%); color: #ffffff; }
+        .screen-creator { background: linear-gradient(135deg, #f97316 0%, #db2777 50%, #7c3aed 100%); color: #ffffff; }
+
+        .m-avatar { width: 70px; height: 70px; border-radius: 50%; border: 3px solid rgba(255, 255, 255, 0.8); object-fit: cover; margin-top: 15px; margin-bottom: 8px; }
+        .m-name { font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 5px; }
+        .m-desc { font-size: 11px; opacity: 0.85; margin: 4px 0 14px; padding: 0 10px; }
         .m-cta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; margin-bottom: 12px; }
-        .m-btn {
-            padding: 8px;
-            border-radius: 10px;
-            font-size: 11px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-            text-decoration: none;
-        }
-        .m-btn-zalo { background: #0068ff; color: #fff; }
-        .m-btn-phone { background: #22c55e; color: #fff; }
-        .m-btn-book { background: #6366f1; color: #fff; grid-column: 1 / -1; }
-
+        .m-btn { padding: 8px; border-radius: 10px; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 5px; }
         .m-links-list { display: flex; flex-direction: column; gap: 8px; width: 100%; }
-        .m-link-item {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 10px 14px;
-            border-radius: 25px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
+        .m-link-item { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); padding: 10px 14px; border-radius: 25px; font-size: 12px; font-weight: 600; color: #fff; display: flex; align-items: center; justify-content: center; gap: 6px; }
 
-        /* Bento Grid Features Section */
-        .features-section { padding: 40px 0 70px; }
+        /* Common Section Styles */
+        .section-padding { padding: 60px 0; }
         .section-header { text-align: center; margin-bottom: 40px; }
         .section-header h2 { font-size: 28px; font-weight: 900; color: #0f172a; margin-bottom: 8px; }
         .section-header p { font-size: 14px; color: #64748b; }
+        
+        .glass-card { background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.9); border-radius: 24px; padding: 26px; box-shadow: 0 6px 24px rgba(15, 23, 42, 0.03); transition: transform 0.2s; }
+        .glass-card:hover { transform: translateY(-3px); }
 
-        .bento-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-        }
-        .bento-card {
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.9);
-            border-radius: 24px;
-            padding: 26px;
-            box-shadow: 0 6px 24px rgba(15, 23, 42, 0.03);
-            transition: transform 0.2s;
-        }
-        .bento-card:hover { transform: translateY(-3px); }
+        /* Bento Grid */
+        .bento-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
         .bento-card.span-2 { grid-column: span 2; }
-        .bento-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            margin-bottom: 16px;
-        }
-        .bento-card h3 { font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 8px; }
-        .bento-card p { font-size: 13px; color: #64748b; line-height: 1.6; }
+        .bento-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 16px; }
+        .glass-card h3 { font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 8px; }
+        .glass-card p { font-size: 13px; color: #64748b; line-height: 1.6; }
 
-        /* Simple Footer */
-        .footer {
-            border-top: 1px solid rgba(226, 232, 240, 0.8);
-            padding: 30px 0;
-            text-align: center;
-            font-size: 13px;
-            color: #64748b;
-        }
+        /* How it works (3 Steps) */
+        .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; text-align: center; }
+        .step-num { width: 50px; height: 50px; background: #0f172a; color: #fff; font-size: 20px; font-weight: 900; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; box-shadow: 0 10px 20px rgba(15, 23, 42, 0.15); }
+        
+        /* Testimonials */
+        .reviews-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .review-card { display: flex; flex-direction: column; gap: 14px; }
+        .review-stars { color: #f59e0b; font-size: 12px; }
+        .review-text { font-size: 14px; font-style: italic; color: #334155; line-height: 1.6; }
+        .reviewer { display: flex; align-items: center; gap: 10px; margin-top: auto; }
+        .reviewer img { width: 40px; height: 40px; border-radius: 50%; }
+        .reviewer-info h4 { font-size: 13px; font-weight: 800; color: #0f172a; }
+        .reviewer-info span { font-size: 11px; color: #64748b; }
+
+        /* FAQ Accordion */
+        .faq-list { max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+        .faq-item { background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(255,255,255,0.9); border-radius: 16px; overflow: hidden; transition: all 0.3s; }
+        .faq-question { padding: 18px 20px; font-size: 14px; font-weight: 700; color: #0f172a; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .faq-question i { transition: transform 0.3s; color: #64748b; }
+        .faq-answer { padding: 0 20px; max-height: 0; overflow: hidden; font-size: 13px; color: #475569; line-height: 1.6; transition: max-height 0.3s ease, padding 0.3s ease; }
+        .faq-item.active { background: rgba(255, 255, 255, 0.95); box-shadow: 0 4px 20px rgba(0,0,0,0.04); }
+        .faq-item.active .faq-question i { transform: rotate(180deg); }
+        .faq-item.active .faq-answer { padding: 0 20px 18px; max-height: 200px; }
+
+        /* Bottom CTA */
+        .bottom-cta { background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%); border-radius: 30px; padding: 60px 20px; text-align: center; color: #fff; margin-bottom: 40px; position: relative; overflow: hidden; }
+        .bottom-cta::before { content:""; position: absolute; top:-50%; left:-10%; width:300px; height:300px; background: rgba(255,255,255,0.1); border-radius:50%; filter: blur(40px); }
+        .bottom-cta h2 { font-size: 32px; font-weight: 900; margin-bottom: 12px; }
+        .bottom-cta p { font-size: 15px; opacity: 0.9; margin-bottom: 30px; }
+        .claim-box-dark { background: rgba(255, 255, 255, 0.15); border-color: rgba(255, 255, 255, 0.3); box-shadow: none; margin-bottom: 0; }
+        .claim-box-dark .claim-prefix { color: rgba(255,255,255,0.7); }
+        .claim-box-dark .claim-input { color: #fff; }
+        .claim-box-dark .claim-input::placeholder { color: rgba(255,255,255,0.5); }
+        .claim-box-dark .btn-claim { background: #fff; color: #2563eb; }
+        .claim-box-dark .btn-claim:hover { background: #f8fafc; }
+
+        /* Footer */
+        .footer { border-top: 1px solid rgba(226, 232, 240, 0.8); padding: 30px 0; text-align: center; font-size: 13px; color: #64748b; }
 
         @media (max-width: 768px) {
             .hero-title { font-size: 32px; }
             .nav-links { display: none; }
-            .bento-grid { grid-template-columns: 1fr; }
+            .bento-grid, .steps-grid, .reviews-grid { grid-template-columns: 1fr; }
             .bento-card.span-2 { grid-column: span 1; }
         }
     </style>
@@ -321,7 +157,7 @@
 
 <div class="container">
     <!-- Navbar -->
-    <header class="navbar">
+    <header class="navbar reveal">
         <a href="/" class="logo-wrap">
             <svg class="logo-svg" viewBox="0 0 180 220" fill="currentColor">
                 <path d="M24 12h86c34 0 61 25 61 57 0 20-10 37-27 47 18 10 28 26 28 47 0 35-28 59-66 64l-33 5c-26 4-43 21-47 42H4c4-35 25-58 62-64l38-6c25-4 40-18 40-37 0-13-7-23-20-30-9 7-21 12-36 14l-28 5c-20 4-31 13-35 26H4v-40c0-25 20-47 54-54l40-8c24-5 39-19 39-38 0-16-13-28-30-28H46v89H24V12Zm48 133 28-5c10-2 18-5 25-10-8-2-16-3-25-1l-39 8c-13 3-23 9-29 18 7 1 14 0 20-2l20-8Z"></path>
@@ -330,104 +166,92 @@
         </a>
         <div class="nav-links">
             <a href="#features" class="nav-link">Tính năng</a>
+            <a href="#guide" class="nav-link">Hướng dẫn</a>
             <a href="/login" class="nav-link">Đăng nhập</a>
         </div>
         <a href="/register" class="btn-nav-action">Tạo Bio Miễn Phí</a>
     </header>
 
     <!-- Hero Section -->
-    <section class="hero">
+    <section class="hero reveal">
         <div class="hero-badge"><i class="fa-solid fa-sparkles"></i> Nền tảng Bio Link chuẩn Business & Creator</div>
         <h1 class="hero-title">Tất cả liên kết của bạn,<br>gọn gàng trong một trang.</h1>
         <p class="hero-subtitle">Giải pháp toàn diện giúp kết nối mạng xã hội, gắn link liên kết và chốt khách hàng qua Zalo/Lịch hẹn chỉ với 1 chạm.</p>
 
-        <!-- Claim URL Box -->
-        <form class="claim-box" onsubmit="event.preventDefault(); submitClaim();">
+        <form class="claim-box" onsubmit="event.preventDefault(); submitClaim('usernameInput');">
             <span class="claim-prefix">biopage/</span>
             <input type="text" id="usernameInput" class="claim-input" placeholder="ten-cua-ban" required>
             <button type="submit" class="btn-claim">Tạo trang ngay</button>
         </form>
 
-        <!-- Mode Toggle Switcher -->
         <div class="toggle-container">
             <button class="toggle-btn active" id="btnBiz" onclick="switchMockupMode('biz')">
-                <i class="fa-solid fa-briefcase"></i> Dành Cho Doanh Nghiệp & Dịch Vụ
+                <i class="fa-solid fa-briefcase"></i> Cho Doanh Nghiệp
             </button>
             <button class="toggle-btn" id="btnCreator" onclick="switchMockupMode('creator')">
-                <i class="fa-solid fa-wand-magic-sparkles"></i> Dành Cho Creator & Cá Nhân
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Cho Cá Nhân
             </button>
         </div>
 
-        <!-- Showcase Mockup -->
         <div class="mockup-display-wrap">
             <div class="mockup-shell">
                 <div class="mockup-notch"></div>
-                
-                <!-- Screen 1: Business Mode -->
+                <!-- Business Screen -->
                 <div id="screenBiz" class="screen-content screen-biz active">
                     <img class="m-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" alt="Avatar">
                     <div class="m-name">Dr. Glow Clinic <i class="fa-solid fa-circle-check" style="color: #38bdf8; font-size:12px;"></i></div>
                     <div class="m-desc">Viện chăm sóc & trẻ hóa da chuyên sâu chuẩn y khoa ✨</div>
-                    
                     <div class="m-cta-grid">
-                        <div class="m-btn m-btn-zalo"><i class="fa-solid fa-comment-dots"></i> Nhắn Zalo</div>
-                        <div class="m-btn m-btn-phone"><i class="fa-solid fa-phone"></i> Gọi Hotline</div>
-                        <div class="m-btn m-btn-book"><i class="fa-solid fa-calendar-check"></i> Đặt Lịch / Nhận Tư Vấn</div>
+                        <div class="m-btn m-btn-zalo" style="background: #0068ff;"><i class="fa-solid fa-comment-dots"></i> Nhắn Zalo</div>
+                        <div class="m-btn m-btn-phone" style="background: #22c55e;"><i class="fa-solid fa-phone"></i> Gọi Hotline</div>
+                        <div class="m-btn m-btn-book" style="background: #6366f1; grid-column: 1 / -1;"><i class="fa-solid fa-calendar-check"></i> Đặt Lịch Tư Vấn</div>
                     </div>
-
                     <div class="m-links-list">
                         <div class="m-link-item"><i class="fa-solid fa-list"></i> Bảng giá dịch vụ 2026</div>
-                        <div class="m-link-item"><i class="fa-solid fa-location-dot"></i> Bản đồ chỉ đường cơ sở</div>
                     </div>
                 </div>
-
-                <!-- Screen 2: Creator Mode -->
+                <!-- Creator Screen -->
                 <div id="screenCreator" class="screen-content screen-creator">
                     <img class="m-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" alt="Avatar">
                     <div class="m-name">Minh Hoàng <i class="fa-solid fa-circle-check" style="color: #38bdf8; font-size:12px;"></i></div>
-                    <div class="m-desc">Tech Reviewer & Content Creator 🚀 Chia sẻ mẹo công nghệ mỗi ngày.</div>
-                    
+                    <div class="m-desc">Tech Reviewer & Content Creator 🚀</div>
                     <div class="m-links-list" style="margin-top: 10px;">
-                        <div class="m-link-item"><i class="fa-brands fa-tiktok"></i> Kênh TikTok (250K Follow)</div>
-                        <div class="m-link-item"><i class="fa-brands fa-youtube"></i> Xem video mới trên YouTube</div>
-                        <div class="m-link-item"><i class="fa-solid fa-bag-shopping"></i> Góc đồ công nghệ mình dùng (Shopee)</div>
-                        <div class="m-link-item"><i class="fa-brands fa-facebook"></i> Kết nối Facebook cá nhân</div>
+                        <div class="m-link-item"><i class="fa-brands fa-tiktok"></i> Kênh TikTok</div>
+                        <div class="m-link-item"><i class="fa-solid fa-bag-shopping"></i> Góc đồ Shopee</div>
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
 
-    <!-- Bento Grid Features -->
-    <section id="features" class="features-section">
+    <!-- Tính năng (Bento Grid) -->
+    <section id="features" class="section-padding reveal">
         <div class="section-header">
-            <h2>Mọi tính năng bạn cần để phát triển</h2>
+            <h2>Mọi tính năng bạn cần để chốt Sale</h2>
             <p>Được thiết kế tối giản, tải trang siêu nhanh và hoàn toàn miễn phí.</p>
         </div>
-
         <div class="bento-grid">
-            <div class="bento-card">
+            <div class="glass-card">
                 <div class="bento-icon" style="background: #eff6ff; color: #2563eb;"><i class="fa-solid fa-bolt"></i></div>
                 <h3>Tối ưu chốt khách 1-chạm</h3>
-                <p>Nút gọi nhanh Hotline và liên kết chat Zalo trực tiếp giúp nâng cao tỷ lệ chuyển đổi khách hàng.</p>
+                <p>Nút gọi Hotline và liên kết chat Zalo trực tiếp giúp nâng cao tỷ lệ chuyển đổi khách hàng.</p>
             </div>
-            <div class="bento-card">
+            <div class="glass-card">
                 <div class="bento-icon" style="background: #fdf4ff; color: #c026d3;"><i class="fa-solid fa-calendar-plus"></i></div>
                 <h3>Popup Đặt lịch tư vấn</h3>
-                <p>Khách hàng để lại thông tin nhanh chóng qua cửa sổ nổi tinh gọn mà không làm rối mắt trang Bio.</p>
+                <p>Khách hàng để lại thông tin nhanh chóng qua cửa sổ nổi tinh gọn mà không làm rối mắt.</p>
             </div>
-            <div class="bento-card">
+            <div class="glass-card">
                 <div class="bento-icon" style="background: #ecfdf5; color: #059669;"><i class="fa-solid fa-qrcode"></i></div>
                 <h3>Mã QR chuẩn quốc gia</h3>
                 <p>Tự động tạo mã QR trang cá nhân chuẩn nét giúp bạn in ấn lên namecard, quầy lễ tân dễ dàng.</p>
             </div>
-            <div class="bento-card span-2">
+            <div class="glass-card span-2">
                 <div class="bento-icon" style="background: #fff7ed; color: #ea580c;"><i class="fa-solid fa-palette"></i></div>
-                <h3>Giao diện Glassmorphism cao cấp</h3>
+                <h3>Giao diện Glassmorphism</h3>
                 <p>Bộ màu Gradient mờ ảo chuẩn phong cách hiện đại cùng trải nghiệm mượt mà trên cả điện thoại lẫn máy tính.</p>
             </div>
-            <div class="bento-card">
+            <div class="glass-card">
                 <div class="bento-icon" style="background: #f1f5f9; color: #0f172a;"><i class="fa-solid fa-chart-pie"></i></div>
                 <h3>Đo lường lượt click</h3>
                 <p>Báo cáo chính xác số lượng truy cập và lượt bấm từng liên kết ngay trong trang quản trị.</p>
@@ -435,38 +259,130 @@
         </div>
     </section>
 
+    <!-- 3 Bước Đơn Giản -->
+    <section id="guide" class="section-padding reveal">
+        <div class="section-header">
+            <h2>Bắt đầu dễ dàng trong 1 phút</h2>
+            <p>Không cần biết lập trình, chỉ vài thao tác nhấp chuột là bạn đã có trang Bio chuyên nghiệp.</p>
+        </div>
+        <div class="steps-grid">
+            <div class="glass-card">
+                <div class="step-num">1</div>
+                <h3>Tạo tài khoản</h3>
+                <p>Chọn một tên đường dẫn mang thương hiệu của riêng bạn (vd: biopage.vn/spa-hanoi).</p>
+            </div>
+            <div class="glass-card">
+                <div class="step-num">2</div>
+                <h3>Cá nhân hóa</h3>
+                <p>Tải ảnh đại diện, chọn màu sắc phong thủy và dán các đường link mạng xã hội, Zalo của bạn vào.</p>
+            </div>
+            <div class="glass-card">
+                <div class="step-num">3</div>
+                <h3>Chia sẻ nhận khách</h3>
+                <p>Copy link dán lên tiểu sử TikTok, Facebook hoặc in mã QR đặt tại cửa hàng để nhận tương tác.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Đánh giá (Testimonials) -->
+    <section class="section-padding reveal">
+        <div class="section-header">
+            <h2>Được tin dùng bởi hơn 1,000+ cá nhân</h2>
+            <p>Họ đã dùng BIOPAGE để tối ưu luồng khách hàng. Còn bạn thì sao?</p>
+        </div>
+        <div class="reviews-grid">
+            <div class="glass-card review-card">
+                <div class="review-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <p class="review-text">"Tính năng Form popup đặt lịch thực sự là cứu cánh cho Spa của mình. Khách vào xem bảng giá xong điền form luôn, mình nhận được thông báo ngay trong trang quản trị. Siêu tiện lợi!"</p>
+                <div class="reviewer">
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100" alt="Reviewer">
+                    <div class="reviewer-info"><h4>Chị Thu Trà</h4><span>Chủ hệ thống Nabe Spa</span></div>
+                </div>
+            </div>
+            <div class="glass-card review-card">
+                <div class="review-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <p class="review-text">"Lúc trước mình xài web nước ngoài rối kinh khủng. Chuyển qua đây thấy giao diện sạch sẽ, có nút Zalo to bự rất hợp với style bán hàng tại Việt Nam. 10 điểm cho thiết kế trong suốt!"</p>
+                <div class="reviewer">
+                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100" alt="Reviewer">
+                    <div class="reviewer-info"><h4>Quang Huy</h4><span>Tiktoker / Reviewer</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Accordion -->
+    <section class="section-padding reveal">
+        <div class="section-header">
+            <h2>Câu hỏi thường gặp</h2>
+        </div>
+        <div class="faq-list">
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">Tạo trang Bio này có mất phí không? <i class="fa-solid fa-chevron-down"></i></div>
+                <div class="faq-answer">Hoàn toàn miễn phí cho các tính năng cơ bản như thêm link, nút Zalo, Hotline và form đặt lịch hẹn. Hệ thống sinh ra để hỗ trợ tối đa cho việc chuyển đổi số của bạn.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">Khách hàng của tôi điền Form đặt lịch thì tôi xem ở đâu? <i class="fa-solid fa-chevron-down"></i></div>
+                <div class="faq-answer">Khi khách hàng điền form, dữ liệu sẽ ngay lập tức được cập nhật vào Tab "Khách Hẹn" trong trang Quản trị (Admin) của bạn. Bạn có thể đánh dấu trạng thái Đã xử lý rất gọn gàng.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">Tôi có thể đổi đường dẫn URL sau khi đăng ký không? <i class="fa-solid fa-chevron-down"></i></div>
+                <div class="faq-answer">Đường dẫn URL (username) là định danh duy nhất của bạn trên hệ thống nên hiện tại không thể tự thay đổi. Nếu cần đổi, bạn có thể tạo một tài khoản mới hoàn toàn miễn phí.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bottom CTA -->
+    <section class="bottom-cta reveal">
+        <h2>Sẵn sàng nâng tầm thương hiệu cá nhân?</h2>
+        <p>Tham gia cùng hàng nghìn doanh nghiệp và nhà sáng tạo đã tối ưu hóa liên kết của họ.</p>
+        <form class="claim-box claim-box-dark" onsubmit="event.preventDefault(); submitClaim('bottomUsernameInput');">
+            <span class="claim-prefix">biopage/</span>
+            <input type="text" id="bottomUsernameInput" class="claim-input" placeholder="ten-thuong-hieu" required>
+            <button type="submit" class="btn-claim">Bắt đầu ngay</button>
+        </form>
+    </section>
+
     <!-- Footer -->
     <footer class="footer">
-        <p>© 2026 BIOPAGE. Thiết kế cho cá nhân và thương hiệu hiện đại.</p>
+        <p>© 2026 BIOPAGE. Giải pháp tối ưu chuyển đổi số cho người Việt.</p>
     </footer>
 </div>
 
 <script>
-    function submitClaim() {
-        const username = document.getElementById("usernameInput").value.trim().toLowerCase();
-        if (username) {
-            window.location.href = `/register?username=${encodeURIComponent(username)}`;
-        }
-    }
-
+    // Xử lý nút gạt xem trước
     function switchMockupMode(mode) {
-        const btnBiz = document.getElementById('btnBiz');
-        const btnCreator = document.getElementById('btnCreator');
-        const screenBiz = document.getElementById('screenBiz');
-        const screenCreator = document.getElementById('screenCreator');
-
-        if (mode === 'biz') {
-            btnBiz.classList.add('active');
-            btnCreator.classList.remove('active');
-            screenBiz.classList.add('active');
-            screenCreator.classList.remove('active');
-        } else {
-            btnCreator.classList.add('active');
-            btnBiz.classList.remove('active');
-            screenCreator.classList.add('active');
-            screenBiz.classList.remove('active');
-        }
+        document.getElementById('btnBiz').classList.toggle('active', mode === 'biz');
+        document.getElementById('btnCreator').classList.toggle('active', mode === 'creator');
+        document.getElementById('screenBiz').classList.toggle('active', mode === 'biz');
+        document.getElementById('screenCreator').classList.toggle('active', mode === 'creator');
     }
+
+    // Xử lý chuyển hướng đăng ký
+    function submitClaim(inputId) {
+        const username = document.getElementById(inputId).value.trim().toLowerCase();
+        if (username) window.location.href = `/register?username=${encodeURIComponent(username)}`;
+    }
+
+    // Xử lý mở/đóng FAQ
+    function toggleFaq(el) {
+        const item = el.parentElement;
+        item.classList.toggle('active');
+    }
+
+    // Hiệu ứng Scroll Animation (Cuộn đến đâu hiện đến đó)
+    document.addEventListener('DOMContentLoaded', function() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach((el) => {
+            observer.observe(el);
+        });
+    });
 </script>
 </body>
 </html>
