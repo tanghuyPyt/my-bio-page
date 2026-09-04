@@ -84,15 +84,15 @@
                 <input type="hidden" name="update_bank" value="1">
                 <div class="form-group">
                     <label>Ngân hàng (Mã viết tắt: MB, VCB, TCB, VPB, ACB...)</label>
-                    <input type="text" name="bank_name" class="form-control" placeholder="VD: MB" value="{{ user[12] if user and len(user) > 12 and user[12] else '' }}" required>
+                    <input type="text" name="bank_name" class="form-control" placeholder="VD: MB" value="{{ user.bank_name }}" required>
                 </div>
                 <div class="form-group">
                     <label>Số tài khoản</label>
-                    <input type="text" name="bank_account" class="form-control" placeholder="Nhập số tài khoản" value="{{ user[13] if user and len(user) > 13 and user[13] else '' }}" required>
+                    <input type="text" name="bank_account" class="form-control" placeholder="Nhập số tài khoản" value="{{ user.bank_account }}" required>
                 </div>
                 <div class="form-group">
                     <label>Tên chủ tài khoản (viết hoa không dấu)</label>
-                    <input type="text" name="bank_owner" class="form-control" placeholder="VD: NGUYEN VAN A" value="{{ user[14] if user and len(user) > 14 and user[14] else '' }}" required>
+                    <input type="text" name="bank_owner" class="form-control" placeholder="VD: NGUYEN VAN A" value="{{ user.bank_owner }}" required>
                 </div>
                 <button type="submit" class="btn-submit" style="background: #059669;">Lưu Cấu Hình VietQR</button>
             </form>
@@ -150,6 +150,7 @@
                         <b>{{ link.title }}</b>
                         <span>{{ link.url }} • <b>{{ link.clicks }}</b> lượt click</span>
                     </div>
+                    <a href="/delete/{{ link.id }}" class="btn-del" onclick="return confirm('Xóa liên kết này?');"><i class="fa-solid fa-trash-can"></i></a>
                 </div>
                 {% endfor %}
             </div>

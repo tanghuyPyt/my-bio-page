@@ -1,158 +1,338 @@
-from flask import Flask, render_template, request, redirect, url_for, session
-import sqlite3
+import os
+from dotenv import load_dotenv
+from flask import Flask, render_template, request, redirect, session
+from werkzeug.security import generate_password_hash, check_password_hash
+import psycopg2
+import re
 
-# Khởi tạo ứng dụng Flask
 app = Flask(__name__)
-app.secret_key = "123456"
+load_dotenv()
+
+app.secret_key = os.environ.get("SECRET_KEY")
+DB_URL = os.environ.get("DATABASE_URL")
+
+RESERVED_USERNAMES = {
+    "admin", "login", "register", "logout", "delete", "delete_service",
+    "click", "static", "api", "index", "home", "about",
+    "contact", "help", "settings", "dashboard", "assets"
+}
 
 def get_db():
-    conn = sqlite3.connect('bio_database.db')
-    return conn
+    return psycopg2.connect(DB_URL)
 
-# Hàm tạo database nếu chưa có
 def init_db():
     conn = get_db()
-    c = conn.cursor()
-    c.execute('''CREATE TABLE IF NOT EXISTS users
-                 (id INTEGER PRIMARY KEY AUTOINCREMENT,
-                  username TEXT UNIQUE, password TEXT, fullname TEXT,
-                  bio TEXT, avatar_url TEXT, banner_url TEXT, theme TEXT,
-                  address TEXT, phone TEXT, social_ig TEXT, social_tiktok TEXT,
-                  social_fb TEXT, social_yt TEXT, zalo TEXT)''')
-    try:
-        c.execute("ALTER TABLE users ADD COLUMN bank_name TEXT")
-        c.execute("ALTER TABLE users ADD COLUMN bank_account TEXT")
-        c.execute("ALTER TABLE users ADD COLUMN bank_owner TEXT")
-    except:
-        pass
-    c.execute('''CREATE TABLE IF NOT EXISTS links
-                 (id INTEGER PRIMARY KEY AUTOINCREMENT,
-                  username TEXT, title TEXT, url TEXT, clicks INTEGER)''')
-    c.execute('''CREATE TABLE IF NOT EXISTS services
-                 (id INTEGER PRIMARY KEY AUTOINCREMENT,
-                  username TEXT, name TEXT, price TEXT)''')
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+            id SERIAL PRIMARY KEY,
+            username TEXT UNIQUE NOT NULL,
+            password TEXT NOT NULL,
+            fullname TEXT,
+            bio TEXT,
+            avatar_url TEXT DEFAULT '',
+            banner_url TEXT DEFAULT '',
+            theme TEXT DEFAULT 'dark',
+            address TEXT DEFAULT '',
+            phone TEXT DEFAULT '',
+            social_ig TEXT DEFAULT '',
+            social_tiktok TEXT DEFAULT '',
+            social_fb TEXT DEFAULT '',
+            social_yt TEXT DEFAULT ''
+        );
+    ''')
+    cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS theme TEXT DEFAULT 'dark';")
+    cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS banner_url TEXT DEFAULT '';")
+    cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS address TEXT DEFAULT '';")
+    cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS phone TEXT DEFAULT '';")
+    cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS social_ig TEXT DEFAULT '';")
+    cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS social_tiktok TEXT DEFAULT '';")
+    cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS social_fb TEXT DEFAULT '';")
+    cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS social_yt TEXT DEFAULT '';")
+    # Cột mới cho tính năng Zalo + VietQR
+    cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS zalo TEXT DEFAULT '';")
+    cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS bank_name TEXT DEFAULT '';")
+    cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS bank_account TEXT DEFAULT '';")
+    cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS bank_owner TEXT DEFAULT '';")
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS links (
+            id SERIAL PRIMARY KEY,
+            username TEXT NOT NULL,
+            title TEXT NOT NULL,
+            url TEXT NOT NULL,
+            clicks INTEGER DEFAULT 0
+        );
+    ''')
+
+    # Bảng mới cho tính năng bảng giá dịch vụ
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS services (
+            id SERIAL PRIMARY KEY,
+            username TEXT NOT NULL,
+            name TEXT NOT NULL,
+            price TEXT NOT NULL
+        );
+    ''')
+
     conn.commit()
+    cursor.close()
     conn.close()
 
 init_db()
 
+
+# 1. Trang chủ
 @app.route("/")
 def index():
-    return render_template("index.html")
-    
+    is_logged_in = "user" in session
+    username = session.get("user")
+    return render_template("index.html", is_logged_in=is_logged_in, username=username)
+
+
+# 2. Đăng Ký
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    if request.method == "POST":
-        username = request.form.get("username").strip().lower()
-        password = request.form.get("password")
-        conn = get_db()
-        c = conn.cursor()
-        try:
-            c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
-            conn.commit()
-            session["user"] = username
-            return redirect(url_for("admin"))
-        except sqlite3.IntegrityError:
-            return "Tên đăng nhập đã tồn tại!"
-        finally:
-            conn.close()
-    return render_template("register.html")
+    error = None
+    suggested_username = request.args.get("username", "")
 
+    if request.method == "POST":
+        username = request.form.get("username", "").strip().lower()
+        password = request.form.get("password", "")
+        fullname = request.form.get("fullname", "")
+        bio = request.form.get("bio", "")
+
+        if not re.match(r"^[a-z0-9_]{3,20}$", username):
+            error = "Tên đăng nhập chỉ được chứa chữ thường, số, dấu gạch dưới, từ 3-20 ký tự."
+            return render_template("register.html", error=error, suggested_username=suggested_username)
+
+        if username in RESERVED_USERNAMES:
+            error = "Tên đăng nhập này không thể sử dụng, vui lòng chọn tên khác."
+            return render_template("register.html", error=error, suggested_username=suggested_username)
+
+        if not password or len(password) < 6:
+            error = "Mật khẩu phải có ít nhất 6 ký tự."
+            return render_template("register.html", error=error, suggested_username=suggested_username)
+
+        hashed_password = generate_password_hash(password)
+
+        try:
+            conn = get_db()
+            cursor = conn.cursor()
+            cursor.execute(
+                "INSERT INTO users (username, password, fullname, bio, avatar_url, banner_url, theme) VALUES (%s, %s, %s, %s, '', '', 'dark')",
+                (username, hashed_password, fullname, bio))
+            conn.commit()
+            cursor.close()
+            conn.close()
+            return redirect("/login")
+        except Exception:
+            error = "Tên đăng nhập này đã tồn tại!"
+
+    return render_template("register.html", error=error, suggested_username=suggested_username)
+
+
+# 3. Đăng Nhập
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    error = None
     if request.method == "POST":
-        username = request.form.get("username").strip().lower()
-        password = request.form.get("password")
-        conn = get_db()
-        c = conn.cursor()
-        c.execute("SELECT * FROM users WHERE username=? AND password=?", (username, password))
-        user = c.fetchone()
-        conn.close()
-        if user:
-            session["user"] = username
-            return redirect(url_for("admin"))
-        return "Sai tài khoản hoặc mật khẩu!"
-    return render_template("login.html")
+        username = request.form.get("username", "").strip().lower()
+        password = request.form.get("password", "")
 
+        conn = get_db()
+        cursor = conn.cursor()
+        cursor.execute("SELECT username, password FROM users WHERE username = %s", (username,))
+        user = cursor.fetchone()
+        cursor.close()
+        conn.close()
+
+        if user and check_password_hash(user[1], password):
+            session["user"] = user[0]
+            return redirect("/admin")
+        else:
+            error = "Sai tên đăng nhập hoặc mật khẩu!"
+
+    return render_template("login.html", error=error)
+
+
+# 4. Đăng Xuất
 @app.route("/logout")
 def logout():
     session.pop("user", None)
-    return redirect(url_for("login"))
+    return redirect("/")
 
+
+# 5. Trang Quản Trị Admin
 @app.route("/admin", methods=["GET", "POST"])
 def admin():
     if "user" not in session:
-        return redirect(url_for("login"))
-    
+        return redirect("/login")
+
     current_user = session["user"]
     conn = get_db()
     cursor = conn.cursor()
 
-    if request.method == "POST":
-        if "add_link" in request.form:
-            title = request.form.get("title", "").strip()
-            url = request.form.get("url", "").strip()
-            if title and url:
-                cursor.execute("INSERT INTO links (username, title, url, clicks) VALUES (?, ?, ?, 0)", 
-                               (current_user, title, url))
-                conn.commit()
+    if request.method == "POST" and "add_link" in request.form:
+        title = request.form.get("title", "").strip()
+        url = request.form.get("url", "").strip()
 
-        if "update_bank" in request.form:
-            bank_name = request.form.get("bank_name", "").strip()
-            bank_account = request.form.get("bank_account", "").strip()
-            bank_owner = request.form.get("bank_owner", "").strip()
-            cursor.execute("UPDATE users SET bank_name=?, bank_account=?, bank_owner=? WHERE username=?", 
-                           (bank_name, bank_account, bank_owner, current_user))
+        if title and url and (url.startswith("http://") or url.startswith("https://")):
+            cursor.execute("INSERT INTO links (username, title, url, clicks) VALUES (%s, %s, %s, 0)", (current_user, title, url))
             conn.commit()
-
-        if "add_service" in request.form:
-            name = request.form.get("name", "").strip()
-            price = request.form.get("price", "").strip()
-            if name and price:
-                cursor.execute("INSERT INTO services (username, name, price) VALUES (?, ?, ?)", 
-                               (current_user, name, price))
-                conn.commit()
 
         cursor.close()
         conn.close()
-        return redirect(url_for("admin"))
+        return redirect("/admin")
 
-    cursor.execute("SELECT * FROM users WHERE username = ?", (current_user,))
-    user_row = cursor.fetchone()
+    if request.method == "POST" and "update_profile" in request.form:
+        fullname = request.form.get("fullname")
+        bio = request.form.get("bio")
+        avatar_url = request.form.get("avatar_url")
+        banner_url = request.form.get("banner_url")
+        theme = request.form.get("theme", "dark")
+        address = request.form.get("address", "").strip()
+        phone = request.form.get("phone", "").strip()
+        social_ig = request.form.get("social_ig", "").strip()
+        social_tiktok = request.form.get("social_tiktok", "").strip()
+        social_fb = request.form.get("social_fb", "").strip()
+        social_yt = request.form.get("social_yt", "").strip()
+        zalo = request.form.get("zalo", "").strip()
 
-    cursor.execute("SELECT id, title, url, clicks FROM links WHERE username = ? ORDER BY id DESC", (current_user,))
-    links = [{"id": r[0], "title": r[1], "url": r[2], "clicks": r[3]} for r in cursor.fetchall()]
+        cursor.execute("""
+            UPDATE users SET
+            fullname = %s, bio = %s, avatar_url = %s, banner_url = %s,
+            theme = %s, address = %s, phone = %s, social_ig = %s,
+            social_tiktok = %s, social_fb = %s, social_yt = %s, zalo = %s
+            WHERE username = %s
+        """, (fullname, bio, avatar_url, banner_url, theme, address, phone, social_ig, social_tiktok, social_fb, social_yt, zalo, current_user))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return redirect("/admin")
 
-    cursor.execute("SELECT id, name, price FROM services WHERE username = ? ORDER BY id DESC", (current_user,))
+    if request.method == "POST" and "update_bank" in request.form:
+        bank_name = request.form.get("bank_name", "").strip()
+        bank_account = request.form.get("bank_account", "").strip()
+        bank_owner = request.form.get("bank_owner", "").strip()
+
+        cursor.execute("""
+            UPDATE users SET bank_name = %s, bank_account = %s, bank_owner = %s
+            WHERE username = %s
+        """, (bank_name, bank_account, bank_owner, current_user))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return redirect("/admin")
+
+    if request.method == "POST" and "add_service" in request.form:
+        name = request.form.get("name", "").strip()
+        price = request.form.get("price", "").strip()
+
+        if name and price:
+            cursor.execute("INSERT INTO services (username, name, price) VALUES (%s, %s, %s)", (current_user, name, price))
+            conn.commit()
+
+        cursor.close()
+        conn.close()
+        return redirect("/admin")
+
+    cursor.execute("""
+        SELECT fullname, bio, avatar_url, banner_url, theme, address, phone,
+        social_ig, social_tiktok, social_fb, social_yt, zalo, bank_name, bank_account, bank_owner
+        FROM users WHERE username = %s
+    """, (current_user,))
+    user_data = cursor.fetchone()
+
+    cursor.execute("SELECT id, title, url, clicks FROM links WHERE username = %s ORDER BY id ASC", (current_user,))
+    links = cursor.fetchall()
+
+    cursor.execute("SELECT id, name, price FROM services WHERE username = %s ORDER BY id ASC", (current_user,))
     services = [{"id": r[0], "name": r[1], "price": r[2]} for r in cursor.fetchall()]
 
     cursor.close()
     conn.close()
-    return render_template("admin.html", user=user_row, links=links, services=services)
 
-@app.route("/delete_service/<int:service_id>")
-def delete_service(service_id):
+    user_info = {
+        "username": current_user,
+        "fullname": user_data[0] if user_data and user_data[0] else current_user,
+        "bio": user_data[1] if user_data and user_data[1] else "",
+        "avatar_url": user_data[2] if user_data and user_data[2] else "",
+        "banner_url": user_data[3] if user_data and user_data[3] else "",
+        "theme": user_data[4] if user_data and user_data[4] else "dark",
+        "address": user_data[5] if user_data and user_data[5] else "",
+        "phone": user_data[6] if user_data and user_data[6] else "",
+        "social_ig": user_data[7] if user_data and user_data[7] else "",
+        "social_tiktok": user_data[8] if user_data and user_data[8] else "",
+        "social_fb": user_data[9] if user_data and user_data[9] else "",
+        "social_yt": user_data[10] if user_data and user_data[10] else "",
+        "zalo": user_data[11] if user_data and user_data[11] else "",
+        "bank_name": user_data[12] if user_data and user_data[12] else "",
+        "bank_account": user_data[13] if user_data and user_data[13] else "",
+        "bank_owner": user_data[14] if user_data and user_data[14] else ""
+    }
+
+    return render_template("admin.html", links=links, services=services, user=user_info)
+
+
+# 6. Xóa link
+@app.route("/delete/<int:link_id>")
+def delete_link(link_id):
     if "user" not in session:
-        return redirect(url_for("login"))
+        return redirect("/login")
+    current_user = session["user"]
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM services WHERE id = ? AND username = ?", (service_id, session["user"]))
+    cursor.execute("DELETE FROM links WHERE id = %s AND username = %s", (link_id, current_user))
     conn.commit()
     cursor.close()
     conn.close()
-    return redirect(url_for("admin"))
+    return redirect("/admin")
 
+
+# 6b. Xóa dịch vụ
+@app.route("/delete_service/<int:service_id>")
+def delete_service(service_id):
+    if "user" not in session:
+        return redirect("/login")
+    current_user = session["user"]
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM services WHERE id = %s AND username = %s", (service_id, current_user))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return redirect("/admin")
+
+
+# 7. Click link
+@app.route("/click/<int:link_id>")
+def track_click(link_id):
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("UPDATE links SET clicks = clicks + 1 WHERE id = %s", (link_id,))
+    conn.commit()
+    cursor.execute("SELECT url FROM links WHERE id = %s", (link_id,))
+    target_url = cursor.fetchone()
+    cursor.close()
+    conn.close()
+
+    if target_url:
+        return redirect(target_url[0])
+    return redirect("/")
+
+
+# 8. Xem Bio công khai
 @app.route("/<username>")
 def user_bio(username):
     username = username.strip().lower()
     conn = get_db()
     cursor = conn.cursor()
-
     cursor.execute("""
         SELECT fullname, bio, avatar_url, banner_url, theme, address, phone,
                social_ig, social_tiktok, social_fb, social_yt, zalo,
                bank_name, bank_account, bank_owner
-        FROM users WHERE username = ?
+        FROM users WHERE username = %s
     """, (username,))
     user_data = cursor.fetchone()
 
@@ -161,17 +341,16 @@ def user_bio(username):
         conn.close()
         return "<h3>Không tìm thấy trang cá nhân này!</h3>", 404
 
-    cursor.execute("SELECT id, title, url FROM links WHERE username = ? ORDER BY id ASC", (username,))
+    cursor.execute("SELECT id, title, url FROM links WHERE username = %s ORDER BY id ASC", (username,))
     my_links = [{"id": row[0], "title": row[1], "url": row[2]} for row in cursor.fetchall()]
 
-    cursor.execute("SELECT id, name, price FROM services WHERE username = ? ORDER BY id ASC", (username,))
+    cursor.execute("SELECT id, name, price FROM services WHERE username = %s ORDER BY id ASC", (username,))
     my_services = [{"id": row[0], "name": row[1], "price": row[2]} for row in cursor.fetchall()]
 
     cursor.close()
     conn.close()
 
     user_info = {
-        "username": username,
         "name": user_data[0] if user_data[0] else username,
         "bio": user_data[1] if user_data[1] else "",
         "avatar": user_data[2] if user_data[2] else "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150",
@@ -183,13 +362,14 @@ def user_bio(username):
         "social_tiktok": user_data[8] if user_data[8] else "",
         "social_fb": user_data[9] if user_data[9] else "",
         "social_yt": user_data[10] if user_data[10] else "",
-        "zalo": user_data[11] if len(user_data) > 11 and user_data[11] else "",
-        "bank_name": user_data[12] if len(user_data) > 12 and user_data[12] else "",
-        "bank_account": user_data[13] if len(user_data) > 13 and user_data[13] else "",
-        "bank_owner": user_data[14] if len(user_data) > 14 and user_data[14] else ""
+        "zalo": user_data[11] if user_data[11] else "",
+        "bank_name": user_data[12] if user_data[12] else "",
+        "bank_account": user_data[13] if user_data[13] else "",
+        "bank_owner": user_data[14] if user_data[14] else ""
     }
 
     return render_template("bio.html", user=user_info, links=my_links, services=my_services)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
