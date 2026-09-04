@@ -1,170 +1,559 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" data-theme="{{ user.theme }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ user.name }} - Bio Link</title>
+    <meta name="description" content="{{ user.bio }}">
+    <title>{{ user.name }} · Bio Link</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        
+        :root {
+            --bg: #f8fafc;
+            --text: #0f172a;
+            --muted: #475569;
+            --card: rgba(255, 255, 255, .52);
+            --surface: rgba(255, 255, 255, .76);
+            --border: rgba(255, 255, 255, .9);
+            --shadow: rgba(15, 23, 42, .06);
+        }
+
+        [data-theme="dark"] {
+            --bg: #0f172a;
+            --text: #f8fafc;
+            --muted: #cbd5e1;
+            --card: rgba(15, 23, 42, .65);
+            --surface: rgba(30, 41, 59, .7);
+            --border: rgba(148, 163, 184, .2);
+            --shadow: rgba(0, 0, 0, .25);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
         body {
-            background: #f8fafc;
-            color: #0f172a;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             padding: 40px 16px;
-            position: relative;
             overflow-x: hidden;
         }
 
-        /* Hiệu ứng Liquid Glass lơ lửng */
-        .liquid-blob { position: fixed; border-radius: 50%; filter: blur(100px); z-index: -1; opacity: 0.55; }
-        .b1 { width: 380px; height: 380px; background: #93c5fd; top: -50px; left: -80px; }
-        .b2 { width: 420px; height: 420px; background: #fbcfe8; bottom: -50px; right: -80px; }
+        .liquid-blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -1;
+            opacity: .52;
+        }
+
+        .b1 {
+            width: 380px;
+            height: 380px;
+            background: #60a5fa;
+            top: -50px;
+            left: -80px;
+        }
+
+        .b2 {
+            width: 420px;
+            height: 420px;
+            background: #f472b6;
+            bottom: -50px;
+            right: -80px;
+        }
 
         .bio-wrapper {
             width: 100%;
             max-width: 440px;
-            background: rgba(255, 255, 255, 0.45);
+            background: var(--card);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.85);
-            border-radius: 36px;
-            padding: 32px 20px;
-            box-shadow: 0 16px 40px rgba(15, 23, 42, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 32px;
+            padding: 20px;
+            box-shadow: 0 16px 40px var(--shadow);
             text-align: center;
+            align-self: flex-start;
         }
 
-        .avatar { width: 88px; height: 88px; border-radius: 50%; object-fit: cover; border: 3px solid #fff; box-shadow: 0 4px 14px rgba(0,0,0,0.08); margin-bottom: 12px; }
-        .name { font-size: 19px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 6px; }
-        .bio-desc { font-size: 13px; color: #475569; margin: 6px 0 20px; line-height: 1.5; }
+        .banner {
+            display: block;
+            width: calc(100% + 40px);
+            height: 132px;
+            object-fit: cover;
+            margin: -20px -20px 0;
+            border-radius: 32px 32px 0 0;
+        }
 
-        /* Nút chốt Sale 1-chạm */
-        .cta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+        .profile {
+            padding-top: 22px;
+        }
+
+        .banner + .profile {
+            padding-top: 0;
+            margin-top: -44px;
+        }
+
+        .avatar {
+            width: 88px;
+            height: 88px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--bg);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, .14);
+            margin-bottom: 12px;
+            background: #e2e8f0;
+        }
+
+        .name {
+            font-size: 20px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .verified {
+            color: #0284c7;
+            font-size: 15px;
+        }
+
+        .bio-desc {
+            font-size: 13px;
+            color: var(--muted);
+            margin: 6px 0 15px;
+            line-height: 1.55;
+            white-space: pre-line;
+        }
+
+        .details,
+        .socials {
+            display: flex;
+            justify-content: center;
+            gap: 9px;
+            flex-wrap: wrap;
+        }
+
+        .details {
+            color: var(--muted);
+            font-size: 12px;
+            margin: 0 0 15px;
+        }
+
+        .social {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            text-decoration: none;
+            transition: transform .15s;
+        }
+
+        .social:hover {
+            transform: translateY(-2px);
+        }
+
+        .cta-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 17px 0 24px;
+        }
+
         .cta-btn {
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            padding: 12px; border-radius: 16px; text-decoration: none; font-size: 13px; font-weight: 700; color: #fff;
-            transition: transform 0.15s; border: none; cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px;
+            border-radius: 16px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            transition: transform .15s;
+            border: 0;
+            cursor: pointer;
         }
-        .cta-btn:active { transform: scale(0.98); }
-        .btn-zalo { background: #0068ff; }
-        .btn-call { background: #16a34a; }
-        .btn-qr { background: #0f172a; grid-column: 1 / -1; }
 
-        /* Tiêu đề mục */
-        .section-title { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b; margin: 20px 0 12px; text-align: left; }
+        .cta-btn:active {
+            transform: scale(.98);
+        }
 
-        /* Bảng giá dịch vụ */
+        .btn-zalo {
+            background: #0068ff;
+        }
+
+        .btn-call {
+            background: #16a34a;
+        }
+
+        .btn-qr {
+            background: #0f172a;
+            grid-column: 1 / -1;
+        }
+
+        .section-title {
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: var(--muted);
+            margin: 20px 0 12px;
+            text-align: left;
+        }
+
         .service-card {
-            display: flex; justify-content: space-between; align-items: center;
-            background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(255, 255, 255, 0.9);
-            border-radius: 18px; padding: 14px 16px; margin-bottom: 10px; text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            text-align: left;
         }
-        .service-name { font-size: 14px; font-weight: 700; color: #0f172a; }
-        .service-price { font-size: 13px; font-weight: 800; color: #059669; }
 
-        /* Danh sách link */
+        .service-name {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .service-price {
+            font-size: 13px;
+            font-weight: 800;
+            color: #10b981;
+            white-space: nowrap;
+        }
+
         .link-item {
-            display: block; background: rgba(255, 255, 255, 0.75); border: 1px solid rgba(255, 255, 255, 0.9);
-            padding: 14px 18px; border-radius: 20px; text-decoration: none; color: #0f172a;
-            font-size: 14px; font-weight: 700; margin-bottom: 10px; transition: all 0.2s;
+            display: block;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 14px 18px;
+            border-radius: 20px;
+            text-decoration: none;
+            color: var(--text);
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            transition: all .2s;
         }
-        .link-item:hover { background: #ffffff; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.04); }
 
-        /* Popup VietQR */
+        .link-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--shadow);
+        }
+
         .modal {
-            display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(8px); z-index: 99; align-items: center; justify-content: center; padding: 16px;
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .55);
+            backdrop-filter: blur(8px);
+            z-index: 99;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
         }
-        .modal.active { display: flex; }
+
+        .modal.active {
+            display: flex;
+        }
+
         .modal-body {
-            background: #ffffff; border-radius: 28px; padding: 24px; max-width: 320px; width: 100%; text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2); position: relative;
+            background: #fff;
+            color: #0f172a;
+            border-radius: 28px;
+            padding: 24px;
+            max-width: 320px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, .25);
+            position: relative;
         }
-        .modal-body img { width: 100%; border-radius: 16px; margin: 12px 0; }
-        .btn-close { position: absolute; top: 14px; right: 16px; font-size: 20px; border: none; background: transparent; cursor: pointer; color: #64748b; }
+
+        .modal-body img {
+            width: 100%;
+            border-radius: 16px;
+            margin: 12px 0;
+        }
+
+        .btn-close {
+            position: absolute;
+            top: 12px;
+            right: 15px;
+            font-size: 24px;
+            line-height: 1;
+            border: 0;
+            background: transparent;
+            cursor: pointer;
+            color: #64748b;
+        }
+
+        @media (max-width: 380px) {
+            body {
+                padding: 18px 10px;
+            }
+
+            .bio-wrapper {
+                border-radius: 26px;
+            }
+
+            .banner {
+                border-radius: 26px 26px 0 0;
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="liquid-blob b1"></div>
+    <div class="liquid-blob b2"></div>
 
-<div class="liquid-blob b1"></div>
-<div class="liquid-blob b2"></div>
-
-<div class="bio-wrapper">
-    <img src="{{ user.avatar }}" alt="Avatar" class="avatar">
-    <h1 class="name">{{ user.name }} <i class="fa-solid fa-circle-check" style="color: #0284c7; font-size: 15px;"></i></h1>
-    <p class="bio-desc">{{ user.bio }}</p>
-
-    <!-- Nút hành động nhanh -->
-    <div class="cta-grid">
-        {% if user.zalo %}
-        <a href="https://zalo.me/{{ user.zalo }}" target="_blank" class="cta-btn btn-zalo">
-            <i class="fa-solid fa-comment-dots"></i> Nhắn Zalo
-        </a>
+    <main class="bio-wrapper">
+        {% if user.banner %}
+        <img
+            src="{{ user.banner }}"
+            alt="Ảnh bìa của {{ user.name }}"
+            class="banner"
+        >
         {% endif %}
 
-        {% if user.phone %}
-        <a href="tel:{{ user.phone }}" class="cta-btn btn-call">
-            <i class="fa-solid fa-phone"></i> Gọi Điện
-        </a>
+        <section class="profile">
+            <img
+                src="{{ user.avatar }}"
+                alt="Ảnh đại diện của {{ user.name }}"
+                class="avatar"
+            >
+
+            <h1 class="name">
+                {{ user.name }}
+                <i
+                    class="fa-solid fa-circle-check verified"
+                    aria-label="Đã xác minh"
+                ></i>
+            </h1>
+
+            {% if user.bio %}
+            <p class="bio-desc">{{ user.bio }}</p>
+            {% endif %}
+
+            {% if user.address %}
+            <p class="details">
+                <span>
+                    <i class="fa-solid fa-location-dot"></i>
+                    {{ user.address }}
+                </span>
+            </p>
+            {% endif %}
+
+            {% if user.social_ig or user.social_tiktok or user.social_fb or user.social_yt %}
+            <nav class="socials" aria-label="Mạng xã hội">
+                {% if user.social_ig %}
+                <a
+                    href="{{ user.social_ig }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="social"
+                    aria-label="Instagram"
+                >
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+                {% endif %}
+
+                {% if user.social_tiktok %}
+                <a
+                    href="{{ user.social_tiktok }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="social"
+                    aria-label="TikTok"
+                >
+                    <i class="fa-brands fa-tiktok"></i>
+                </a>
+                {% endif %}
+
+                {% if user.social_fb %}
+                <a
+                    href="{{ user.social_fb }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="social"
+                    aria-label="Facebook"
+                >
+                    <i class="fa-brands fa-facebook-f"></i>
+                </a>
+                {% endif %}
+
+                {% if user.social_yt %}
+                <a
+                    href="{{ user.social_yt }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="social"
+                    aria-label="YouTube"
+                >
+                    <i class="fa-brands fa-youtube"></i>
+                </a>
+                {% endif %}
+            </nav>
+            {% endif %}
+        </section>
+
+        {% if user.zalo or user.phone or user.vietqr_url %}
+        <section class="cta-grid" aria-label="Liên hệ nhanh">
+            {% if user.zalo %}
+            <a
+                href="https://zalo.me/{{ user.zalo }}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="cta-btn btn-zalo"
+            >
+                <i class="fa-solid fa-comment-dots"></i>
+                Nhắn Zalo
+            </a>
+            {% endif %}
+
+            {% if user.phone %}
+            <a href="tel:{{ user.phone }}" class="cta-btn btn-call">
+                <i class="fa-solid fa-phone"></i>
+                Gọi điện
+            </a>
+            {% endif %}
+
+            {% if user.vietqr_url %}
+            <button
+                type="button"
+                class="cta-btn btn-qr"
+                onclick="openQrModal()"
+            >
+                <i class="fa-solid fa-qrcode"></i>
+                Quét mã VietQR chuyển tiền
+            </button>
+            {% endif %}
+        </section>
         {% endif %}
 
-        {% if user.bank_account and user.bank_name %}
-        <button class="cta-btn btn-qr" onclick="openQrModal()">
-            <i class="fa-solid fa-qrcode"></i> Quét Mã VietQR Chuyển Tiền
-        </button>
+        {% if services %}
+        <section>
+            <h2 class="section-title">
+                <i class="fa-solid fa-tags"></i>
+                Bảng giá dịch vụ
+            </h2>
+
+            {% for s in services %}
+            <div class="service-card">
+                <span class="service-name">{{ s.name }}</span>
+                <span class="service-price">{{ s.price }}</span>
+            </div>
+            {% endfor %}
+        </section>
         {% endif %}
+
+        {% if links %}
+        <section>
+            <h2 class="section-title">
+                <i class="fa-solid fa-link"></i>
+                Liên kết
+            </h2>
+
+            {% for link in links %}
+            <a
+                href="{{ url_for('track_click', link_id=link.id) }}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="link-item"
+            >
+                {{ link.title }}
+            </a>
+            {% endfor %}
+        </section>
+        {% endif %}
+    </main>
+
+    {% if user.vietqr_url %}
+    <div
+        class="modal"
+        id="qrModal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="qrTitle"
+        onclick="closeQrModal(event)"
+    >
+        <div class="modal-body" onclick="event.stopPropagation()">
+            <button
+                type="button"
+                class="btn-close"
+                onclick="closeQrModal()"
+                aria-label="Đóng"
+            >
+                &times;
+            </button>
+
+            <h2 id="qrTitle" style="font-size: 16px; font-weight: 800;">
+                Chuyển khoản VietQR
+            </h2>
+
+            <p style="font-size: 12px; color: #64748b; margin-top: 4px;">
+                Quét mã bằng ứng dụng ngân hàng
+            </p>
+
+            <img
+                src="{{ user.vietqr_url }}"
+                alt="Mã VietQR cho {{ user.name }}"
+            >
+
+            <div style="font-size: 13px; font-weight: 700;">
+                {{ user.bank_owner }}
+            </div>
+
+            <div style="font-size: 12px; color: #475569;">
+                {{ user.bank_name }} · {{ user.bank_account }}
+            </div>
+        </div>
     </div>
-
-    <!-- Bảng giá dịch vụ -->
-    {% if services %}
-    <div class="section-title"><i class="fa-solid fa-tags"></i> Bảng Giá Dịch Vụ</div>
-    {% for s in services %}
-    <div class="service-card">
-        <span class="service-name">{{ s.name }}</span>
-        <span class="service-price">{{ s.price }}</span>
-    </div>
-    {% endfor %}
     {% endif %}
 
-    <!-- Danh sách liên kết ngoài -->
-    {% if links %}
-    <div class="section-title"><i class="fa-solid fa-link"></i> Liên Kết</div>
-    {% for l in links %}
-    <a href="{{ l.url }}" target="_blank" class="link-item">{{ l.title }}</a>
-    {% endfor %}
-    {% endif %}
-</div>
+    <script>
+        function openQrModal() {
+            const modal = document.getElementById("qrModal");
 
-<!-- Modal hiển thị VietQR tự động -->
-{% if user.bank_account and user.bank_name %}
-<div class="modal" id="qrModal" onclick="closeQrModal(event)">
-    <div class="modal-body" onclick="event.stopPropagation()">
-        <button class="btn-close" onclick="closeQrModal()">&times;</button>
-        <h3 style="font-size: 16px; font-weight: 800;">Chuyển khoản VietQR</h3>
-        <p style="font-size: 12px; color: #64748b; margin-top: 4px;">Quét mã bằng app ngân hàng bất kỳ</p>
-        
-        <!-- Tự động ghép API tạo mã chuẩn VietQR -->
-        <img src="https://img.vietqr.io/image/{{ user.bank_name }}-{{ user.bank_account }}-compact2.png?accountName={{ user.bank_owner }}" alt="VietQR Code">
+            if (modal) {
+                modal.classList.add("active");
+                modal.querySelector(".btn-close").focus();
+            }
+        }
 
-        <div style="font-size: 13px; font-weight: 700; color: #0f172a;">{{ user.bank_owner }}</div>
-        <div style="font-size: 12px; color: #475569;">{{ user.bank_name }} - {{ user.bank_account }}</div>
-    </div>
-</div>
-{% endif %}
+        function closeQrModal(event) {
+            if (!event || event.target === event.currentTarget) {
+                const modal = document.getElementById("qrModal");
 
-<script>
-    function openQrModal() {
-        const modal = document.getElementById('qrModal');
-        if (modal) modal.classList.add('active');
-    }
-    function closeQrModal() {
-        const modal = document.getElementById('qrModal');
-        if (modal) modal.classList.remove('active');
-    }
-</script>
+                if (modal) {
+                    modal.classList.remove("active");
+                }
+            }
+        }
 
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") {
+                closeQrModal();
+            }
+        });
+    </script>
 </body>
 </html>

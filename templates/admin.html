@@ -3,160 +3,674 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bảng Quản Trị - BIOPAGE</title>
+    <title>Bảng quản trị · BIOPAGE</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background: #f8fafc; color: #0f172a; min-height: 100vh; padding: 20px 10px; position: relative; }
-
-        .liquid-blob { position: fixed; border-radius: 50%; filter: blur(120px); z-index: -1; opacity: 0.5; }
-        .b1 { width: 450px; height: 450px; background: #93c5fd; top: -10%; left: -10%; }
-        .b2 { width: 500px; height: 500px; background: #fbcfe8; bottom: -10%; right: -10%; }
-
-        .container { max-width: 900px; margin: 0 auto; }
-        
-        .header-bar {
-            display: flex; justify-content: space-between; align-items: center;
-            background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.8); border-radius: 20px;
-            padding: 16px 24px; margin-bottom: 24px;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
-        .btn-logout { text-decoration: none; color: #ef4444; font-size: 14px; font-weight: 700; }
-        .btn-view-bio { text-decoration: none; background: #2563eb; color: #fff; padding: 8px 18px; border-radius: 30px; font-size: 13px; font-weight: 700; margin-right: 12px; }
 
-        .grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+        body {
+            background: #f8fafc;
+            color: #0f172a;
+            min-height: 100vh;
+            padding: 20px 10px;
+        }
+
+        .liquid-blob {
+            position: fixed;
+            width: 460px;
+            height: 460px;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: -1;
+            opacity: .45;
+        }
+
+        .b1 {
+            background: #93c5fd;
+            top: -12%;
+            left: -10%;
+        }
+
+        .b2 {
+            background: #fbcfe8;
+            bottom: -12%;
+            right: -10%;
+        }
+
+        .container {
+            max-width: 980px;
+            margin: 0 auto;
+        }
+
+        .header-bar,
         .card {
-            background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.8); border-radius: 24px;
-            padding: 24px; box-shadow: 0 8px 30px rgba(0,0,0,0.03);
+            background: rgba(255, 255, 255, .62);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, .9);
+            box-shadow: 0 8px 30px rgba(15, 23, 42, .04);
         }
-        .card h2 { font-size: 17px; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
 
-        .form-group { margin-bottom: 14px; }
-        .form-group label { display: block; font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 6px; }
-        .form-control {
-            width: 100%; padding: 11px 16px; border-radius: 14px;
-            border: 1px solid rgba(203, 213, 225, 0.8); background: rgba(255, 255, 255, 0.8);
-            font-size: 14px; outline: none;
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            align-items: center;
+            border-radius: 20px;
+            padding: 16px 24px;
+            margin-bottom: 24px;
         }
-        .form-control:focus { border-color: #2563eb; }
+
+        .header-bar h1 {
+            font-size: 18px;
+        }
+
+        .muted {
+            color: #64748b;
+            font-size: 12px;
+            margin-top: 3px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-view,
+        .btn-logout {
+            border: 0;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 9px 15px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .btn-view {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-logout {
+            background: transparent;
+            color: #dc2626;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .full {
+            grid-column: 1 / -1;
+        }
+
+        .card {
+            border-radius: 24px;
+            padding: 24px;
+        }
+
+        .card h2 {
+            font-size: 17px;
+            margin-bottom: 16px;
+        }
+
+        .card h2 i {
+            margin-right: 7px;
+            color: #2563eb;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .span-2 {
+            grid-column: span 2;
+        }
+
+        .form-group {
+            min-width: 0;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: #475569;
+            margin: 0 0 6px;
+        }
+
+        .form-control {
+            width: 100%;
+            border: 1px solid #cbd5e1;
+            border-radius: 13px;
+            background: rgba(255, 255, 255, .85);
+            padding: 11px 13px;
+            font-size: 14px;
+            color: #0f172a;
+        }
+
+        .form-control:focus {
+            outline: 2px solid #bfdbfe;
+            border-color: #2563eb;
+        }
+
+        textarea.form-control {
+            min-height: 86px;
+            resize: vertical;
+        }
 
         .btn-submit {
-            width: 100%; padding: 12px; border: none; border-radius: 14px;
-            background: #0f172a; color: #fff; font-size: 14px; font-weight: 700;
-            cursor: pointer; transition: 0.2s;
+            width: 100%;
+            border: 0;
+            border-radius: 14px;
+            padding: 12px;
+            background: #0f172a;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 14px;
         }
-        .btn-submit:hover { opacity: 0.9; }
 
-        .item-list { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
-        .item-row {
-            display: flex; justify-content: space-between; align-items: center;
-            background: rgba(255, 255, 255, 0.7); padding: 12px 16px; border-radius: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.9);
+        .btn-submit:hover {
+            opacity: .9;
         }
-        .item-info b { font-size: 14px; color: #0f172a; display: block; }
-        .item-info span { font-size: 12px; color: #64748b; }
-        .btn-del { color: #ef4444; text-decoration: none; font-size: 14px; padding: 4px 8px; }
+
+        .item-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, .72);
+            border: 1px solid rgba(255, 255, 255, .9);
+            border-radius: 14px;
+            padding: 12px 14px;
+        }
+
+        .item-info {
+            min-width: 0;
+        }
+
+        .item-info b {
+            font-size: 14px;
+            display: block;
+            overflow-wrap: anywhere;
+        }
+
+        .item-info span {
+            color: #64748b;
+            font-size: 12px;
+            overflow-wrap: anywhere;
+        }
+
+        .btn-del {
+            border: 0;
+            background: none;
+            color: #dc2626;
+            padding: 8px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .two-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr auto;
+            align-items: end;
+            gap: 12px;
+        }
+
+        .two-inputs .btn-submit {
+            width: auto;
+            padding: 12px 22px;
+            margin: 0;
+            background: #2563eb;
+        }
+
+        .note {
+            color: #64748b;
+            font-size: 12px;
+            line-height: 1.45;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 720px) {
+            body {
+                padding: 12px 8px;
+            }
+
+            .header-bar {
+                padding: 16px;
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .grid,
+            .form-grid,
+            .two-inputs {
+                grid-template-columns: 1fr;
+            }
+
+            .full,
+            .span-2 {
+                grid-column: auto;
+            }
+
+            .two-inputs .btn-submit {
+                width: 100%;
+            }
+
+            .card {
+                padding: 19px;
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="liquid-blob b1"></div>
+    <div class="liquid-blob b2"></div>
 
-<div class="liquid-blob b1"></div>
-<div class="liquid-blob b2"></div>
-
-<div class="container">
-    <div class="header-bar">
-        <div>
-            <h3>Quản trị Bio Link</h3>
-            <span style="font-size: 12px; color: #64748b;">Xin chào, <b>{{ session['user'] }}</b></span>
-        </div>
-        <div>
-            <a href="/{{ session['user'] }}" target="_blank" class="btn-view-bio"><i class="fa-solid fa-arrow-up-right-from-square"></i> Xem Trang Bio</a>
-            <a href="/logout" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a>
-        </div>
-    </div>
-
-    <div class="grid-cards">
-        <!-- 1. Quản lý VietQR -->
-        <div class="card">
-            <h2><i class="fa-solid fa-qrcode" style="color: #059669;"></i> Tài Khoản Thanh Toán (VietQR)</h2>
-            <form method="POST">
-                <input type="hidden" name="update_bank" value="1">
-                <div class="form-group">
-                    <label>Ngân hàng (Mã viết tắt: MB, VCB, TCB, VPB, ACB...)</label>
-                    <input type="text" name="bank_name" class="form-control" placeholder="VD: MB" value="{{ user.bank_name }}" required>
-                </div>
-                <div class="form-group">
-                    <label>Số tài khoản</label>
-                    <input type="text" name="bank_account" class="form-control" placeholder="Nhập số tài khoản" value="{{ user.bank_account }}" required>
-                </div>
-                <div class="form-group">
-                    <label>Tên chủ tài khoản (viết hoa không dấu)</label>
-                    <input type="text" name="bank_owner" class="form-control" placeholder="VD: NGUYEN VAN A" value="{{ user.bank_owner }}" required>
-                </div>
-                <button type="submit" class="btn-submit" style="background: #059669;">Lưu Cấu Hình VietQR</button>
-            </form>
-        </div>
-
-        <!-- 2. Quản lý Bảng giá / Dịch vụ -->
-        <div class="card">
-            <h2><i class="fa-solid fa-tags" style="color: #6366f1;"></i> Menu Dịch Vụ / Bảng Giá</h2>
-            <form method="POST">
-                <input type="hidden" name="add_service" value="1">
-                <div class="form-group">
-                    <label>Tên dịch vụ / sản phẩm</label>
-                    <input type="text" name="name" class="form-control" placeholder="VD: Tư vấn da chuyên sâu" required>
-                </div>
-                <div class="form-group">
-                    <label>Giá tiền hiển thị</label>
-                    <input type="text" name="price" class="form-control" placeholder="VD: 250.000đ hoặc Miễn phí" required>
-                </div>
-                <button type="submit" class="btn-submit" style="background: #6366f1;">Thêm Vào Bảng Giá</button>
-            </form>
-
-            <div class="item-list">
-                {% for s in services %}
-                <div class="item-row">
-                    <div class="item-info">
-                        <b>{{ s.name }}</b>
-                        <span style="color: #059669; font-weight: 700;">{{ s.price }}</span>
-                    </div>
-                    <a href="/delete_service/{{ s.id }}" class="btn-del" onclick="return confirm('Xóa dịch vụ này?');"><i class="fa-solid fa-trash-can"></i></a>
-                </div>
-                {% endfor %}
+    <main class="container">
+        <header class="header-bar">
+            <div>
+                <h1>Quản trị Bio Link</h1>
+                <p class="muted">Xin chào, <strong>{{ user.username }}</strong></p>
             </div>
-        </div>
 
-        <!-- 3. Quản lý Liên kết (Links) -->
-        <div class="card" style="grid-column: 1 / -1;">
-            <h2><i class="fa-solid fa-link" style="color: #2563eb;"></i> Danh Sách Liên Kết Ngoài</h2>
-            <form method="POST" style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 12px; align-items: end;">
-                <input type="hidden" name="add_link" value="1">
-                <div class="form-group" style="margin: 0;">
-                    <label>Tiêu đề nút bấm</label>
-                    <input type="text" name="title" class="form-control" placeholder="VD: Kênh TikTok cá nhân" required>
-                </div>
-                <div class="form-group" style="margin: 0;">
-                    <label>Đường dẫn URL</label>
-                    <input type="url" name="url" class="form-control" placeholder="https://..." required>
-                </div>
-                <button type="submit" class="btn-submit" style="height: 44px; width: auto; padding: 0 24px; background: #2563eb;">Thêm Link</button>
-            </form>
+            <div class="header-actions">
+                <a
+                    href="{{ url_for('user_bio', username=user.username) }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="btn-view"
+                >
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    Xem trang bio
+                </a>
 
-            <div class="item-list">
-                {% for link in links %}
-                <div class="item-row">
-                    <div class="item-info">
-                        <b>{{ link.title }}</b>
-                        <span>{{ link.url }} • <b>{{ link.clicks }}</b> lượt click</span>
-                    </div>
-                    <a href="/delete/{{ link.id }}" class="btn-del" onclick="return confirm('Xóa liên kết này?');"><i class="fa-solid fa-trash-can"></i></a>
-                </div>
-                {% endfor %}
+                <form method="post" action="{{ url_for('logout') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="btn-logout" type="submit">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        Đăng xuất
+                    </button>
+                </form>
             </div>
-        </div>
-    </div>
-</div>
+        </header>
 
+        <section class="grid">
+            <article class="card full">
+                <h2>
+                    <i class="fa-solid fa-user-pen"></i>
+                    Hồ sơ công khai
+                </h2>
+
+                <form method="post">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="update_profile" value="1">
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="fullname">Tên hiển thị</label>
+                            <input
+                                id="fullname"
+                                name="fullname"
+                                class="form-control"
+                                maxlength="80"
+                                value="{{ user.fullname }}"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="theme">Giao diện</label>
+                            <select id="theme" name="theme" class="form-control">
+                                <option value="light" {% if user.theme == 'light' %}selected{% endif %}>
+                                    Sáng
+                                </option>
+                                <option value="dark" {% if user.theme == 'dark' %}selected{% endif %}>
+                                    Tối
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="form-group span-2">
+                            <label for="bio">Giới thiệu</label>
+                            <textarea
+                                id="bio"
+                                name="bio"
+                                class="form-control"
+                                maxlength="300"
+                            >{{ user.bio }}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="avatar_url">URL ảnh đại diện</label>
+                            <input
+                                id="avatar_url"
+                                name="avatar_url"
+                                type="url"
+                                class="form-control"
+                                placeholder="https://..."
+                                value="{{ user.avatar_url }}"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="banner_url">URL ảnh bìa</label>
+                            <input
+                                id="banner_url"
+                                name="banner_url"
+                                type="url"
+                                class="form-control"
+                                placeholder="https://..."
+                                value="{{ user.banner_url }}"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="address">Địa chỉ / khu vực</label>
+                            <input
+                                id="address"
+                                name="address"
+                                class="form-control"
+                                maxlength="160"
+                                value="{{ user.address }}"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Số điện thoại</label>
+                            <input
+                                id="phone"
+                                name="phone"
+                                type="tel"
+                                class="form-control"
+                                maxlength="25"
+                                value="{{ user.phone }}"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="zalo">Số Zalo</label>
+                            <input
+                                id="zalo"
+                                name="zalo"
+                                inputmode="numeric"
+                                class="form-control"
+                                maxlength="20"
+                                value="{{ user.zalo }}"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="social_ig">Link Instagram</label>
+                            <input
+                                id="social_ig"
+                                name="social_ig"
+                                type="url"
+                                class="form-control"
+                                placeholder="https://instagram.com/..."
+                                value="{{ user.social_ig }}"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="social_tiktok">Link TikTok</label>
+                            <input
+                                id="social_tiktok"
+                                name="social_tiktok"
+                                type="url"
+                                class="form-control"
+                                placeholder="https://tiktok.com/@..."
+                                value="{{ user.social_tiktok }}"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="social_fb">Link Facebook</label>
+                            <input
+                                id="social_fb"
+                                name="social_fb"
+                                type="url"
+                                class="form-control"
+                                placeholder="https://facebook.com/..."
+                                value="{{ user.social_fb }}"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="social_yt">Link YouTube</label>
+                            <input
+                                id="social_yt"
+                                name="social_yt"
+                                type="url"
+                                class="form-control"
+                                placeholder="https://youtube.com/..."
+                                value="{{ user.social_yt }}"
+                            >
+                        </div>
+                    </div>
+
+                    <button class="btn-submit" type="submit">
+                        Lưu hồ sơ
+                    </button>
+                </form>
+            </article>
+
+            <article class="card">
+                <h2>
+                    <i class="fa-solid fa-qrcode" style="color: #059669;"></i>
+                    VietQR
+                </h2>
+
+                <form method="post">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="update_bank" value="1">
+
+                    <div class="form-group">
+                        <label for="bank_name">Mã ngân hàng</label>
+                        <input
+                            id="bank_name"
+                            name="bank_name"
+                            class="form-control"
+                            maxlength="12"
+                            placeholder="VD: MB, VCB"
+                            value="{{ user.bank_name }}"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bank_account">Số tài khoản</label>
+                        <input
+                            id="bank_account"
+                            name="bank_account"
+                            inputmode="numeric"
+                            class="form-control"
+                            maxlength="25"
+                            value="{{ user.bank_account }}"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bank_owner">Tên chủ tài khoản</label>
+                        <input
+                            id="bank_owner"
+                            name="bank_owner"
+                            class="form-control"
+                            maxlength="80"
+                            value="{{ user.bank_owner }}"
+                        >
+                    </div>
+
+                    <button class="btn-submit" style="background: #059669;" type="submit">
+                        Lưu VietQR
+                    </button>
+
+                    <p class="note">
+                        Thông tin này sẽ hiển thị công khai trên trang bio khi bạn bật mã QR.
+                    </p>
+                </form>
+            </article>
+
+            <article class="card">
+                <h2>
+                    <i class="fa-solid fa-tags" style="color: #6366f1;"></i>
+                    Dịch vụ / bảng giá
+                </h2>
+
+                <form method="post">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="add_service" value="1">
+
+                    <div class="form-group">
+                        <label for="service_name">Tên dịch vụ</label>
+                        <input
+                            id="service_name"
+                            name="name"
+                            class="form-control"
+                            maxlength="100"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="price">Giá hiển thị</label>
+                        <input
+                            id="price"
+                            name="price"
+                            class="form-control"
+                            maxlength="60"
+                            placeholder="VD: 250.000đ"
+                            required
+                        >
+                    </div>
+
+                    <button class="btn-submit" style="background: #6366f1;" type="submit">
+                        Thêm dịch vụ
+                    </button>
+                </form>
+
+                <div class="item-list">
+                    {% for s in services %}
+                    <div class="item-row">
+                        <div class="item-info">
+                            <b>{{ s.name }}</b>
+                            <span style="color: #059669; font-weight: 700;">
+                                {{ s.price }}
+                            </span>
+                        </div>
+
+                        <form
+                            method="post"
+                            action="{{ url_for('delete_service', service_id=s.id) }}"
+                            onsubmit="return confirm('Xóa dịch vụ này?');"
+                        >
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                            <button
+                                class="btn-del"
+                                type="submit"
+                                aria-label="Xóa {{ s.name }}"
+                            >
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </form>
+                    </div>
+                    {% endfor %}
+                </div>
+            </article>
+
+            <article class="card full">
+                <h2>
+                    <i class="fa-solid fa-link"></i>
+                    Liên kết ngoài
+                </h2>
+
+                <form method="post" class="two-inputs">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="add_link" value="1">
+
+                    <div class="form-group">
+                        <label for="title">Tiêu đề nút</label>
+                        <input
+                            id="title"
+                            name="title"
+                            class="form-control"
+                            maxlength="100"
+                            placeholder="VD: Kênh TikTok"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="url">Đường dẫn URL</label>
+                        <input
+                            id="url"
+                            name="url"
+                            type="url"
+                            class="form-control"
+                            placeholder="https://..."
+                            required
+                        >
+                    </div>
+
+                    <button type="submit" class="btn-submit">
+                        Thêm link
+                    </button>
+                </form>
+
+                <div class="item-list">
+                    {% for link in links %}
+                    <div class="item-row">
+                        <div class="item-info">
+                            <b>{{ link.title }}</b>
+                            <span>
+                                {{ link.url }} ·
+                                <strong>{{ link.clicks }}</strong> lượt click
+                            </span>
+                        </div>
+
+                        <form
+                            method="post"
+                            action="{{ url_for('delete_link', link_id=link.id) }}"
+                            onsubmit="return confirm('Xóa liên kết này?');"
+                        >
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                            <button
+                                class="btn-del"
+                                type="submit"
+                                aria-label="Xóa {{ link.title }}"
+                            >
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </form>
+                    </div>
+                    {% endfor %}
+                </div>
+            </article>
+        </section>
+    </main>
 </body>
 </html>
