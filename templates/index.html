@@ -3,152 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIOPAGE - Trang Bio Đa Năng Cho Cá Nhân & Doanh Nghiệp</title>
+    <title>GHÉ.NOW - Ghé một giây, kết nối ngay</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        :root {
+            --bg-main: #FBFFFE;
+            --text-main: #141414;
+            --text-muted: #55697A;
+            --brand-dark: #00638E;
+            --brand-hover: #4EC3CB;
+            --glass-bg: rgba(251, 255, 254, 0.65);
+            --glass-border: #BFD8E3;
+            --blob-1: #004A6B;
+            --blob-2: #00638E;
+            --blob-3: #8CB9CC;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif; }
         
         body {
-            background: #f8fafc;
-            color: #0f172a;
+            background: var(--bg-main);
+            color: var(--text-main);
             min-height: 100vh;
             overflow-x: hidden;
             position: relative;
             z-index: 0;
         }
 
-        /* --- LIQUID BLOBS (Vệt màu lỏng phía sau) --- */
+        /* --- AZURE BLOBS --- */
         .liquid-blob {
-            position: fixed;
+            position: absolute;
             border-radius: 50%;
             filter: blur(120px);
             z-index: -1;
-            opacity: 0.6;
+            opacity: 0.12;
+            transition: transform 0.1s ease-out;
         }
-        .blob-1 { width: 500px; height: 500px; background: #a5b4fc; top: -10%; left: -10%; }
-        .blob-2 { width: 600px; height: 600px; background: #fbcfe8; bottom: -20%; right: -10%; }
-        .blob-3 { width: 450px; height: 450px; background: #bae6fd; top: 40%; left: 30%; }
+        .blob-1 { width: 500px; height: 500px; background: var(--blob-1); top: -5%; left: -10%; }
+        .blob-2 { width: 600px; height: 600px; background: var(--blob-2); top: 20%; right: -15%; }
+        .blob-3 { width: 450px; height: 450px; background: var(--blob-3); bottom: 10%; left: 20%; opacity: 0.08; }
 
         .container { max-width: 1160px; margin: 0 auto; padding: 0 20px; }
 
-        /* Animation cuộn trang */
-        .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
+        /* Animation */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
-        /* --- GLASS EFFECT (Khối kính trong suốt) --- */
+        /* --- LIGHT GLASS EFFECT --- */
         .glass-element {
-            background: rgba(255, 255, 255, 0.4) !important;
+            background: var(--glass-bg);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.8) !important;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05) !important;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 16px 40px rgba(0, 99, 142, 0.05);
+        }
+
+        /* --- NÚT BẤM LIQUID GLASS --- */
+        .btn-claim, .btn-nav-action {
+            background: linear-gradient(135deg, rgba(0, 99, 142, 0.85) 0%, rgba(78, 195, 203, 0.75) 100%);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 25px rgba(0, 99, 142, 0.2), 
+                        inset 0 2px 4px rgba(255, 255, 255, 0.5), 
+                        inset 0 -3px 4px rgba(0, 0, 0, 0.1);
+            color: #ffffff;
+            border-radius: 40px;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .btn-claim { padding: 14px 32px; font-size: 15px; }
+        .btn-nav-action { padding: 10px 24px; font-size: 14px; }
+
+        .btn-claim:hover, .btn-nav-action:hover {
+            background: linear-gradient(135deg, rgba(0, 99, 142, 1) 0%, rgba(78, 195, 203, 1) 100%);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(78, 195, 203, 0.3), 
+                        inset 0 2px 5px rgba(255, 255, 255, 0.7), 
+                        inset 0 -3px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-claim:active, .btn-nav-action:active {
+            transform: translateY(1px) scale(0.98);
+            box-shadow: 0 4px 15px rgba(0, 99, 142, 0.2), 
+                        inset 0 2px 4px rgba(255, 255, 255, 0.3);
         }
 
         /* Navbar */
         .navbar { display: flex; justify-content: space-between; align-items: center; padding: 14px 28px; margin: 20px auto; border-radius: 50px; }
-        .logo-wrap { display: flex; align-items: center; gap: 8px; text-decoration: none; color: #0f172a; }
-        .logo-svg { height: 26px; width: auto; color: #0f172a; }
-        .logo-brand { font-size: 16px; font-weight: 800; letter-spacing: 0.2em; color: #0f172a; }
-        .nav-links { display: flex; gap: 24px; align-items: center; }
-        .nav-link { text-decoration: none; color: #475569; font-size: 14px; font-weight: 600; transition: color 0.2s; }
-        .nav-link:hover { color: #0f172a; }
-        .btn-nav-action { background: #0f172a; color: #ffffff; text-decoration: none; padding: 9px 20px; border-radius: 30px; font-size: 13px; font-weight: 700; transition: transform 0.2s; }
-        .btn-nav-action:hover { transform: translateY(-1px); }
+        .logo-wrap { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-main); }
+        .logo-brand { font-size: 20px; font-weight: 800; letter-spacing: 0.15em; }
+        .logo-dot { color: var(--brand-dark); }
+        .nav-links { display: flex; gap: 32px; align-items: center; }
+        .nav-link { text-decoration: none; color: var(--text-muted); font-size: 15px; font-weight: 600; transition: color 0.2s; }
+        .nav-link:hover { color: var(--brand-dark); }
 
         /* Hero */
-        .hero { text-align: center; padding: 40px 0 20px; }
-        .hero-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 30px; font-size: 12px; font-weight: 700; color: #0284c7; margin-bottom: 20px; }
-        .hero-title { font-size: 46px; font-weight: 900; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 16px; }
-        .hero-subtitle { font-size: 16px; color: #475569; max-width: 600px; margin: 0 auto 30px; line-height: 1.6; }
+        .hero { text-align: center; padding: 80px 0 50px; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 30px; font-size: 13px; font-weight: 700; color: var(--brand-dark); margin-bottom: 24px; background: rgba(0, 99, 142, 0.08); border: 1px solid rgba(0, 99, 142, 0.15); }
+        .hero-title { font-size: 56px; font-weight: 900; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 20px; color: var(--text-main); }
+        .hero-subtitle { font-size: 18px; color: var(--text-muted); max-width: 600px; margin: 0 auto 40px; line-height: 1.6; font-weight: 500; }
 
-        .claim-box { display: flex; align-items: center; border-radius: 50px; padding: 6px 8px 6px 20px; max-width: 480px; margin: 0 auto 40px; }
-        .claim-prefix { font-size: 14px; font-weight: 700; color: #94a3b8; }
-        .claim-input { border: none; outline: none; background: transparent; font-size: 14px; font-weight: 700; color: #0f172a; flex: 1; padding: 0 6px; }
-        .btn-claim { background: #2563eb; color: #ffffff; border: none; padding: 12px 24px; border-radius: 40px; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
-        .btn-claim:hover { background: #1d4ed8; transform: scale(1.02); }
+        .claim-box { display: flex; align-items: center; border-radius: 50px; padding: 8px 8px 8px 24px; max-width: 520px; margin: 0 auto 20px; background: #FFFFFF; }
+        .claim-prefix { font-size: 16px; font-weight: 700; color: #888; }
+        .claim-input { border: none; outline: none; background: transparent; font-size: 16px; font-weight: 700; color: var(--text-main); flex: 1; padding: 0 8px; }
+        .claim-input::placeholder { color: #CBD5E1; }
+        .hero-note { font-size: 13px; color: #888; font-weight: 500; }
 
-        .toggle-container { display: inline-flex; padding: 5px; border-radius: 40px; margin-bottom: 30px; }
-        .toggle-btn { padding: 9px 22px; border: none; background: transparent; font-size: 13px; font-weight: 700; color: #64748b; border-radius: 30px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.25s ease; }
-        .toggle-btn.active { background: #ffffff; color: #0f172a; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06); }
+        /* Băng chuyền Marquee */
+        .marquee-wrapper { overflow: hidden; width: 100%; padding: 30px 0; border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); background: rgba(251, 255, 254, 0.4); margin-bottom: 80px; }
+        .marquee-content { display: flex; width: max-content; animation: scroll 30s linear infinite; }
+        .marquee-item { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 700; color: var(--text-muted); margin: 0 40px; }
+        .marquee-item i { font-size: 24px; color: var(--brand-dark); }
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-        /* Mockup Điện thoại */
-        .mockup-display-wrap { display: flex; justify-content: center; position: relative; margin-bottom: 70px; }
-        .mockup-shell { width: 330px; height: 560px; background: #000; border-radius: 44px; border: 10px solid #0f172a; box-shadow: 0 24px 70px rgba(15, 23, 42, 0.16); position: relative; overflow: hidden; }
-        .mockup-notch { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 86px; height: 18px; background: #0f172a; border-radius: 20px; z-index: 10; }
-        .screen-content { width: 100%; height: 100%; padding: 24px 16px 16px; display: none; flex-direction: column; align-items: center; text-align: center; }
-        .screen-content.active { display: flex; }
-        .screen-biz { background: linear-gradient(135deg, #0369a1 0%, #0f172a 100%); color: #ffffff; }
-        .screen-creator { background: linear-gradient(135deg, #f97316 0%, #db2777 50%, #7c3aed 100%); color: #ffffff; }
-        .m-avatar { width: 70px; height: 70px; border-radius: 50%; border: 3px solid rgba(255, 255, 255, 0.8); object-fit: cover; margin-top: 15px; margin-bottom: 8px; }
-        .m-name { font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 5px; }
-        .m-desc { font-size: 11px; opacity: 0.85; margin: 4px 0 14px; padding: 0 10px; }
-        .m-cta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; margin-bottom: 12px; }
-        .m-btn { padding: 8px; border-radius: 10px; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 5px; }
-        .m-links-list { display: flex; flex-direction: column; gap: 8px; width: 100%; }
-        .m-link-item { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); padding: 10px 14px; border-radius: 25px; font-size: 12px; font-weight: 600; color: #fff; display: flex; align-items: center; justify-content: center; gap: 6px; }
-
-        /* Các khối Section chung */
-        .section-padding { padding: 60px 0; }
-        .section-header { text-align: center; margin-bottom: 40px; }
-        .section-header h2 { font-size: 28px; font-weight: 900; color: #0f172a; margin-bottom: 8px; }
-        .section-header p { font-size: 14px; color: #64748b; }
-        .glass-card { border-radius: 24px; padding: 26px; transition: transform 0.2s; }
-        .glass-card:hover { transform: translateY(-3px); }
-
-        /* Bento Grid */
-        .bento-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        .bento-card.span-2 { grid-column: span 2; }
-        .bento-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 16px; }
-        .glass-card h3 { font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 8px; }
-        .glass-card p { font-size: 13px; color: #64748b; line-height: 1.6; }
-
-        /* 3 Bước Đơn Giản */
-        .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; text-align: center; }
-        .step-num { width: 50px; height: 50px; background: #0f172a; color: #fff; font-size: 20px; font-weight: 900; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; box-shadow: 0 10px 20px rgba(15, 23, 42, 0.15); }
+        /* Showcase: Cá nhân vs Doanh nghiệp */
+        .showcase-section { margin-bottom: 100px; }
+        .showcase-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px; }
+        .showcase-card { border-radius: 32px; padding: 40px; display: flex; flex-direction: column; align-items: center; text-align: center; background: #FFFFFF; overflow: hidden; position: relative; }
+        .showcase-card h3 { font-size: 24px; font-weight: 800; margin-bottom: 12px; color: var(--text-main); }
+        .showcase-card p { font-size: 15px; color: var(--text-muted); margin-bottom: 30px; line-height: 1.6; }
         
-        /* Đánh giá */
-        .reviews-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-        .review-card { display: flex; flex-direction: column; gap: 14px; }
-        .review-stars { color: #f59e0b; font-size: 12px; }
-        .review-text { font-size: 14px; font-style: italic; color: #334155; line-height: 1.6; }
-        .reviewer { display: flex; align-items: center; gap: 10px; margin-top: auto; }
-        .reviewer img { width: 40px; height: 40px; border-radius: 50%; }
-        .reviewer-info h4 { font-size: 13px; font-weight: 800; color: #0f172a; }
-        .reviewer-info span { font-size: 11px; color: #64748b; }
+        .mockup-phone { width: 280px; height: 500px; background: #F8FAFC; border-radius: 36px; border: 8px solid #E2E8F0; box-shadow: 0 20px 40px rgba(0,0,0,0.08); padding: 20px 16px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .mockup-avatar { width: 70px; height: 70px; border-radius: 50%; margin-bottom: 10px; object-fit: cover; }
+        .mockup-name { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
+        .mockup-desc { font-size: 11px; color: #64748B; margin-bottom: 16px; padding: 0 10px; }
+        
+        /* Skin: Doanh nghiệp */
+        .btn-biz-primary { background: #0068FF; color: white; width: 100%; padding: 10px; border-radius: 12px; font-size: 12px; font-weight: 700; margin-bottom: 8px; display: flex; justify-content: center; align-items: center; gap: 6px; }
+        .btn-biz-secondary { background: #16A34A; color: white; width: 100%; padding: 10px; border-radius: 12px; font-size: 12px; font-weight: 700; margin-bottom: 16px; display: flex; justify-content: center; align-items: center; gap: 6px; }
+        .link-biz { width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 14px; font-size: 12px; font-weight: 600; margin-bottom: 8px; background: white; }
 
-        /* FAQ */
-        .faq-list { max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
-        .faq-item { border-radius: 16px; overflow: hidden; transition: all 0.3s; }
-        .faq-question { padding: 18px 20px; font-size: 14px; font-weight: 700; color: #0f172a; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-        .faq-question i { transition: transform 0.3s; color: #64748b; }
-        .faq-answer { padding: 0 20px; max-height: 0; overflow: hidden; font-size: 13px; color: #475569; line-height: 1.6; transition: max-height 0.3s ease, padding 0.3s ease; }
-        .faq-item.active { background: rgba(255, 255, 255, 0.95) !important; box-shadow: 0 4px 20px rgba(0,0,0,0.04); }
-        .faq-item.active .faq-question i { transform: rotate(180deg); }
-        .faq-item.active .faq-answer { padding: 0 20px 18px; max-height: 200px; }
+        /* Skin: Cá nhân */
+        .link-creator { width: 100%; padding: 14px; background: white; border: 1px solid #E2E8F0; border-radius: 16px; font-size: 13px; font-weight: 700; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
 
-        /* Banner cuối trang */
-        .bottom-cta { background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%); border-radius: 30px; padding: 60px 20px; text-align: center; color: #fff; margin-bottom: 40px; position: relative; overflow: hidden; }
-        .bottom-cta h2 { font-size: 32px; font-weight: 900; margin-bottom: 12px; }
-        .bottom-cta p { font-size: 15px; opacity: 0.9; margin-bottom: 30px; }
-        .claim-box-dark { background: rgba(255, 255, 255, 0.15) !important; border-color: rgba(255, 255, 255, 0.3) !important; box-shadow: none !important; margin-bottom: 0; }
-        .claim-box-dark .claim-prefix { color: rgba(255,255,255,0.7); }
-        .claim-box-dark .claim-input { color: #fff; }
-        .claim-box-dark .claim-input::placeholder { color: rgba(255,255,255,0.5); }
-        .claim-box-dark .btn-claim { background: #fff; color: #2563eb; }
+        /* Features Bento */
+        .section-header { text-align: center; margin-bottom: 50px; }
+        .section-header h2 { font-size: 36px; font-weight: 900; margin-bottom: 16px; letter-spacing: -0.5px; }
+        .section-header p { font-size: 16px; color: var(--text-muted); max-width: 600px; margin: 0 auto; line-height: 1.6; }
+        
+        .bento-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 80px;}
+        .bento-card { border-radius: 24px; padding: 32px; transition: transform 0.3s ease; }
+        .bento-card:hover { transform: translateY(-5px); }
+        .bento-card.span-2 { grid-column: span 2; }
+        .bento-icon { width: 50px; height: 50px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 24px; background: white; color: var(--brand-dark); box-shadow: 0 4px 12px rgba(0, 99, 142, 0.1); }
+        .bento-card h3 { font-size: 20px; font-weight: 800; margin-bottom: 12px; }
+        .bento-card p { font-size: 15px; color: var(--text-muted); line-height: 1.6; }
 
-        .footer { border-top: 1px solid rgba(226, 232, 240, 0.8); padding: 30px 0; text-align: center; font-size: 13px; color: #64748b; }
+        /* Bottom CTA */
+        .bottom-cta { background: linear-gradient(135deg, var(--brand-dark) 0%, var(--blob-1) 100%); border-radius: 32px; padding: 70px 20px; text-align: center; color: #fff; margin-bottom: 60px; box-shadow: 0 20px 40px rgba(0, 99, 142, 0.2); }
+        .bottom-cta h2 { font-size: 36px; font-weight: 900; margin-bottom: 16px; letter-spacing: -0.5px; }
+        .bottom-cta p { font-size: 16px; color: #D1E5F0; margin-bottom: 36px; }
+        .bottom-cta .claim-box { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); }
+        .bottom-cta .claim-input { color: #FFF; }
+        .bottom-cta .claim-input::placeholder { color: rgba(255,255,255,0.6); }
+        .bottom-cta .claim-prefix { color: rgba(255,255,255,0.8); }
+        
+        /* Hủy áp dụng CSS khối nước cho nút Bottom CTA để giữ sự tương phản trên nền tối */
+        .bottom-cta .btn-claim { 
+            background: #FFF; 
+            color: var(--brand-dark); 
+            box-shadow: none; 
+            border: none; 
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+        }
+        .bottom-cta .btn-claim:hover { 
+            background: var(--brand-hover); 
+            color: #FFF; 
+        }
+
+        .footer { border-top: 1px solid var(--glass-border); padding: 40px 0; text-align: center; font-size: 14px; color: var(--text-muted); font-weight: 500; }
 
         @media (max-width: 768px) {
-            .hero-title { font-size: 32px; }
+            .hero-title { font-size: 40px; }
             .nav-links { display: none; }
-            .bento-grid, .steps-grid, .reviews-grid { grid-template-columns: 1fr; }
+            .bento-grid, .showcase-grid { grid-template-columns: 1fr; }
             .bento-card.span-2 { grid-column: span 1; }
         }
     </style>
 </head>
 <body>
 
-<!-- Vệt sáng lỏng -->
 <div class="liquid-blob blob-1"></div>
 <div class="liquid-blob blob-2"></div>
 <div class="liquid-blob blob-3"></div>
@@ -156,200 +199,156 @@
 <div class="container">
     <header class="navbar glass-element reveal">
         <a href="/" class="logo-wrap">
-            <svg class="logo-svg" viewBox="0 0 180 220" fill="currentColor">
-                <path d="M24 12h86c34 0 61 25 61 57 0 20-10 37-27 47 18 10 28 26 28 47 0 35-28 59-66 64l-33 5c-26 4-43 21-47 42H4c4-35 25-58 62-64l38-6c25-4 40-18 40-37 0-13-7-23-20-30-9 7-21 12-36 14l-28 5c-20 4-31 13-35 26H4v-40c0-25 20-47 54-54l40-8c24-5 39-19 39-38 0-16-13-28-30-28H46v89H24V12Zm48 133 28-5c10-2 18-5 25-10-8-2-16-3-25-1l-39 8c-13 3-23 9-29 18 7 1 14 0 20-2l20-8Z"></path>
-            </svg>
-            <span class="logo-brand">BIOPAGE</span>
+            <span class="logo-brand">GHÉ<span class="logo-dot">.</span>NOW</span>
         </a>
         <div class="nav-links">
+            <a href="#showcase" class="nav-link">Giải pháp</a>
             <a href="#features" class="nav-link">Tính năng</a>
-            <a href="#guide" class="nav-link">Hướng dẫn</a>
             <a href="/login" class="nav-link">Đăng nhập</a>
         </div>
-        <a href="/register" class="btn-nav-action">Tạo Bio Miễn Phí</a>
+        <a href="/register" class="btn-nav-action">Bắt Đầu Ngay</a>
     </header>
 
     <section class="hero reveal">
-        <div class="hero-badge glass-element"><i class="fa-solid fa-sparkles"></i> Nền tảng Bio Link chuẩn Business & Creator</div>
-        <h1 class="hero-title">Tất cả liên kết của bạn,<br>gọn gàng trong một trang.</h1>
-        <p class="hero-subtitle">Giải pháp toàn diện giúp kết nối mạng xã hội, gắn link liên kết và chốt khách hàng qua Zalo/Lịch hẹn chỉ với 1 chạm.</p>
+        <div class="hero-badge"><i class="fa-solid fa-bolt"></i> Nền tảng Link-in-Bio thế hệ mới</div>
+        <h1 class="hero-title">Ghé một giây,<br>kết nối ngay.</h1>
+        <p class="hero-subtitle">Biến liên kết đơn điệu thành điểm chạm mạnh mẽ. Tối ưu cho cả Creator và Doanh nghiệp địa phương tại Việt Nam.</p>
 
         <form class="claim-box glass-element" onsubmit="event.preventDefault(); submitClaim('usernameInput');">
-            <span class="claim-prefix">biopage/</span>
+            <span class="claim-prefix">ghenow.vn/</span>
             <input type="text" id="usernameInput" class="claim-input" placeholder="ten-cua-ban" required>
-            <button type="submit" class="btn-claim">Tạo trang ngay</button>
+            <button type="submit" class="btn-claim">Tạo trang miễn phí</button>
         </form>
+        <p class="hero-note">Không yêu cầu thẻ tín dụng · Thiết lập trong 60 giây</p>
+    </section>
 
-        <div class="toggle-container glass-element">
-            <button class="toggle-btn active" id="btnBiz" onclick="switchMockupMode('biz')">
-                <i class="fa-solid fa-briefcase"></i> Cho Doanh Nghiệp
-            </button>
-            <button class="toggle-btn" id="btnCreator" onclick="switchMockupMode('creator')">
-                <i class="fa-solid fa-wand-magic-sparkles"></i> Cho Cá Nhân
-            </button>
+    <!-- Gia vị Uy Tín -->
+    <div class="marquee-wrapper reveal">
+        <div class="marquee-content">
+            <div class="marquee-item"><i class="fa-brands fa-tiktok"></i> Tích hợp mượt mà TikTok</div>
+            <div class="marquee-item"><i class="fa-solid fa-qrcode"></i> Thanh toán VietQR chuẩn Napas</div>
+            <div class="marquee-item"><i class="fa-solid fa-comment-dots"></i> Chat Zalo trực tiếp</div>
+            <div class="marquee-item"><i class="fa-solid fa-map-location-dot"></i> Bản đồ Google Maps</div>
+            <div class="marquee-item"><i class="fa-solid fa-calendar-check"></i> Form Booking Đặt Lịch</div>
+            <!-- Duplicate for infinite scroll -->
+            <div class="marquee-item"><i class="fa-brands fa-tiktok"></i> Tích hợp mượt mà TikTok</div>
+            <div class="marquee-item"><i class="fa-solid fa-qrcode"></i> Thanh toán VietQR chuẩn Napas</div>
+            <div class="marquee-item"><i class="fa-solid fa-comment-dots"></i> Chat Zalo trực tiếp</div>
+            <div class="marquee-item"><i class="fa-solid fa-map-location-dot"></i> Bản đồ Google Maps</div>
+            <div class="marquee-item"><i class="fa-solid fa-calendar-check"></i> Form Booking Đặt Lịch</div>
         </div>
+    </div>
 
-        <div class="mockup-display-wrap">
-            <div class="mockup-shell">
-                <div class="mockup-notch"></div>
-                <div id="screenBiz" class="screen-content screen-biz active">
-                    <img class="m-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" alt="Avatar">
-                    <div class="m-name">Dr. Glow Clinic <i class="fa-solid fa-circle-check" style="color: #38bdf8; font-size:12px;"></i></div>
-                    <div class="m-desc">Viện chăm sóc & trẻ hóa da chuyên sâu chuẩn y khoa ✨</div>
-                    <div class="m-cta-grid">
-                        <div class="m-btn" style="background: #0068ff;"><i class="fa-solid fa-comment-dots"></i> Nhắn Zalo</div>
-                        <div class="m-btn" style="background: #22c55e;"><i class="fa-solid fa-phone"></i> Gọi Hotline</div>
-                        <div class="m-btn" style="background: #6366f1; grid-column: 1 / -1;"><i class="fa-solid fa-calendar-check"></i> Đặt Lịch Tư Vấn</div>
-                    </div>
-                    <div class="m-links-list">
-                        <div class="m-link-item"><i class="fa-solid fa-list"></i> Bảng giá dịch vụ 2026</div>
-                    </div>
+    <!-- Tách biệt Cá Nhân & Doanh Nghiệp xịn xò -->
+    <section id="showcase" class="showcase-section reveal">
+        <div class="section-header">
+            <h2>Một nền tảng. Hai giải pháp chuyên biệt.</h2>
+            <p>Trải nghiệm được thiết kế riêng biệt ngay từ lúc đăng ký, ẩn đi sự rườm rà, tập trung đúng mục tiêu của bạn.</p>
+        </div>
+        <div class="showcase-grid">
+            <!-- Dành cho Doanh Nghiệp -->
+            <div class="showcase-card glass-element">
+                <h3><i class="fa-solid fa-store" style="color: var(--brand-dark);"></i> Local Business</h3>
+                <p>Khách ghé trang là để mua hàng, gọi điện, tìm địa chỉ hoặc đặt lịch sử dụng dịch vụ.</p>
+                <div class="mockup-phone">
+                    <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=150" class="mockup-avatar" alt="Clinic">
+                    <div class="mockup-name">Glow Spa & Clinic <i class="fa-solid fa-circle-check" style="color: #0068FF;"></i></div>
+                    <div class="mockup-desc">Chăm sóc da chuyên sâu tại Quận 1</div>
+                    <div class="btn-biz-primary"><i class="fa-solid fa-comment-dots"></i> Chat Zalo Tư Vấn</div>
+                    <div class="btn-biz-secondary"><i class="fa-solid fa-calendar-check"></i> Đặt Lịch Ngay</div>
+                    <div class="link-biz"><i class="fa-solid fa-tags"></i> Bảng giá dịch vụ 2026</div>
+                    <div class="link-biz" style="border-color: #00638E; color: #00638E;"><i class="fa-solid fa-qrcode"></i> Quét mã VietQR chuyển khoản</div>
                 </div>
-                <div id="screenCreator" class="screen-content screen-creator">
-                    <img class="m-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" alt="Avatar">
-                    <div class="m-name">Minh Hoàng <i class="fa-solid fa-circle-check" style="color: #38bdf8; font-size:12px;"></i></div>
-                    <div class="m-desc">Tech Reviewer & Content Creator 🚀</div>
-                    <div class="m-links-list" style="margin-top: 10px;">
-                        <div class="m-link-item"><i class="fa-brands fa-tiktok"></i> Kênh TikTok</div>
-                        <div class="m-link-item"><i class="fa-solid fa-bag-shopping"></i> Góc đồ Shopee</div>
-                    </div>
+            </div>
+            
+            <!-- Dành cho Cá nhân -->
+            <div class="showcase-card glass-element">
+                <h3><i class="fa-solid fa-wand-magic-sparkles" style="color: var(--brand-hover);"></i> Creator / Cá nhân</h3>
+                <p>Khách ghé trang để kết nối đa nền tảng, xem portfolio và mua sắm Affiliate.</p>
+                <div class="mockup-phone">
+                    <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" class="mockup-avatar" alt="Creator">
+                    <div class="mockup-name">Minh Hoàng <i class="fa-solid fa-circle-check" style="color: #0068FF;"></i></div>
+                    <div class="mockup-desc">Tech Reviewer & Content Creator 🚀</div>
+                    <div class="link-creator" style="background: #111; color: white;"><i class="fa-brands fa-tiktok"></i> @minhhoang.tech</div>
+                    <div class="link-creator" style="background: #FF0000; color: white;"><i class="fa-brands fa-youtube"></i> Minh Hoàng Channel</div>
+                    <div class="link-creator" style="color: #333;"><i class="fa-solid fa-briefcase"></i> Portfolio báo giá Booking</div>
+                    <div class="link-creator" style="color: #FF7A59; border-color: #FF7A59;"><i class="fa-solid fa-box-open"></i> Góc đồ Shopee (Mua tại đây)</div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Bento Grid Tính năng -->
     <section id="features" class="section-padding reveal">
         <div class="section-header">
-            <h2>Mọi tính năng bạn cần để chốt Sale</h2>
-            <p>Được thiết kế tối giản, tải trang siêu nhanh và hoàn toàn miễn phí.</p>
+            <h2>Tính năng "vũ khí" chốt sale</h2>
+            <p>Bỏ đi những rào cản thao tác, giúp tỷ lệ chuyển đổi của bạn tăng mạnh nhất có thể.</p>
         </div>
         <div class="bento-grid">
-            <div class="glass-card glass-element">
-                <div class="bento-icon" style="background: #eff6ff; color: #2563eb;"><i class="fa-solid fa-bolt"></i></div>
-                <h3>Tối ưu chốt khách 1-chạm</h3>
-                <p>Nút gọi Hotline và liên kết chat Zalo trực tiếp giúp nâng cao tỷ lệ chuyển đổi khách hàng.</p>
+            <div class="bento-card glass-element span-2">
+                <div class="bento-icon"><i class="fa-solid fa-calendar-plus"></i></div>
+                <h3>Popup Đặt lịch tư vấn (Booking)</h3>
+                <p>Khách hàng để lại thông tin trực tiếp trên cửa sổ nổi tinh gọn. Dữ liệu đổ thẳng về Tab "Khách Hẹn" trong Admin của bạn ngay lập tức.</p>
             </div>
-            <div class="glass-card glass-element">
-                <div class="bento-icon" style="background: #fdf4ff; color: #c026d3;"><i class="fa-solid fa-calendar-plus"></i></div>
-                <h3>Popup Đặt lịch tư vấn</h3>
-                <p>Khách hàng để lại thông tin nhanh chóng qua cửa sổ nổi tinh gọn mà không làm rối mắt.</p>
-            </div>
-            <div class="glass-card glass-element">
-                <div class="bento-icon" style="background: #ecfdf5; color: #059669;"><i class="fa-solid fa-qrcode"></i></div>
+            <div class="bento-card glass-element">
+                <div class="bento-icon"><i class="fa-solid fa-qrcode"></i></div>
                 <h3>Mã QR chuẩn quốc gia</h3>
-                <p>Tự động tạo mã QR trang cá nhân chuẩn nét giúp bạn in ấn lên namecard, quầy lễ tân dễ dàng.</p>
+                <p>Tự động tạo mã VietQR thanh toán chuẩn Napas. Khách quét là chuyển khoản, không cần gõ số tài khoản.</p>
             </div>
-            <div class="glass-card glass-element span-2">
-                <div class="bento-icon" style="background: #fff7ed; color: #ea580c;"><i class="fa-solid fa-palette"></i></div>
-                <h3>Giao diện Glassmorphism</h3>
-                <p>Bộ màu Gradient mờ ảo chuẩn phong cách hiện đại cùng trải nghiệm mượt mà trên cả điện thoại lẫn máy tính.</p>
+            <div class="bento-card glass-element">
+                <div class="bento-icon"><i class="fa-solid fa-bolt"></i></div>
+                <h3>Tối ưu chốt khách 1-chạm</h3>
+                <p>Nút gọi Hotline và liên kết Zalo được ưu tiên hiển thị, phù hợp hoàn hảo với thói quen mua hàng tại Việt Nam.</p>
             </div>
-            <div class="glass-card glass-element">
-                <div class="bento-icon" style="background: #f1f5f9; color: #0f172a;"><i class="fa-solid fa-chart-pie"></i></div>
-                <h3>Đo lường lượt click</h3>
-                <p>Báo cáo chính xác số lượng truy cập và lượt bấm từng liên kết ngay trong trang quản trị.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="guide" class="section-padding reveal">
-        <div class="section-header">
-            <h2>Bắt đầu dễ dàng trong 1 phút</h2>
-            <p>Không cần biết lập trình, chỉ vài thao tác nhấp chuột là bạn đã có trang Bio chuyên nghiệp.</p>
-        </div>
-        <div class="steps-grid">
-            <div class="glass-card glass-element">
-                <div class="step-num">1</div>
-                <h3>Tạo tài khoản</h3>
-                <p>Chọn một tên đường dẫn mang thương hiệu của riêng bạn (vd: biopage.vn/spa-hanoi).</p>
-            </div>
-            <div class="glass-card glass-element">
-                <div class="step-num">2</div>
-                <h3>Cá nhân hóa</h3>
-                <p>Tải ảnh đại diện, chọn màu sắc phong thủy và dán các đường link mạng xã hội, Zalo của bạn vào.</p>
-            </div>
-            <div class="glass-card glass-element">
-                <div class="step-num">3</div>
-                <h3>Chia sẻ nhận khách</h3>
-                <p>Copy link dán lên tiểu sử TikTok, Facebook hoặc in mã QR đặt tại cửa hàng để nhận tương tác.</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="section-padding reveal">
-        <div class="section-header">
-            <h2>Được tin dùng bởi hơn 1,000+ cá nhân</h2>
-            <p>Họ đã dùng BIOPAGE để tối ưu luồng khách hàng. Còn bạn thì sao?</p>
-        </div>
-        <div class="reviews-grid">
-            <div class="glass-card glass-element review-card">
-                <div class="review-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                <p class="review-text">"Tính năng Form popup đặt lịch thực sự là cứu cánh cho Spa của mình. Khách vào xem bảng giá xong điền form luôn, mình nhận được thông báo ngay trong trang quản trị. Siêu tiện lợi!"</p>
-                <div class="reviewer">
-                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100" alt="Reviewer">
-                    <div class="reviewer-info"><h4>Chị Thu Trà</h4><span>Chủ hệ thống Nabe Spa</span></div>
-                </div>
-            </div>
-            <div class="glass-card glass-element review-card">
-                <div class="review-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                <p class="review-text">"Lúc trước mình xài web nước ngoài rối kinh khủng. Chuyển qua đây thấy giao diện sạch sẽ, có nút Zalo to bự rất hợp với style bán hàng tại Việt Nam. 10 điểm cho thiết kế trong suốt!"</p>
-                <div class="reviewer">
-                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100" alt="Reviewer">
-                    <div class="reviewer-info"><h4>Quang Huy</h4><span>Tiktoker / Reviewer</span></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="section-padding reveal">
-        <div class="section-header"><h2>Câu hỏi thường gặp</h2></div>
-        <div class="faq-list">
-            <div class="faq-item glass-element">
-                <div class="faq-question" onclick="toggleFaq(this)">Tạo trang Bio này có mất phí không? <i class="fa-solid fa-chevron-down"></i></div>
-                <div class="faq-answer">Hoàn toàn miễn phí cho các tính năng cơ bản như thêm link, nút Zalo, Hotline và form đặt lịch hẹn. Hệ thống sinh ra để hỗ trợ tối đa cho việc chuyển đổi số của bạn.</div>
-            </div>
-            <div class="faq-item glass-element">
-                <div class="faq-question" onclick="toggleFaq(this)">Khách hàng của tôi điền Form đặt lịch thì tôi xem ở đâu? <i class="fa-solid fa-chevron-down"></i></div>
-                <div class="faq-answer">Khi khách hàng điền form, dữ liệu sẽ ngay lập tức được cập nhật vào Tab "Khách Hẹn" trong trang Quản trị (Admin) của bạn. Bạn có thể đánh dấu trạng thái Đã xử lý rất gọn gàng.</div>
-            </div>
-            <div class="faq-item glass-element">
-                <div class="faq-question" onclick="toggleFaq(this)">Tôi có thể đổi đường dẫn URL sau khi đăng ký không? <i class="fa-solid fa-chevron-down"></i></div>
-                <div class="faq-answer">Đường dẫn URL (username) là định danh duy nhất của bạn trên hệ thống nên hiện tại không thể tự thay đổi. Nếu cần đổi, bạn có thể tạo một tài khoản mới hoàn toàn miễn phí.</div>
+            <div class="bento-card glass-element span-2">
+                <div class="bento-icon"><i class="fa-solid fa-swatchbook"></i></div>
+                <h3>Giao diện Azure Glassmorphism</h3>
+                <p>Bộ nhận diện Premium với hiệu ứng kính sáng màu, font chữ Outfit hiện đại mang lại cảm giác sạch sẽ, đáng tin cậy.</p>
             </div>
         </div>
     </section>
 
     <section class="bottom-cta reveal">
-        <h2>Sẵn sàng nâng tầm thương hiệu cá nhân?</h2>
-        <p>Tham gia cùng hàng nghìn doanh nghiệp và nhà sáng tạo đã tối ưu hóa liên kết của họ.</p>
-        <form class="claim-box claim-box-dark glass-element" onsubmit="event.preventDefault(); submitClaim('bottomUsernameInput');">
-            <span class="claim-prefix">biopage/</span>
+        <h2>Sẵn sàng nâng tầm thương hiệu?</h2>
+        <p>Bắt đầu xây dựng trang đích chuyên nghiệp của bạn chỉ trong 60 giây.</p>
+        <form class="claim-box" onsubmit="event.preventDefault(); submitClaim('bottomUsernameInput');">
+            <span class="claim-prefix">ghenow.vn/</span>
             <input type="text" id="bottomUsernameInput" class="claim-input" placeholder="ten-thuong-hieu" required>
-            <button type="submit" class="btn-claim">Bắt đầu ngay</button>
+            <button type="submit" class="btn-claim">Tạo trang ngay</button>
         </form>
     </section>
 
-    <footer class="footer"><p>© 2026 BIOPAGE. Giải pháp tối ưu chuyển đổi số cho người Việt.</p></footer>
+    <footer class="footer">
+        <p>© 2026 GHÉ.NOW — Một trang để khách ghé, liên hệ và hành động ngay.</p>
+    </footer>
 </div>
 
 <script>
-    function switchMockupMode(mode) {
-        document.getElementById('btnBiz').classList.toggle('active', mode === 'biz');
-        document.getElementById('btnCreator').classList.toggle('active', mode === 'creator');
-        document.getElementById('screenBiz').classList.toggle('active', mode === 'biz');
-        document.getElementById('screenCreator').classList.toggle('active', mode === 'creator');
-    }
     function submitClaim(inputId) {
         const username = document.getElementById(inputId).value.trim().toLowerCase();
         if (username) window.location.href = `/register?username=${encodeURIComponent(username)}`;
     }
-    function toggleFaq(el) { el.parentElement.classList.toggle('active'); }
 
+    // Hiệu ứng cuộn hiển thị
     document.addEventListener('DOMContentLoaded', function() {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
         }, { threshold: 0.1 });
         document.querySelectorAll('.reveal').forEach((el) => { observer.observe(el); });
+    });
+
+    // Hiệu ứng tương tác nền (Mouse Parallax)
+    document.addEventListener('mousemove', function(e) {
+        const x = e.clientX / window.innerWidth;
+        const y = e.clientY / window.innerHeight;
+        
+        const blob1 = document.querySelector('.blob-1');
+        const blob2 = document.querySelector('.blob-2');
+        const blob3 = document.querySelector('.blob-3');
+        
+        if(blob1) blob1.style.transform = `translate(${x * 40}px, ${y * 40}px)`;
+        if(blob2) blob2.style.transform = `translate(-${x * 50}px, -${y * 50}px)`;
+        if(blob3) blob3.style.transform = `translate(${x * -30}px, ${y * 60}px)`;
     });
 </script>
 </body>

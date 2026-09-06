@@ -3,152 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng nhập - BIOPAGE</title>
+    <title>Đăng nhập - GHÉ.NOW</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
+        :root {
+            --bg-main: #FBFFFE;
+            --text-main: #141414;
+            --brand-dark: #00638E;
+            --brand-hover: #4EC3CB;
+            --glass-border: #BFD8E3;
+            --blob-1: #004A6B;
+            --blob-2: #00638E;
+            --blob-3: #8CB9CC;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         body {
-            background-color: #f8fafc;
-            color: #0f172a;
+            background-color: var(--bg-main);
+            color: var(--text-main);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            position: relative;
+            overflow: hidden;
         }
+
+        /* --- AZURE BLOBS --- */
+        .liquid-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -1;
+            opacity: 0.15;
+        }
+        .blob-1 { width: 450px; height: 450px; background: var(--blob-1); top: -10%; left: -5%; }
+        .blob-2 { width: 500px; height: 500px; background: var(--blob-2); bottom: -15%; right: -5%; }
+        .blob-3 { width: 400px; height: 400px; background: var(--blob-3); top: 30%; left: 30%; opacity: 0.1; }
 
         .auth-card {
             width: 100%;
             max-width: 400px;
-            background: #ffffff;
-            border: 1px solid rgba(15, 23, 42, 0.08);
-            border-radius: 24px;
-            padding: 36px 30px;
-            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.04);
+            background: rgba(251, 255, 254, 0.65);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            padding: 40px 32px;
+            box-shadow: 0 16px 40px rgba(0, 74, 107, 0.06);
             text-align: center;
+            position: relative;
+            z-index: 1;
         }
 
         /* LOGO */
         .logo-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
+            display: inline-block;
             text-decoration: none;
             margin-bottom: 24px;
         }
-        .logo-icon-svg { height: 32px; width: auto; color: #000; }
         .logo-text-brand {
-            font-size: 18px;
+            font-size: 22px;
             font-weight: 800;
-            letter-spacing: 0.22em;
-            color: #000;
+            letter-spacing: 0.15em;
+            color: var(--text-main);
+        }
+        .logo-dot {
+            color: var(--brand-dark);
         }
 
         h1 {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 800;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             letter-spacing: -0.5px;
         }
         .subtitle {
-            font-size: 13px;
-            color: #64748b;
-            margin-bottom: 24px;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 28px;
         }
 
-        /* FORM */
+        /* FORM CHÍNH */
         form { text-align: left; }
-        .form-group { margin-bottom: 16px; }
+        .form-group { margin-bottom: 18px; }
         label {
             display: block;
             font-size: 13px;
             font-weight: 600;
-            margin-bottom: 6px;
-            color: #334155;
+            margin-bottom: 8px;
+            color: var(--text-main);
         }
         input {
             width: 100%;
-            padding: 12px 14px;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
+            padding: 14px 16px;
+            background: #FFFFFF;
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
             font-size: 14px;
-            color: #0f172a;
+            color: var(--text-main);
             outline: none;
-            transition: border-color 0.2s;
+            transition: all 0.2s;
         }
+        input::placeholder { color: #A0AAB2; font-family: 'Outfit', sans-serif; }
         input:focus {
-            border-color: #000000;
-            background: #ffffff;
+            border-color: var(--brand-dark);
+            box-shadow: 0 0 0 3px rgba(78, 195, 203, 0.15);
         }
 
         .btn-submit {
             width: 100%;
-            padding: 13px;
-            background: #000000;
+            padding: 15px;
+            background: var(--brand-dark);
             color: #ffffff;
             border: none;
             border-radius: 50px;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 700;
             cursor: pointer;
             margin-top: 10px;
-            transition: transform 0.2s, background 0.2s;
+            transition: background 0.2s, transform 0.1s;
         }
         .btn-submit:hover {
-            background: #1e293b;
-            transform: scale(1.02);
+            background: var(--brand-hover);
+        }
+        .btn-submit:active {
+            transform: scale(0.98);
         }
 
+        /* HIỂN THỊ LỖI / THÀNH CÔNG */
         .error-msg {
-            background: #fef2f2;
-            color: #ef4444;
-            padding: 10px;
-            border-radius: 10px;
+            background: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+            padding: 12px;
+            border-radius: 12px;
             font-size: 13px;
-            margin-bottom: 16px;
-            border: 1px solid #fee2e2;
+            font-weight: 500;
+            margin-bottom: 20px;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            text-align: center;
+        }
+
+        .flash-msg {
+            background: rgba(78, 195, 203, 0.1);
+            color: var(--brand-dark);
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            border: 1px solid rgba(78, 195, 203, 0.2);
             text-align: center;
         }
 
         .auth-footer {
-            margin-top: 24px;
-            font-size: 13px;
-            color: #64748b;
+            margin-top: 28px;
+            font-size: 14px;
+            color: #666;
+            text-align: center;
         }
         .auth-footer a {
-            color: #000000;
+            color: var(--brand-dark);
             font-weight: 700;
             text-decoration: none;
+            transition: color 0.2s;
         }
-        .auth-footer a:hover { text-decoration: underline; }
+        .auth-footer a:hover { 
+            color: var(--brand-hover); 
+        }
+
+        @media (max-width: 480px) {
+            .auth-card { padding: 32px 24px; }
+        }
     </style>
 </head>
 <body>
 
+    <div class="liquid-blob blob-1"></div>
+    <div class="liquid-blob blob-2"></div>
+    <div class="liquid-blob blob-3"></div>
+
     <div class="auth-card">
-        <!-- LOGO -->
         <a href="/" class="logo-link">
-            <svg class="logo-icon-svg" viewBox="0 0 180 220" fill="currentColor">
-                <path d="M24 12h86c34 0 61 25 61 57 0 20-10 37-27 47 18 10 28 26 28 47 0 35-28 59-66 64l-33 5c-26 4-43 21-47 42H4c4-35 25-58 62-64l38-6c25-4 40-18 40-37 0-13-7-23-20-30-9 7-21 12-36 14l-28 5c-20 4-31 13-35 26H4v-40c0-25 20-47 54-54l40-8c24-5 39-19 39-38 0-16-13-28-30-28H46v89H24V12Zm48 133 28-5c10-2 18-5 25-10-8-2-16-3-25-1l-39 8c-13 3-23 9-29 18 7 1 14 0 20-2l20-8Z"></path>
-            </svg>
-            <span class="logo-text-brand">BIOPAGE</span>
+            <span class="logo-text-brand">GHÉ<span class="logo-dot">.</span>NOW</span>
         </a>
 
         <h1>Đăng nhập</h1>
-        <p class="subtitle">Chào mừng bạn quay trở lại với biopage</p>
+        <p class="subtitle">Quản lý và cập nhật điểm chạm của bạn</p>
+
+        <!-- Khối hiển thị thông báo flash từ app.py -->
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              <div class="flash-msg"><i class="fa-solid fa-circle-check"></i> {{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
 
         {% if error %}
             <div class="error-msg"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</div>
         {% endif %}
 
         <form method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
             <div class="form-group">
                 <label>Tên đăng nhập</label>
                 <input type="text" name="username" placeholder="Nhập tên đăng nhập" required autofocus>
@@ -163,7 +229,7 @@
         </form>
 
         <div class="auth-footer">
-            Chưa có tài khoản? <a href="/register">Đăng ký ngay</a>
+            Chưa có tài khoản? <a href="/register">Tạo trang miễn phí</a>
         </div>
     </div>
 

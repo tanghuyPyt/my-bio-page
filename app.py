@@ -7,7 +7,7 @@ from urllib.parse import urlencode, urlparse
 
 import psycopg2
 from dotenv import load_dotenv
-from flask import Flask, abort, redirect, render_template, request, session, url_for
+from flask import Flask, abort, flash, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
 
 
@@ -15,7 +15,6 @@ load_dotenv()
 
 app = Flask(__name__)
 
-# A missing key is acceptable for a temporary local run, but never for production.
 secret_key = os.environ.get("SECRET_KEY")
 if not secret_key and os.environ.get("FLASK_ENV") == "production":
     raise RuntimeError("SECRET_KEY must be configured in production.")
@@ -70,9 +69,6 @@ def protect_post_requests():
     if request.method != "POST":
         return
     supplied_token = request.form.get("csrf_token", "")
-    # Add the hidden field to the existing login/register templates when they
-    # are updated. Until then, keep those two public forms compatible while
-    # strictly protecting every authenticated admin action.
     if request.endpoint in {"login", "register"} and not supplied_token:
         return
     if not supplied_token or not hmac.compare_digest(supplied_token, get_csrf_token()):
@@ -125,6 +121,7 @@ def init_db():
                 avatar_url TEXT DEFAULT '',
                 banner_url TEXT DEFAULT '',
                 theme TEXT DEFAULT 'light',
+                account_type TEXT DEFAULT 'personal',
                 address TEXT DEFAULT '',
                 phone TEXT DEFAULT '',
                 social_ig TEXT DEFAULT '',
@@ -139,6 +136,7 @@ def init_db():
         ''')
         for statement in (
             "ALTER TABLE users ADD COLUMN IF NOT EXISTS theme TEXT DEFAULT 'light'",
+            "ALTER TABLE users ADD COLUMN IF NOT EXISTS account_type TEXT DEFAULT 'personal'",
             "ALTER TABLE users ADD COLUMN IF NOT EXISTS banner_url TEXT DEFAULT ''",
             "ALTER TABLE users ADD COLUMN IF NOT EXISTS address TEXT DEFAULT ''",
             "ALTER TABLE users ADD COLUMN IF NOT EXISTS phone TEXT DEFAULT ''",
@@ -174,8 +172,23 @@ def init_db():
                 price TEXT NOT NULL
             );
         ''')
+
+        # Bảng quản lý khách đặt lịch tư vấn
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS bookings (
+                id SERIAL PRIMARY KEY,
+                username TEXT NOT NULL,
+                customer_name TEXT NOT NULL,
+                customer_phone TEXT NOT NULL,
+                note TEXT,
+                status TEXT DEFAULT 'Chờ xử lý',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        ''')
+
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_links_username_position ON links (username, position)")
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_services_username ON services (username)")
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_bookings_username ON bookings (username)")
         conn.commit()
     finally:
         close_db(conn, cursor)
@@ -203,6 +216,10 @@ def register():
         password = request.form.get("password", "")
         fullname = form_text("fullname", 80)
         bio = form_text("bio", 300)
+        account_type = request.form.get("account_type", "personal")
+
+        if account_type not in {"personal", "business"}:
+            account_type = "personal"
 
         if not re.fullmatch(r"[a-z0-9_]{3,20}", username):
             error = "Tên đăng nhập chỉ gồm chữ thường, số hoặc dấu gạch dưới (3–20 ký tự)."
@@ -215,11 +232,12 @@ def register():
             cursor = conn.cursor()
             try:
                 cursor.execute(
-                    """INSERT INTO users (username, password, fullname, bio, theme)
-                       VALUES (%s, %s, %s, %s, 'light')""",
-                    (username, generate_password_hash(password), fullname, bio),
+                    """INSERT INTO users (username, password, fullname, bio, theme, account_type)
+                       VALUES (%s, %s, %s, %s, 'light', %s)""",
+                    (username, generate_password_hash(password), fullname, bio, account_type),
                 )
                 conn.commit()
+                flash("Đăng ký tài khoản thành công! Vui lòng đăng nhập.")
                 return redirect(url_for("login"))
             except psycopg2.IntegrityError:
                 conn.rollback()
@@ -263,12 +281,11 @@ def logout():
 
 def profile_from_row(username, row):
     fields = (
-        "fullname", "bio", "avatar_url", "banner_url", "theme", "address", "phone",
+        "fullname", "bio", "avatar_url", "banner_url", "theme", "account_type", "address", "phone",
         "social_ig", "social_tiktok", "social_fb", "social_yt", "zalo", "bank_name",
         "bank_account", "bank_owner",
     )
     profile = dict(zip(fields, row))
-    # Existing database records may predate the input validation below.
     for url_field in ("avatar_url", "banner_url", "social_ig", "social_tiktok", "social_fb", "social_yt"):
         if profile[url_field] and not is_http_url(profile[url_field]):
             profile[url_field] = ""
@@ -277,6 +294,7 @@ def profile_from_row(username, row):
     profile["avatar"] = profile["avatar_url"] or "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150"
     profile["banner"] = profile["banner_url"]
     profile["theme"] = profile["theme"] if profile["theme"] in {"light", "dark"} else "light"
+    profile["account_type"] = profile["account_type"] if profile["account_type"] in {"personal", "business"} else "personal"
     profile["vietqr_url"] = ""
     if profile["bank_name"] and profile["bank_account"]:
         profile["vietqr_url"] = (
@@ -298,11 +316,14 @@ def update_profile(current_user):
     social_links = {name: form_text(name, 2048) for name in ("social_ig", "social_tiktok", "social_fb", "social_yt")}
 
     if theme not in {"light", "dark"}:
-        abort(400, description="Giao diện không hợp lệ.")
+        flash("Giao diện không hợp lệ.")
+        return
     if any(value and not is_http_url(value) for value in [avatar_url, banner_url, *social_links.values()]):
-        abort(400, description="Ảnh và mạng xã hội phải là URL bắt đầu bằng http:// hoặc https://.")
+        flash("Ảnh và mạng xã hội phải là URL hợp lệ (bắt đầu bằng http:// hoặc https://).")
+        return
     if not valid_phone(phone) or not valid_zalo(zalo):
-        abort(400, description="Số điện thoại hoặc số Zalo không hợp lệ.")
+        flash("Số điện thoại hoặc số Zalo không hợp lệ.")
+        return
 
     conn = get_db()
     cursor = conn.cursor()
@@ -317,6 +338,7 @@ def update_profile(current_user):
              social_links["social_yt"], zalo, current_user),
         )
         conn.commit()
+        flash("Cập nhật hồ sơ thành công!")
     finally:
         close_db(conn, cursor)
 
@@ -334,17 +356,19 @@ def admin():
             bank_account = form_text("bank_account", 25)
             bank_owner = form_text("bank_owner", 80).upper()
             if not valid_bank(bank_name, bank_account):
-                abort(400, description="Mã ngân hàng hoặc số tài khoản không hợp lệ.")
-            conn = get_db()
-            cursor = conn.cursor()
-            try:
-                cursor.execute(
-                    "UPDATE users SET bank_name = %s, bank_account = %s, bank_owner = %s WHERE username = %s",
-                    (bank_name, bank_account, bank_owner, current_user),
-                )
-                conn.commit()
-            finally:
-                close_db(conn, cursor)
+                flash("Mã ngân hàng hoặc số tài khoản không hợp lệ.")
+            else:
+                conn = get_db()
+                cursor = conn.cursor()
+                try:
+                    cursor.execute(
+                        "UPDATE users SET bank_name = %s, bank_account = %s, bank_owner = %s WHERE username = %s",
+                        (bank_name, bank_account, bank_owner, current_user),
+                    )
+                    conn.commit()
+                    flash("Cập nhật VietQR thành công!")
+                finally:
+                    close_db(conn, cursor)
         elif "add_service" in request.form:
             name = form_text("name", 100)
             price = form_text("price", 60)
@@ -354,32 +378,37 @@ def admin():
                 try:
                     cursor.execute("INSERT INTO services (username, name, price) VALUES (%s, %s, %s)", (current_user, name, price))
                     conn.commit()
+                    flash("Thêm dịch vụ mới thành công!")
                 finally:
                     close_db(conn, cursor)
+            else:
+                flash("Vui lòng nhập tên và giá dịch vụ.")
         elif "add_link" in request.form:
             title = form_text("title", 100)
             target_url = form_text("url", 2048)
             if not title or not is_http_url(target_url):
-                abort(400, description="Tiêu đề và URL hợp lệ là bắt buộc.")
-            conn = get_db()
-            cursor = conn.cursor()
-            try:
-                cursor.execute("SELECT COALESCE(MAX(position), 0) + 1 FROM links WHERE username = %s", (current_user,))
-                next_position = cursor.fetchone()[0]
-                cursor.execute(
-                    "INSERT INTO links (username, title, url, clicks, position) VALUES (%s, %s, %s, 0, %s)",
-                    (current_user, title, target_url, next_position),
-                )
-                conn.commit()
-            finally:
-                close_db(conn, cursor)
+                flash("Tiêu đề và URL hợp lệ (bắt đầu bằng http:// hoặc https://) là bắt buộc.")
+            else:
+                conn = get_db()
+                cursor = conn.cursor()
+                try:
+                    cursor.execute("SELECT COALESCE(MAX(position), 0) + 1 FROM links WHERE username = %s", (current_user,))
+                    next_position = cursor.fetchone()[0]
+                    cursor.execute(
+                        "INSERT INTO links (username, title, url, clicks, position) VALUES (%s, %s, %s, 0, %s)",
+                        (current_user, title, target_url, next_position),
+                    )
+                    conn.commit()
+                    flash("Thêm liên kết thành công!")
+                finally:
+                    close_db(conn, cursor)
         return redirect(url_for("admin"))
 
     conn = get_db()
     cursor = conn.cursor()
     try:
         cursor.execute(
-            """SELECT fullname, bio, avatar_url, banner_url, theme, address, phone, social_ig,
+            """SELECT fullname, bio, avatar_url, banner_url, theme, account_type, address, phone, social_ig,
                       social_tiktok, social_fb, social_yt, zalo, bank_name, bank_account, bank_owner
                FROM users WHERE username = %s""",
             (current_user,),
@@ -389,10 +418,14 @@ def admin():
         links = [{"id": item[0], "title": item[1], "url": item[2], "clicks": item[3]} for item in cursor.fetchall()]
         cursor.execute("SELECT id, name, price FROM services WHERE username = %s ORDER BY id", (current_user,))
         services = [{"id": item[0], "name": item[1], "price": item[2]} for item in cursor.fetchall()]
+        
+        # Lấy danh sách khách hẹn
+        cursor.execute("SELECT id, customer_name, customer_phone, note, status, created_at FROM bookings WHERE username = %s ORDER BY id DESC", (current_user,))
+        bookings = [{"id": item[0], "name": item[1], "phone": item[2], "note": item[3], "status": item[4], "time": item[5]} for item in cursor.fetchall()]
     finally:
         close_db(conn, cursor)
 
-    return render_template("admin.html", user=profile_from_row(current_user, row), links=links, services=services)
+    return render_template("admin.html", user=profile_from_row(current_user, row), links=links, services=services, bookings=bookings)
 
 
 @app.post("/delete/<int:link_id>")
@@ -403,6 +436,7 @@ def delete_link(link_id):
     try:
         cursor.execute("DELETE FROM links WHERE id = %s AND username = %s", (link_id, session["user"]))
         conn.commit()
+        flash("Đã xóa liên kết.")
     finally:
         close_db(conn, cursor)
     return redirect(url_for("admin"))
@@ -416,6 +450,7 @@ def delete_service(service_id):
     try:
         cursor.execute("DELETE FROM services WHERE id = %s AND username = %s", (service_id, session["user"]))
         conn.commit()
+        flash("Đã xóa dịch vụ.")
     finally:
         close_db(conn, cursor)
     return redirect(url_for("admin"))
@@ -434,6 +469,32 @@ def track_click(link_id):
     return redirect(target[0] if target and is_http_url(target[0]) else url_for("index"))
 
 
+@app.post("/book/<username>")
+def create_booking(username):
+    username = username.strip().lower()
+    customer_name = form_text("customer_name", 80)
+    customer_phone = form_text("customer_phone", 25)
+    note = form_text("note", 200)
+
+    if not customer_name or not valid_phone(customer_phone):
+        flash("Vui lòng nhập tên và số điện thoại hợp lệ để đặt lịch.")
+        return redirect(url_for("user_bio", username=username))
+
+    conn = get_db()
+    cursor = conn.cursor()
+    try:
+        cursor.execute(
+            """INSERT INTO bookings (username, customer_name, customer_phone, note)
+               VALUES (%s, %s, %s, %s)""",
+            (username, customer_name, customer_phone, note),
+        )
+        conn.commit()
+        flash("Gửi yêu cầu đặt lịch thành công! Chủ trang sẽ liên hệ lại sớm.")
+    finally:
+        close_db(conn, cursor)
+    return redirect(url_for("user_bio", username=username))
+
+
 @app.route("/<username>")
 def user_bio(username):
     username = username.strip().lower()
@@ -441,7 +502,7 @@ def user_bio(username):
     cursor = conn.cursor()
     try:
         cursor.execute(
-            """SELECT fullname, bio, avatar_url, banner_url, theme, address, phone, social_ig,
+            """SELECT fullname, bio, avatar_url, banner_url, theme, account_type, address, phone, social_ig,
                       social_tiktok, social_fb, social_yt, zalo, bank_name, bank_account, bank_owner
                FROM users WHERE username = %s""",
             (username,),
@@ -449,8 +510,8 @@ def user_bio(username):
         row = cursor.fetchone()
         if not row:
             abort(404)
-        cursor.execute("SELECT id, title FROM links WHERE username = %s ORDER BY position, id", (username,))
-        links = [{"id": item[0], "title": item[1]} for item in cursor.fetchall()]
+        cursor.execute("SELECT id, title, url FROM links WHERE username = %s ORDER BY position, id", (username,))
+        links = [{"id": item[0], "title": item[1], "url": item[2]} for item in cursor.fetchall()]
         cursor.execute("SELECT id, name, price FROM services WHERE username = %s ORDER BY id", (username,))
         services = [{"id": item[0], "name": item[1], "price": item[2]} for item in cursor.fetchall()]
     finally:
