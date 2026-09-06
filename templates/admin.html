@@ -3,112 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bảng quản trị - GHÉ.NOW</title>
+    <title>Quản Trị - GHÉ.NOW</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
             --bg-main: #FBFFFE;
             --text-main: #141414;
+            --text-muted: #55697A;
             --brand-dark: #00638E;
             --brand-hover: #4EC3CB;
+            --glass-bg: rgba(251, 255, 254, 0.85);
             --glass-border: #BFD8E3;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
         
-        body { background: var(--bg-main); color: var(--text-main); min-height: 100vh; }
+        body { background: var(--bg-main); color: var(--text-main); min-height: 100vh; padding-bottom: 40px; }
 
-        /* Bố cục 2 cột */
+        /* Top Bar Thống kê nhanh (SaaS Stats) */
+        .stats-bar {
+            max-width: 1200px;
+            margin: 20px auto 0;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        .stat-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 4px 20px rgba(0, 99, 142, 0.04);
+        }
+        .stat-icon {
+            width: 44px; height: 44px; border-radius: 14px; background: rgba(0, 99, 142, 0.1);
+            color: var(--brand-dark); display: flex; align-items: center; justify-content: center; font-size: 18px;
+        }
+        .stat-info h4 { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+        .stat-info span { font-size: 20px; font-weight: 800; color: var(--text-main); }
+
+        /* Bố cục chính 2 cột */
         .admin-layout {
             display: grid;
             grid-template-columns: 1fr 380px;
             gap: 30px;
             max-width: 1200px;
-            margin: 0 auto;
-            padding: 30px 20px;
+            margin: 20px auto 0;
+            padding: 0 20px;
         }
 
-        /* Bảng điều khiển bên trái */
+        /* Khung quản trị bên trái */
         .editor-panel {
-            background: rgba(251, 255, 254, 0.8);
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
             border-radius: 24px;
             padding: 30px;
             box-shadow: 0 10px 30px rgba(0, 99, 142, 0.05);
         }
 
-        /* Tabs chuyển đổi */
-        .tab-menu { display: flex; gap: 10px; margin-bottom: 24px; border-bottom: 2px solid #E2E8F0; padding-bottom: 10px; }
-        .tab-btn {
-            background: none; border: none; font-size: 15px; font-weight: 700; color: #888;
-            padding: 8px 16px; cursor: pointer; border-radius: 12px; transition: all 0.2s;
+        .admin-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #E2E8F0;
         }
-        .tab-btn.active { background: rgba(0, 99, 142, 0.1); color: var(--brand-dark); }
+        .admin-title h2 { font-size: 20px; font-weight: 800; }
+        .admin-title p { font-size: 13px; color: var(--text-muted); }
+
+        /* Tabs chuyển đổi */
+        .tab-menu { display: flex; gap: 8px; margin-bottom: 24px; background: #F1F5F9; padding: 6px; border-radius: 16px; }
+        .tab-btn {
+            flex: 1; background: none; border: none; font-size: 14px; font-weight: 700; color: var(--text-muted);
+            padding: 10px; cursor: pointer; border-radius: 12px; transition: all 0.2s; text-align: center;
+        }
+        .tab-btn.active { background: #FFFFFF; color: var(--brand-dark); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
         /* Form Controls */
-        .form-group { margin-bottom: 16px; }
-        label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
-        input, select, textarea {
-            width: 100%; padding: 12px; border: 1px solid var(--glass-border);
-            border-radius: 12px; font-size: 14px; outline: none;
+        .form-group { margin-bottom: 18px; }
+        label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--text-main); }
+        input, textarea {
+            width: 100%; padding: 14px 16px; border: 1px solid var(--glass-border);
+            border-radius: 14px; font-size: 14px; outline: none; background: #FFF;
+            transition: all 0.2s;
         }
-        input:focus { border-color: var(--brand-dark); }
+        input:focus, textarea:focus { border-color: var(--brand-dark); box-shadow: 0 0 0 3px rgba(78, 195, 203, 0.15); }
         
         .btn-submit {
             background: var(--brand-dark); color: white; border: none;
-            padding: 12px 24px; border-radius: 50px; font-weight: 700; cursor: pointer;
+            width: 100%; padding: 14px; border-radius: 50px; font-weight: 700; cursor: pointer;
+            transition: background 0.2s; font-size: 15px;
         }
+        .btn-submit:hover { background: var(--brand-hover); }
 
-        /* Cột Live Preview bên phải */
-        .preview-panel { position: sticky; top: 30px; height: calc(100vh - 60px); display: flex; flex-direction: column; align-items: center; }
+        /* Cột Live Preview bên phải (PC) */
+        .preview-panel { position: sticky; top: 20px; height: calc(100vh - 40px); display: flex; flex-direction: column; align-items: center; }
         .phone-mockup {
-            width: 320px; height: 650px; background: #000; border-radius: 40px;
+            width: 320px; height: 640px; background: #000; border-radius: 40px;
             border: 10px solid #141414; overflow: hidden; position: relative;
             box-shadow: 0 20px 40px rgba(0,0,0,0.15);
         }
-        .phone-notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 120px; height: 25px; background: #141414; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; z-index: 10; }
+        .phone-notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 120px; height: 22px; background: #141414; border-bottom-left-radius: 14px; border-bottom-right-radius: 14px; z-index: 10; }
         .phone-mockup iframe { width: 100%; height: 100%; border: none; background: #fff; }
 
-        /* Table Khách hẹn */
+        /* Mobile Switcher (Chỉ hiện trên điện thoại) */
+        .mobile-toggle-bar {
+            display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: #141414; color: white; padding: 8px 16px; border-radius: 30px;
+            z-index: 1000; box-shadow: 0 10px 25px rgba(0,0,0,0.3); font-size: 13px; font-weight: 700; gap: 12px; align-items: center;
+        }
+        .mobile-toggle-bar button { background: none; border: none; color: #aaa; font-weight: 700; cursor: pointer; padding: 6px 12px; border-radius: 20px; }
+        .mobile-toggle-bar button.active { background: var(--brand-dark); color: white; }
+
         .booking-card {
             border: 1px solid var(--glass-border); border-radius: 16px;
             padding: 16px; margin-bottom: 12px; background: #fff;
         }
-        .booking-card h4 { font-size: 16px; color: var(--brand-dark); margin-bottom: 4px; }
-        .booking-card p { font-size: 13px; color: #555; }
-        .status-badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; background: #FEF3C7; color: #D97706; margin-top: 8px;}
+        .status-badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; background: #FEF3C7; color: #D97706; }
 
         @media (max-width: 900px) {
-            .admin-layout { grid-template-columns: 1fr; }
-            .preview-panel { display: none; } /* Ẩn Live Preview trên mobile để gọn nhẹ */
+            .admin-layout { grid-template-columns: 1fr; padding: 0 12px; }
+            .stats-bar { grid-template-columns: 1fr; padding: 0 12px; }
+            .preview-panel { display: none; } /* Mặc định ẩn iframe trên mobile, dùng mobile toggle bar */
+            .mobile-toggle-bar { display: flex; }
+            
+            /* Class hỗ trợ ẩn hiện khi bấm nút trên mobile */
+            .mobile-hidden { display: none !important; }
+            .mobile-show { display: block !important; }
         }
     </style>
 </head>
 <body>
 
+    <!-- Top Stats Bar -->
+    <div class="stats-bar">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-link"></i></div>
+            <div class="stat-info">
+                <h4>Tổng số liên kết</h4>
+                <span>{{ links|length }}</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-calendar-check"></i></div>
+            <div class="stat-info">
+                <h4>Lịch hẹn mới</h4>
+                <span>{{ bookings|length }}</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-eye"></i></div>
+            <div class="stat-info">
+                <h4>Trạng thái</h4>
+                <span style="font-size: 15px; color: #16A34A; font-weight: 700;">Đang hoạt động</span>
+            </div>
+        </div>
+    </div>
+
     <div class="admin-layout">
-        <!-- CỘT TRÁI: NHẬP LIỆU -->
-        <div class="editor-panel">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2>Quản trị GHÉ.NOW</h2>
+        <!-- CỘT TRÁI: QUẢN TRỊ -->
+        <div class="editor-panel" id="editorSection">
+            <div class="admin-header">
+                <div class="admin-title">
+                    <h2>Xin chào, {{ user.name }}!</h2>
+                    <p>Quản lý toàn bộ điểm chạm của bạn tại đây.</p>
+                </div>
                 <form method="post" action="{{ url_for('logout') }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button type="submit" style="background:none; border:none; color: #EF4444; font-weight:700; cursor:pointer;"><i class="fa-solid fa-power-off"></i> Thoát</button>
+                    <button type="submit" style="background:rgba(239, 68, 68, 0.1); border:none; color: #EF4444; font-weight:700; cursor:pointer; padding: 8px 16px; border-radius: 20px;"><i class="fa-solid fa-power-off"></i> Thoát</button>
                 </form>
             </div>
 
             {% with messages = get_flashed_messages() %}
               {% if messages %}
-                <div style="background: #E0F2FE; color: #00638E; padding: 12px; border-radius: 12px; margin-bottom: 20px; font-size: 13px; font-weight: 600;">
+                <div style="background: rgba(78,195,203,0.15); color: var(--brand-dark); padding: 12px 16px; border-radius: 12px; margin-bottom: 20px; font-size: 13px; font-weight: 600; border: 1px solid var(--glass-border);">
                   <i class="fa-solid fa-circle-check"></i> {{ messages[0] }}
                 </div>
               {% endif %}
             {% endwith %}
 
-            <!-- Nút điều hướng Tabs -->
             <div class="tab-menu">
                 <button class="tab-btn active" onclick="openTab('tab-profile')"><i class="fa-solid fa-user-pen"></i> Hồ sơ</button>
                 <button class="tab-btn" onclick="openTab('tab-links')"><i class="fa-solid fa-link"></i> Liên kết</button>
@@ -137,18 +215,18 @@
                         <label>Số Zalo nhận tin</label>
                         <input name="zalo" value="{{ user.zalo }}">
                     </div>
-                    <button type="submit" class="btn-submit">Lưu thay đổi</button>
+                    <button type="submit" class="btn-submit">Lưu Thay Đổi</button>
                 </form>
             </div>
 
             <!-- Tab 2: Liên kết -->
             <div id="tab-links" class="tab-content">
-                <form method="post" style="margin-bottom: 20px;">
+                <form method="post" style="margin-bottom: 24px;">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="add_link" value="1">
                     <div class="form-group">
                         <label>Tiêu đề nút bấm</label>
-                        <input name="title" placeholder="Ví dụ: Kênh TikTok của tôi" required>
+                        <input name="title" placeholder="Ví dụ: Đặt lịch tư vấn ngay" required>
                     </div>
                     <div class="form-group">
                         <label>Đường dẫn (URL)</label>
@@ -157,16 +235,15 @@
                     <button type="submit" class="btn-submit">Thêm Liên Kết Mới</button>
                 </form>
 
-                <!-- Danh sách link hiển thị bằng vòng lặp Jinja -->
                 {% for link in links %}
                 <div class="booking-card" style="display: flex; justify-content: space-between; align-items: center;">
                     <div>
-                        <h4 style="color: var(--text-main);">{{ link.title }}</h4>
-                        <p style="font-size: 11px;">{{ link.clicks }} lượt bấm</p>
+                        <h4 style="color: var(--text-main); font-size: 15px;">{{ link.title }}</h4>
+                        <p style="font-size: 11px; color:#888;">{{ link.clicks }} lượt bấm</p>
                     </div>
                     <form method="post" action="{{ url_for('delete_link', link_id=link.id) }}">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <button type="submit" style="color:#EF4444; background:none; border:none; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
+                        <button type="submit" style="color:#EF4444; background:none; border:none; cursor:pointer; font-size: 16px;"><i class="fa-solid fa-trash"></i></button>
                     </form>
                 </div>
                 {% endfor %}
@@ -174,32 +251,49 @@
 
             <!-- Tab 3: Khách Hẹn -->
             <div id="tab-bookings" class="tab-content">
-                <p style="font-size: 13px; color: #888; margin-bottom: 16px;">Danh sách khách hàng đã điền form Đặt lịch trên trang của bạn.</p>
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">Danh sách khách hàng đã điền form Đặt lịch từ trang của bạn.</p>
                 
-                <!-- Dữ liệu mẫu cứng (bạn sẽ thay bằng vòng lặp Jinja từ database sau) -->
-                <div class="booking-card">
-                    <h4>Nguyễn Văn A</h4>
-                    <p><i class="fa-solid fa-phone"></i> 0901234567</p>
-                    <p><i class="fa-solid fa-note-sticky"></i> Tư vấn lộ trình chăm sóc da.</p>
-                    <span class="status-badge">Chờ gọi lại</span>
-                </div>
+                {% if bookings %}
+                    {% for b in bookings %}
+                    <div class="booking-card">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div>
+                                <h4 style="color: var(--brand-dark); font-size: 15px;"><i class="fa-solid fa-user"></i> {{ b.name }}</h4>
+                                <p style="margin: 6px 0;"><i class="fa-solid fa-phone" style="color: var(--brand-dark);"></i> <a href="tel:{{ b.phone }}" style="color: inherit; text-decoration: none; font-weight: 700;">{{ b.phone }}</a></p>
+                                {% if b.note %}
+                                <p style="font-size: 12px; color: #555; background: #F8FAFC; padding: 8px 10px; border-radius: 8px; margin-top: 6px;"><i class="fa-solid fa-note-sticky"></i> {{ b.note }}</p>
+                                {% endif %}
+                            </div>
+                            <span class="status-badge">{{ b.status }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div style="text-align: center; padding: 40px; color: #aaa; font-size: 14px;">
+                        <i class="fa-regular fa-folder-open" style="font-size: 32px; margin-bottom: 8px;"></i>
+                        <p>Chưa có lịch hẹn nào được gửi tới.</p>
+                    </div>
+                {% endif %}
             </div>
-
         </div>
 
-        <!-- CỘT PHẢI: LIVE PREVIEW -->
-        <div class="preview-panel">
-            <h3 style="font-size: 15px; margin-bottom: 12px; color: #888;">Xem trước trực tiếp</h3>
+        <!-- CỘT PHẢI: LIVE PREVIEW (PC) -->
+        <div class="preview-panel" id="previewSection">
+            <h3 style="font-size: 14px; margin-bottom: 12px; color: var(--text-muted);">Giao diện xem trước trực tiếp</h3>
             <div class="phone-mockup">
                 <div class="phone-notch"></div>
-                <!-- Sử dụng iframe để tải thẳng trang bio.html -->
                 <iframe src="{{ url_for('user_bio', username=user.username) }}"></iframe>
             </div>
-            <a href="{{ url_for('user_bio', username=user.username) }}" target="_blank" style="margin-top: 16px; font-size: 13px; font-weight: 700; color: var(--brand-dark); text-decoration: none;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Mở trang ở Tab mới</a>
+            <a href="{{ url_for('user_bio', username=user.username) }}" target="_blank" style="margin-top: 14px; font-size: 13px; font-weight: 700; color: var(--brand-dark); text-decoration: none;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Mở trang ở Tab mới</a>
         </div>
     </div>
 
-    <!-- Script đổi Tab đơn giản -->
+    <!-- Thanh chuyển đổi xem nhanh trên Mobile -->
+    <div class="mobile-toggle-bar">
+        <button id="btnEdit" class="active" onclick="switchMobileView('edit')"><i class="fa-solid fa-pen-to-square"></i> Sửa</button>
+        <button id="btnPreview" onclick="switchMobileView('preview')"><i class="fa-solid fa-mobile-screen"></i> Xem trước</button>
+    </div>
+
     <script>
         function openTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
@@ -207,6 +301,28 @@
             
             document.getElementById(tabId).classList.add('active');
             event.currentTarget.classList.add('active');
+        }
+
+        // Điều khiển ẩn/hiện trên màn hình Mobile
+        function switchMobileView(view) {
+            const editor = document.getElementById('editorSection');
+            const preview = document.getElementById('previewSection');
+            const btnEdit = document.getElementById('btnEdit');
+            const btnPreview = document.getElementById('btnPreview');
+
+            if (view === 'edit') {
+                editor.classList.remove('mobile-hidden');
+                preview.classList.remove('mobile-show');
+                preview.style.display = 'none';
+                btnEdit.classList.add('active');
+                btnPreview.classList.remove('active');
+            } else {
+                editor.classList.add('mobile-hidden');
+                preview.style.display = 'flex';
+                preview.classList.add('mobile-show');
+                btnEdit.classList.remove('active');
+                btnPreview.classList.add('active');
+            }
         }
     </script>
 </body>
